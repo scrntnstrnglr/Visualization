@@ -8,7 +8,7 @@ public class Example extends PApplet {
 
 	public void draw() {
 
-		stroke(255);
+		stroke(255,0,0);
 		line(0, 0, mouseX, mouseY);
 	}
 
