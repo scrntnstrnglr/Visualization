@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/core.jar"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/controlP5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/jython-standalone-2.7.2b2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
