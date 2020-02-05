@@ -18,8 +18,8 @@ import com.tcd.visualization.cs7ds4.nightingale.utils.VisualizerSettings;
 
 public class CoxComb extends PApplet {
 	private static VisualizerSettings settings;
-	private static final int SCREEN_WIDTH = 1800;
-	private static final int SCREEN_HEIGHT = 930;
+	private static int SCREEN_WIDTH ;
+	private static int SCREEN_HEIGHT;
 	private static Table table;
 	private static PFont f;
 	private static ControlP5 cp5;
@@ -34,6 +34,7 @@ public class CoxComb extends PApplet {
 	private Toggle cbJan13,cbFeb14,cbMar15,cbApr16,cbMay17,cbJun18,cbJul19,cbAug20,cbSep21,cbOct22,cbNov23,cbDec24;
 	private Toggle cbJan25,cbFeb26,cbMar27,cbApr28,cbMay29,cbJun30,cbJul31,cbAug32,cbSep33,cbOct34,cbNov35,cbDec36;
 	private Map<String,ArrayList> dateInfo;
+	private static  Range range;
 	
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month=month;
@@ -42,10 +43,13 @@ public class CoxComb extends PApplet {
 	}
 
 	public void settings() {
-		size(SCREEN_WIDTH, SCREEN_HEIGHT);
 		table = loadTable("nightingale-data.csv", "header");
 		settings = new VisualizerSettings(table);
 		dateInfo=settings.getToggleButtonsForMonths();
+		
+		SCREEN_WIDTH=settings.SCREEN_WIDTH;
+		SCREEN_HEIGHT = settings.SCREEN_HEIGHT;
+		size(SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 	
 	
@@ -89,9 +93,11 @@ public class CoxComb extends PApplet {
 		System.out.println("Actual viz period: "+visualizationPeriod);
 		
 
-		 Range range = cp5.addRange("rangeController")
+		 range = cp5.addRange("rangeController")
 		             // disable broadcasting since setRange and setRangeValues will trigger an event
-		             .setBroadcast(false) 
+		             .setBroadcast(false)
+		             .setRange(0, 200)
+		             .setRangeValues(0, 200)
 		             .setPosition(40,height/2+348)
 		             .setSize(720,40)
 		             .setHandleSize(20)
@@ -114,13 +120,19 @@ public class CoxComb extends PApplet {
 		 
 		 
 	} 
-
-
-
 	
 	public void draw() {
+		range.addListener(new ControlListener() {
+			
+			@Override
+			public void controlEvent(ControlEvent event) {
+				// TODO Auto-generated method stub
+			    Controller<?> r = event.getController();
+			    System.out.println(r.getArrayValue(0)+" "+r.getArrayValue(1));
+			}
+		});
 		clear();
-		background(0);
+		background(settings.VIZ_BACKGROUND);
 		float radians = (PI * (360 / visualizationPeriod)) / 180;
 		float start = 0.0F;
 		Map<String, Integer> dataSet = new HashMap<String, Integer>();
@@ -142,14 +154,14 @@ public class CoxComb extends PApplet {
 			double arcLengthAC = 13 * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 			pushMatrix();
 			translate(width / 2, height / 2 + 140);
-			fill(sliderValue);
-			stroke(zygStrokeColor);
+			fill(settings.ZYGMOTIC_ARC_COLOR[0],settings.ZYGMOTIC_ARC_COLOR[1],settings.ZYGMOTIC_ARC_COLOR[2]);
+			stroke(0);
 			if(zygmoticToggle.getState())
 				arc(0, 0, (float) arcLengthZD, (float) arcLengthZD, start, start + radians, PIE);
-			fill(205, 97, 85);
+			fill(settings.WOUNDS_ARC_COLOR[0],settings.WOUNDS_ARC_COLOR[1],settings.WOUNDS_ARC_COLOR[2]);
 			if(woundsToggle.getState())
 				arc(0, 0, (float) arcLengthWI, (float) arcLengthWI, start, start + radians, PIE);
-			fill(249, 235, 234);
+			fill(settings.OTHERS_ARC_COLOR[0],settings.OTHERS_ARC_COLOR[1],settings.OTHERS_ARC_COLOR[2]);
 			if(otherToggle.getState())
 				arc(0, 0, (float) arcLengthAC, (float) arcLengthAC, start, start + radians, PIE);
 			fill(255, 0, 0);

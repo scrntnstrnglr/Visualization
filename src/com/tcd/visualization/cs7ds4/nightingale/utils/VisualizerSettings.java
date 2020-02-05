@@ -6,16 +6,29 @@ import java.util.Set;
 import controlP5.ControlP5;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import processing.data.*;
 import processing.core.*;
 
 public  class VisualizerSettings extends PApplet {
+	
+	//Constants
+	public final int VIZ_BACKGROUND=200;
+	public final int SCREEN_WIDTH=1000 ,SCREEN_HEIGHT=930;
+	public final int[]  ZYGMOTIC_ARC_COLOR = new int[] {22, 160, 133};
+	public final int[]  WOUNDS_ARC_COLOR = new int[] {125, 206, 160};
+	public final int[]  OTHERS_ARC_COLOR = new int[] {234, 250, 241};
+	
 	private final Table table;
 	private Map<String, ArrayList> dateInfo;
+	
+	
+	
 	public VisualizerSettings(Table table) {
 		this.table = table;
 	}
