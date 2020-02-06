@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+
 import org.fusesource.jansi.Ansi.Color;
+import org.python.antlr.op.Div.Div___init___exposer;
 
 import processing.core.*;
 import processing.data.*;
@@ -18,133 +21,151 @@ import com.tcd.visualization.cs7ds4.nightingale.utils.VisualizerSettings;
 
 public class CoxComb extends PApplet {
 	private static VisualizerSettings settings;
-	private static int SCREEN_WIDTH ;
+	private static int SCREEN_WIDTH;
 	private static int SCREEN_HEIGHT;
 	private static Table table;
 	private static PFont f;
 	private static ControlP5 cp5;
 	private int sliderValue = 100;
-	private Toggle zygmoticToggle,woundsToggle,otherToggle;
-	Map <Toggle,Map<Boolean,Boolean>> toggleData;
+	private Toggle zygmoticToggle, woundsToggle, otherToggle;
+	Map<Toggle, Map<Boolean, Boolean>> toggleData;
 	private int zygStrokeColor = 0;
-	private final String month,year;
+	private final String month, year;
 	private int startRow;
-	private int visualizationPeriod; //in months
-	private Toggle cbJan1,cbFeb2,cbMar3,cbApr4,cbMay5,cbJun6,cbJul7,cbAug8,cbSep9,cbOct10,cbNov11,cbDec12;
-	private Toggle cbJan13,cbFeb14,cbMar15,cbApr16,cbMay17,cbJun18,cbJul19,cbAug20,cbSep21,cbOct22,cbNov23,cbDec24;
-	private Toggle cbJan25,cbFeb26,cbMar27,cbApr28,cbMay29,cbJun30,cbJul31,cbAug32,cbSep33,cbOct34,cbNov35,cbDec36;
-	private Map<String,ArrayList> dateInfo;
-	private static  Range range;
-	
+	private int visualizationPeriod; // in months
+	private Map<String, ArrayList> dateInfo;
+	private static Range range;
+	private static String[] title;
+
 	public CoxComb(String month, String year, int visualizationPeriod) {
-		this.month=month;
-		this.year=year;
-		this.visualizationPeriod=visualizationPeriod;
+		this.month = month;
+		this.year = year;
+		this.visualizationPeriod = visualizationPeriod;
 	}
 
 	public void settings() {
 		table = loadTable("nightingale-data.csv", "header");
 		settings = new VisualizerSettings(table);
-		dateInfo=settings.getToggleButtonsForMonths();
-		
-		SCREEN_WIDTH=settings.SCREEN_WIDTH;
+		dateInfo = settings.getToggleButtonsForMonths();
+
+		SCREEN_WIDTH = settings.SCREEN_WIDTH;
 		SCREEN_HEIGHT = settings.SCREEN_HEIGHT;
+		title = settings.TITLE.split(" ");
 		size(SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
-	
-	
+
 	public void setup() {
 		f = createFont("Georgia", 12, true);
 		textFont(f);
 		textAlign(CENTER);
 		smooth();
 		cp5 = new ControlP5(this);
-		zygmoticToggle = cp5.addToggle("Zygmotic Diseases").setPosition(40,height/2+100).setSize(50,20).setValue(true).setMode(ControlP5.SWITCH);
-		woundsToggle = cp5.addToggle("Wound and Injuries").setPosition(40,height/2+140).setSize(50,20).setValue(true).setMode(ControlP5.SWITCH);
-		otherToggle = cp5.addToggle("Others").setPosition(40,height/2+180).setSize(50,20).setValue(true).setMode(ControlP5.SWITCH);
-		toggleData = new HashMap<Toggle,Map<Boolean,Boolean>>();
-		int index=0;
-		for(TableRow row : table.rows()) {
+		zygmoticToggle = cp5.addToggle("Zygmotic Diseases").setPosition(40, height / 2 + 100).setSize(50, 20)
+				.setValue(true).setMode(ControlP5.SWITCH);
+		woundsToggle = cp5.addToggle("Wound and Injuries").setPosition(40, height / 2 + 140).setSize(50, 20)
+				.setValue(true).setMode(ControlP5.SWITCH);
+		otherToggle = cp5.addToggle("Others").setPosition(40, height / 2 + 180).setSize(50, 20).setValue(true)
+				.setMode(ControlP5.SWITCH);
+		toggleData = new HashMap<Toggle, Map<Boolean, Boolean>>();
+		int index = 0;
+		for (TableRow row : table.rows()) {
 			String monthYear = row.getString("Month");
-			String extractedMonth = monthYear.substring(0,monthYear.indexOf(' '));
-			String extractedYear = monthYear.substring(monthYear.indexOf(' ')+1);
-			if(extractedYear.equals(year) && extractedMonth.equals(month)) {
-				startRow=index;
+			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
+			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
+			if (extractedYear.equals(year) && extractedMonth.equals(month)) {
+				startRow = index;
 				break;
 			}
 			index++;
 		}
 		System.out.println(startRow);
-		
-		//validating the visualizing period
-		int rowIter=startRow,count=0;
-		TableRow row=table.getRow(rowIter);
-		int limit = rowIter+visualizationPeriod;
-		while(rowIter < limit) {	
+
+		// validating the visualizing period
+		int rowIter = startRow, count = 0;
+		TableRow row = table.getRow(rowIter);
+		int limit = rowIter + visualizationPeriod;
+		while (rowIter < limit) {
 			try {
-			System.out.println(table.getRow(rowIter).getString("Month"));
-			} catch(ArrayIndexOutOfBoundsException e) {
+				System.out.println(table.getRow(rowIter).getString("Month"));
+			} catch (ArrayIndexOutOfBoundsException e) {
 				break;
 			}
 			count++;
 			rowIter++;
 		}
-		visualizationPeriod=count;
-		System.out.println("Actual viz period: "+visualizationPeriod);
-		
+		visualizationPeriod = count;
+		System.out.println("Actual viz period: " + visualizationPeriod);
 
-		 range = cp5.addRange("rangeController")
-		             // disable broadcasting since setRange and setRangeValues will trigger an event
-		             .setBroadcast(false)
-		             .setRange(0, 200)
-		             .setRangeValues(0, 200)
-		             .setPosition(40,height/2+348)
-		             .setSize(720,40)
-		             .setHandleSize(20)
-		             // after the initialization we turn broadcast back on again
-		             .setBroadcast(true)
-		             .setColorForeground(color(255,40))
-		             .setColorBackground(color(255,40)).setNumberOfTickMarks(24).setLabelVisible(false)
-		             ;
+		range = cp5.addRange("rangeController")
+				// disable broadcasting since setRange and setRangeValues will trigger an event
+				.setBroadcast(false).setRange(0, 23).setRangeValues(0, 11).setPosition(40, height / 2 + 348)
+				.setSize(730, 40).setHandleSize(20)
+				// after the initialization we turn broadcast back on again
+				.setBroadcast(true).setColorForeground(color(255, 40)).setColorBackground(color(255, 40))
+				.setNumberOfTickMarks(24).setLabelVisible(false);
 
-		 int initialX=40,item=1;
-			 for(Map.Entry<String, ArrayList> entrySet : dateInfo.entrySet()) {
-				 cp5.addTextlabel("labelItem"+item++).setText(entrySet.getKey()).setPosition(initialX,height/2+415);
-				 int indexInner=0;
-				 while(indexInner<entrySet.getValue().size()) {
-					 cp5.addTextlabel("labelItem"+item++).setText(entrySet.getValue().get(indexInner).toString()).setPosition(initialX,height/2+400);
-					 initialX+=30;
-					 indexInner++;
-				 }
+		int initialX = 40, item = 1;
+		for (Map.Entry<String, ArrayList> entrySet : dateInfo.entrySet()) {
+			cp5.addTextlabel("labelItem" + item++).setText(entrySet.getKey()).setPosition(initialX, height / 2 + 415);
+			int indexInner = 0;
+			while (indexInner < entrySet.getValue().size()) {
+				cp5.addTextlabel("labelItem" + item++).setText(entrySet.getValue().get(indexInner).toString())
+						.setPosition(initialX, height / 2 + 400);
+				initialX += 30;
+				indexInner++;
 			}
-		 
-		 
-	} 
-	
+		}
+		
+		//---setting title---
+		cp5.addTextlabel("title0").setText(title[0]).setPosition(width/2-250, 40).setFont(createFont("Arial",25));
+		cp5.addTextlabel("title1").setText(title[1]).setPosition(width/2-120, 50).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title2").setText(title[2]).setPosition(width/2-90, 50).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title3").setText(title[3]).setPosition(width/2-46, 40).setFont(createFont("Arial",25));
+		cp5.addTextlabel("title4").setText(title[4]).setPosition(width/2+68, 50).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title5").setText(title[5]).setPosition(width/2+100, 40).setFont(createFont("Arial",25));
+		cp5.addTextlabel("title6").setText(title[6]).setPosition(width/2-80, 70).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title7").setText(title[7]).setPosition(width/2-60, 70).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title8").setText(title[8]).setPosition(width/2-25, 70).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title9").setText(title[9]).setPosition(width/2+20, 70).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title10").setText(title[10]).setPosition(width/2+40, 70).setFont(createFont("Arial",13));
+		cp5.addTextlabel("title11").setText(title[11]).setPosition(width/2+70, 70).setFont(createFont("Arial",13));
+	}
+
 	public void draw() {
+		
 		range.addListener(new ControlListener() {
-			
+
 			@Override
 			public void controlEvent(ControlEvent event) {
 				// TODO Auto-generated method stub
-			    Controller<?> r = event.getController();
-			    System.out.println(r.getArrayValue(0)+" "+r.getArrayValue(1));
+				Controller<?> r = event.getController();
+				// System.out.println(r.getArrayValue(0)+" "+r.getArrayValue(1));
+
+				startRow = (int) r.getArrayValue(0);
+				int endRow = (int) r.getArrayValue(1);
+				visualizationPeriod = (int) (r.getArrayValue(1) - r.getArrayValue(0)) + 1;
+				// System.out.println(startRow + "-->" + endRow+"-->"+visualizationPeriod);
 			}
 		});
 		clear();
-		background(settings.VIZ_BACKGROUND);
-		float radians = (PI * (360 / visualizationPeriod)) / 180;
+		background(settings.VIZ_BACKGROUND[0],settings.VIZ_BACKGROUND[1],settings.VIZ_BACKGROUND[2]);
+		float radians = 0.0f;
+		try {
+			radians = (PI * (360 / visualizationPeriod)) / 180;
+		} catch (Exception e) {
+			visualizationPeriod = 1;
+		}
 		float start = 0.0F;
 		Map<String, Integer> dataSet = new HashMap<String, Integer>();
 		int yearNo = visualizationPeriod;
 		int rowIter = startRow;
 		TableRow row;
-		int limit = rowIter+visualizationPeriod;
-		while(rowIter < limit) {
-			row=table.getRow(rowIter);
+		int limit = rowIter + visualizationPeriod;
+		while (rowIter < limit) {
+			row = table.getRow(rowIter);
 			String monthYear = row.getString("Month");
-			String extractedMonth = monthYear.substring(0,monthYear.indexOf(' '));
-			String extractedYear = monthYear.substring(monthYear.indexOf(' ')+1);
+			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
+			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
 			// if (monthYear.equals("Jan 1855")) {
 			float zymoticDiseases = row.getFloat("AZymotic diseases");
 			float woundsAndInjueries = row.getFloat("AWounds & injuries");
@@ -153,17 +174,21 @@ public class CoxComb extends PApplet {
 			double arcLengthWI = 13 * Math.sqrt((woundsAndInjueries * visualizationPeriod) / 3.142);
 			double arcLengthAC = 13 * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 			pushMatrix();
-			translate(width / 2, height / 2 + 140);
-			fill(settings.ZYGMOTIC_ARC_COLOR[0],settings.ZYGMOTIC_ARC_COLOR[1],settings.ZYGMOTIC_ARC_COLOR[2]);
+			translate(width / 2, height / 2 + 80);
+			fill(settings.ZYGMOTIC_ARC_COLOR[0], settings.ZYGMOTIC_ARC_COLOR[1], settings.ZYGMOTIC_ARC_COLOR[2]);
 			stroke(0);
-			if(zygmoticToggle.getState())
+
+			if (zygmoticToggle.getState()) {
 				arc(0, 0, (float) arcLengthZD, (float) arcLengthZD, start, start + radians, PIE);
-			fill(settings.WOUNDS_ARC_COLOR[0],settings.WOUNDS_ARC_COLOR[1],settings.WOUNDS_ARC_COLOR[2]);
-			if(woundsToggle.getState())
+			}
+			fill(settings.WOUNDS_ARC_COLOR[0], settings.WOUNDS_ARC_COLOR[1], settings.WOUNDS_ARC_COLOR[2]);
+			if (woundsToggle.getState()) {
 				arc(0, 0, (float) arcLengthWI, (float) arcLengthWI, start, start + radians, PIE);
-			fill(settings.OTHERS_ARC_COLOR[0],settings.OTHERS_ARC_COLOR[1],settings.OTHERS_ARC_COLOR[2]);
-			if(otherToggle.getState())
+			}
+			fill(settings.OTHERS_ARC_COLOR[0], settings.OTHERS_ARC_COLOR[1], settings.OTHERS_ARC_COLOR[2]);
+			if (otherToggle.getState()) {
 				arc(0, 0, (float) arcLengthAC, (float) arcLengthAC, start, start + radians, PIE);
+			}
 			fill(255, 0, 0);
 			rotate((start + (start + radians)) / 2);
 			text(monthYear, 150, 0);
@@ -173,17 +198,15 @@ public class CoxComb extends PApplet {
 			yearNo++;
 			rowIter++;
 		}
-	}  
-	
-	public void mouseMoved() {
-		zygStrokeColor=255;
 	}
-	
 
+	public void mouseMoved() {
+		zygStrokeColor = 255;
+	}
 
 	public static void main(String args[]) {
 		String[] a = { "MAIN" };
-		PApplet.runSketch(a, new CoxComb("Apr","1854",12));
+		PApplet.runSketch(a, new CoxComb("Apr", "1854", 12));
 	}
 
 }

@@ -18,19 +18,20 @@ import processing.core.*;
 public  class VisualizerSettings extends PApplet {
 	
 	//Constants
-	public final int VIZ_BACKGROUND=200;
-	public final int SCREEN_WIDTH=1000 ,SCREEN_HEIGHT=930;
-	public final int[]  ZYGMOTIC_ARC_COLOR = new int[] {22, 160, 133};
-	public final int[]  WOUNDS_ARC_COLOR = new int[] {125, 206, 160};
-	public final int[]  OTHERS_ARC_COLOR = new int[] {234, 250, 241};
-	
+	public final int[] VIZ_BACKGROUND= new int[] {86, 101, 115};
+	public final int SCREEN_WIDTH=820 ,SCREEN_HEIGHT=930;
+	public final int[]  ZYGMOTIC_ARC_COLOR = new int[] {27, 79, 114};
+	public final int[]  WOUNDS_ARC_COLOR = new int[] {52, 152, 219};
+	public final int[]  OTHERS_ARC_COLOR = new int[] {214, 234, 248};
+	public final String TITLE="DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
 	private final Table table;
 	private Map<String, ArrayList> dateInfo;
 	
-	
+	//244, 236, 247
 	
 	public VisualizerSettings(Table table) {
 		this.table = table;
+		
 	}
 	
 	public Map<String,ArrayList> getToggleButtonsForMonths(){
