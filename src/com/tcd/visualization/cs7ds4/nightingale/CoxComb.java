@@ -26,16 +26,15 @@ public class CoxComb extends PApplet {
 	private static Table table;
 	private static PFont f;
 	private static ControlP5 cp5;
-	private int sliderValue = 100;
 	private Toggle zygmoticToggle, woundsToggle, otherToggle;
 	Map<Toggle, Map<Boolean, Boolean>> toggleData;
-	private int zygStrokeColor = 0;
 	private final String month, year;
 	private int startRow;
 	private int visualizationPeriod; // in months
 	private Map<String, ArrayList> dateInfo;
 	private static Range range;
 	private static String[] title;
+	private static PImage img;
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
@@ -78,15 +77,14 @@ public class CoxComb extends PApplet {
 			}
 			index++;
 		}
-		System.out.println(startRow);
-
+		
 		// validating the visualizing period
 		int rowIter = startRow, count = 0;
 		TableRow row = table.getRow(rowIter);
 		int limit = rowIter + visualizationPeriod;
 		while (rowIter < limit) {
 			try {
-				System.out.println(table.getRow(rowIter).getString("Month"));
+				table.getRow(rowIter).getString("Month");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				break;
 			}
@@ -94,7 +92,6 @@ public class CoxComb extends PApplet {
 			rowIter++;
 		}
 		visualizationPeriod = count;
-		System.out.println("Actual viz period: " + visualizationPeriod);
 
 		range = cp5.addRange("rangeController")
 				// disable broadcasting since setRange and setRangeValues will trigger an event
@@ -129,10 +126,12 @@ public class CoxComb extends PApplet {
 		cp5.addTextlabel("title9").setText(title[9]).setPosition(width/2+20, 70).setFont(createFont("Arial",13));
 		cp5.addTextlabel("title10").setText(title[10]).setPosition(width/2+40, 70).setFont(createFont("Arial",13));
 		cp5.addTextlabel("title11").setText(title[11]).setPosition(width/2+70, 70).setFont(createFont("Arial",13));
+	
+		
+
 	}
 
 	public void draw() {
-		
 		range.addListener(new ControlListener() {
 
 			@Override
@@ -166,7 +165,6 @@ public class CoxComb extends PApplet {
 			String monthYear = row.getString("Month");
 			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
 			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
-			// if (monthYear.equals("Jan 1855")) {
 			float zymoticDiseases = row.getFloat("AZymotic diseases");
 			float woundsAndInjueries = row.getFloat("AWounds & injuries");
 			float allOtherCauses = row.getFloat("AAll other causes");
@@ -198,10 +196,6 @@ public class CoxComb extends PApplet {
 			yearNo++;
 			rowIter++;
 		}
-	}
-
-	public void mouseMoved() {
-		zygStrokeColor = 255;
 	}
 
 	public static void main(String args[]) {
