@@ -6,8 +6,8 @@ public class Example extends PApplet {
 		size(800, 800);
 	}
 	public void setup() {
-		img=loadImage("data\\underline.jpg");
-		img.resize(width, height);
+		img=loadImage("data\\20161.jpg");
+		img.resize(100, 100);
 	}
 
 	public void draw() {
