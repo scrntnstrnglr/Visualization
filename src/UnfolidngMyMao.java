@@ -5,10 +5,6 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.*;
 import de.fhpotsdam.unfolding.utils.*;
 
-import java.util.HashMap;
-import java.util.List;
-import processing.core.*;
-
 import de.fhpotsdam.unfolding.*;
 import de.fhpotsdam.unfolding.data.*;
 import de.fhpotsdam.unfolding.geo.Location;
@@ -23,25 +19,42 @@ import processing.core.*;
 
 public class UnfolidngMyMao extends PApplet {
 
-	UnfoldingMap map;
+	private static UnfoldingMap map;
+	private static Location moscowLocation,berlinLocation;
 
-	public  UnfolidngMyMao() {
-		AbstractMapProvider p1 = new Google.GoogleTerrainProvider();
-		map = new UnfoldingMap(this, 50, 50, 500, 350, p1);
+	public UnfolidngMyMao() {
+		// map = new UnfoldingMap(this,100, 50, 500, 350, new
+		// Google.GoogleMapProvider());
+		// MapUtils.createDefaultEventDispatcher(this, map);
 	}
 
 	public void settings() {
-		size(800, 600, P3D);
+		size(800, 600, P2D);
+		map = new UnfoldingMap(this, 100, 50, 500, 350, new Google.GoogleMapProvider());
+		MapUtils.createDefaultEventDispatcher(this, map);
 	}
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		map.zoomAndPanTo(new Location(52.5f, 13.4f), 10);
-		MapUtils.createDefaultEventDispatcher(this, map);
+		berlinLocation = new Location(52.5f, 13.4f);
+		map.zoomAndPanTo(berlinLocation, 10);
+		// map.setPanningRestriction(moscowLocation, 30);
+		// SimplePointMarker berlinMarker = new SimplePointMarker(berlinLocation);
+		// berlinMarker.setColor(color(255, 0, 0, 100));
+		// berlinMarker.setStrokeColor(color(255, 0, 0));
+		// berlinMarker.setStrokeWeight(4);
+		// berlinMarker.setRadius(5000.0f);
+		// map.addMarkers(berlinMarker);
+		// map.setTweening(true);
 	}
 
 	public void draw() {
 		map.draw();
+		//Location location = new Location(46.048941, 14.508402);
+		//map.zoomAndPanTo(location, 10);
+		Marker berlinMarker = new SimplePointMarker(berlinLocation);
+		
+		map.addMarker(berlinMarker);
 	}
 
 	public static void main(String args[]) {
@@ -50,3 +63,4 @@ public class UnfolidngMyMao extends PApplet {
 	}
 
 }
+

@@ -17,11 +17,13 @@ import org.python.antlr.op.Div.Div___init___exposer;
 
 import processing.core.*;
 import processing.data.*;
-import com.tcd.visualization.cs7ds4.nightingale.utils.VisualizerSettings;
+
+import com.tcd.visualization.cs7ds4.utils.CSVLoader;
+import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
 
 public class CoxComb extends PApplet {
-	private static VisualizerSettings settings;
-	private static int SCREEN_WIDTH;
+	private static CSVLoader csvLoader;
+	private  static int SCREEN_WIDTH;
 	private static int SCREEN_HEIGHT;
 	private static Table table;
 	private static PFont f;
@@ -44,12 +46,12 @@ public class CoxComb extends PApplet {
 
 	public void settings() {
 		table = loadTable("nightingale-data.csv", "header");
-		settings = new VisualizerSettings(table);
-		dateInfo = settings.getToggleButtonsForMonths();
+		csvLoader = new CSVLoader(table);
+		dateInfo = csvLoader.getToggleButtonsForMonths();
 
-		SCREEN_WIDTH = settings.SCREEN_WIDTH;
-		SCREEN_HEIGHT = settings.SCREEN_HEIGHT;
-		title = settings.TITLE.split(" ");
+		SCREEN_WIDTH = VisualizerSettings.SCREEN_WIDTH;
+		SCREEN_HEIGHT = VisualizerSettings.SCREEN_HEIGHT;
+		title = VisualizerSettings.TITLE.split(" ");
 		size(SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
@@ -147,7 +149,7 @@ public class CoxComb extends PApplet {
 			}
 		});
 		clear();
-		background(settings.VIZ_BACKGROUND[0],settings.VIZ_BACKGROUND[1],settings.VIZ_BACKGROUND[2]);
+		background(VisualizerSettings.VIZ_BACKGROUND[0],VisualizerSettings.VIZ_BACKGROUND[1],VisualizerSettings.VIZ_BACKGROUND[2]);
 		float radians = 0.0f;
 		try {
 			radians = (PI * (360 / visualizationPeriod)) / 180;
@@ -173,17 +175,17 @@ public class CoxComb extends PApplet {
 			double arcLengthAC = 13 * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 			pushMatrix();
 			translate(width / 2, height / 2 + 80);
-			fill(settings.ZYGMOTIC_ARC_COLOR[0], settings.ZYGMOTIC_ARC_COLOR[1], settings.ZYGMOTIC_ARC_COLOR[2]);
+			fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1], VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
 			stroke(0);
 
 			if (zygmoticToggle.getState()) {
 				arc(0, 0, (float) arcLengthZD, (float) arcLengthZD, start, start + radians, PIE);
 			}
-			fill(settings.WOUNDS_ARC_COLOR[0], settings.WOUNDS_ARC_COLOR[1], settings.WOUNDS_ARC_COLOR[2]);
+			fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1], VisualizerSettings.WOUNDS_ARC_COLOR[2]);
 			if (woundsToggle.getState()) {
 				arc(0, 0, (float) arcLengthWI, (float) arcLengthWI, start, start + radians, PIE);
 			}
-			fill(settings.OTHERS_ARC_COLOR[0], settings.OTHERS_ARC_COLOR[1], settings.OTHERS_ARC_COLOR[2]);
+			fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1], VisualizerSettings.OTHERS_ARC_COLOR[2]);
 			if (otherToggle.getState()) {
 				arc(0, 0, (float) arcLengthAC, (float) arcLengthAC, start, start + radians, PIE);
 			}

@@ -6,7 +6,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Visualization/natives"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/core.jar"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/controlP5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/jython-standalone-2.7.2b2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/tracer.jar"/>
@@ -16,5 +15,10 @@
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/jogl-all.jar"/>
 	<classpathentry kind="lib" path="C:/Users/SIDDHARTHA/workspace_sid/Visualization/lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="natives"/>
+	<classpathentry kind="lib" path="lib/2.2.1/core.jar"/>
+	<classpathentry kind="lib" path="lib/2.2.1/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/2.2.1/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="lib/2.2.1/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="lib/2.2.1/jogl-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
