@@ -49,9 +49,10 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT);
+		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT,
+				VisualizerSettings.MINARD_RENDERER);
 		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
-		//map.setTweening(true);
+		// map.setTweening(true);
 		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"));
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
 		troopsTable = new CSVLoader(loadTable("minard-data\\troops.csv", "header"));
@@ -62,7 +63,7 @@ public class Minards extends PApplet {
 		markerLocations = citiesTable.getMarkerLocations();
 		attackPath = troopsTable.getPath("A", 1);
 		retreatPath = troopsTable.getPath("R", 1);
-		cp5 = new ControlP5(this); //controlp5 object
+		cp5 = new ControlP5(this); // controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
 		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(true)
@@ -85,56 +86,59 @@ public class Minards extends PApplet {
 		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(15, 255).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Show Cities");
 
-
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
 		pinImg = loadImage("img\\minard\\location.png");
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
-		
-		locationMarkerList=new ArrayList<Marker>();
+
+		locationMarkerList = new ArrayList<Marker>();
 		for (Map.Entry<String, Location> entry : markerLocations.entrySet())
 			locationMarkerList.add(new LocationMarker(entry.getValue()));
-	
+
 		MapUtils.createDefaultEventDispatcher(this, map);
 	}
 
 	public void draw() {
-		
+
 		map.draw();
 		if (citiesMarkersToggle.getState()) {
 			markerManager.addMarkers(locationMarkerList);
-			//map.addMarkerManager(markerManager);
-		}else {
-			for(Marker marker : locationMarkerList)
+			// map.addMarkerManager(markerManager);
+		} else {
+			for (Marker marker : locationMarkerList)
 				markerManager.removeMarker(marker);
-			//map.addMarkerManager(markerManager);
+			// map.addMarkerManager(markerManager);
 		}
 
+		if (group1AttackToggle.getState())
+			markerManager
+					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet())));
 
-		
-		if(group1AttackToggle.getState())
-			markerManager.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet())));
-		
-		if(group1RetreatToggle.getState())
-			markerManager.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet())));
-		
-		if(group2AttackToggle.getState())
-			markerManager.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet())));
-		
-		if(group2RetreatToggle.getState())
-			markerManager.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet())));
-		
-		if(group3AttackToggle.getState())
-			markerManager.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet())));
-		
-		if(group3RetreatToggle.getState())
-			markerManager.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()))); 
-		
-		
-		
-		//markerManager.addMarker(new AttackLineMarker(new LinkedList<Location>(attackPath.keySet())));
-		//markerManager.addMarker(new RetreatLineMarker(new LinkedList<Location>(retreatPath.keySet())));
-		
+		if (group1RetreatToggle.getState())
+			markerManager
+					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet())));
+
+		if (group2AttackToggle.getState())
+			markerManager
+					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet())));
+
+		if (group2RetreatToggle.getState())
+			markerManager
+					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet())));
+
+		if (group3AttackToggle.getState())
+			markerManager
+					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet())));
+
+		if (group3RetreatToggle.getState())
+			markerManager
+					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet())));
+
+		// markerManager.addMarker(new AttackLineMarker(new
+		// LinkedList<Location>(attackPath.keySet())));
+		// markerManager.addMarker(new RetreatLineMarker(new
+		// LinkedList<Location>(retreatPath.keySet())));
+
 		map.addMarkerManager(markerManager);
 
 		pushMatrix();
