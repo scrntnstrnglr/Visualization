@@ -42,6 +42,9 @@ public class Minards extends PApplet {
 	MarkerManager<Marker> markerManager;
 	public static PImage pinImg;
 	private ControlP5 cp5;
+	
+	private AttackLineMarker group1AttackPath, group2AttackPath, group3AttackPath;
+	private RetreatLineMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
 
 	public Minards() {
 		// translate(0,800);
@@ -70,21 +73,21 @@ public class Minards extends PApplet {
 		cp5 = new ControlP5(this); // controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
-		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(true)
+		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(75, 35).setSize(40, 20).setState(true)
+		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(75, 35).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
 		cp5.addTextlabel("group2").setText("Group 2").setPosition(10, 90).setFont(createFont("Arial", 12)).setColor(0);
-		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(15, 115).setSize(40, 20).setState(true)
+		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(15, 115).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(75, 115).setSize(40, 20).setState(true)
+		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(75, 115).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
 		cp5.addTextlabel("group3").setText("Group 3").setPosition(10, 170).setFont(createFont("Arial", 12)).setColor(0);
-		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(15, 195).setSize(40, 20).setState(true)
+		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(15, 195).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(75, 195).setSize(40, 20).setState(true)
+		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(75, 195).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
 		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(15, 255).setSize(40, 20).setState(false)
@@ -98,6 +101,14 @@ public class Minards extends PApplet {
 		locationMarkerList = new ArrayList<Marker>();
 		for (Map.Entry<String, Location> entry : markerLocations.entrySet())
 			locationMarkerList.add(new LocationMarker(entry.getValue()));
+		
+		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet()));
+		group1RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet()));
+		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet()));
+		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()));
+		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet()));
+		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()));
+		
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 	}
@@ -105,39 +116,16 @@ public class Minards extends PApplet {
 	public void draw() {
 
 		map.draw();
-		if (citiesMarkersToggle.getState()) {
-			markerManager.addMarkers(locationMarkerList);
-			// map.addMarkerManager(markerManager);
-		} else {
-			for (Marker marker : locationMarkerList)
-				markerManager.removeMarker(marker);
-			// map.addMarkerManager(markerManager);
-		}
-
-		if (group1AttackToggle.getState())
-			markerManager
-					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet())));
-
-		if (group1RetreatToggle.getState())
-			markerManager
-					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet())));
-
-		if (group2AttackToggle.getState())
-			markerManager
-					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet())));
-
-		if (group2RetreatToggle.getState())
-			markerManager
-					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet())));
-
-		if (group3AttackToggle.getState())
-			markerManager
-					.addMarker(new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet())));
-
-		if (group3RetreatToggle.getState())
-			markerManager
-					.addMarker(new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet())));
-
+		
+		toggleDisplay(citiesMarkersToggle.getState(),locationMarkerList);
+		toggleDisplay(group1AttackToggle.getState(),group1AttackPath);
+		toggleDisplay(group1RetreatToggle.getState(),group1RetreatPath);
+		toggleDisplay(group2AttackToggle.getState(),group2AttackPath);
+		toggleDisplay(group2RetreatToggle.getState(),group2RetreatPath);
+		toggleDisplay(group3AttackToggle.getState(),group3AttackPath);
+		toggleDisplay(group3RetreatToggle.getState(),group3RetreatPath);
+		
+		
 		// markerManager.addMarker(new AttackLineMarker(new
 		// LinkedList<Location>(attackPath.keySet())));
 		// markerManager.addMarker(new RetreatLineMarker(new
@@ -151,6 +139,24 @@ public class Minards extends PApplet {
 		rect(0, 0, VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
 		popMatrix();
 
+	}
+	
+	private void toggleDisplay(boolean show, Marker marker) {
+		if(show)
+			markerManager.addMarker(marker);
+		else
+			markerManager.removeMarker(marker);
+		
+	}
+	
+	private void toggleDisplay(boolean show, List<Marker> markers) {
+		if(show)
+			markerManager.addMarkers(markers);
+		else {
+			for (Marker marker : markers)
+				markerManager.removeMarker(marker);
+		}
+			
 	}
 
 	public class GraphApplet extends PApplet {
