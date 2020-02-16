@@ -62,7 +62,7 @@ public class Minards extends PApplet {
 		markerLocations = citiesTable.getMarkerLocations();
 		attackPath = troopsTable.getPath("A", 1);
 		retreatPath = troopsTable.getPath("R", 1);
-		cp5 = new ControlP5(this);
+		cp5 = new ControlP5(this); //controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
 		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(true)
