@@ -38,18 +38,19 @@ public class Minards extends PApplet {
 	private static UnfoldingMap map;
 	private Map<String, Location> markerLocations;
 	private Map<Location, Integer> attackPath, retreatPath;
-	private static List<Marker> locationMarkerList;
+	//private static LinkedList<Location> locationMarkerList;
 	MarkerManager<Marker> markerManager;
 	public static PImage pinImg;
 	private ControlP5 cp5;
-	
+
 	private AttackLineMarker group1AttackPath, group2AttackPath, group3AttackPath;
 	private RetreatLineMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
+	private LocationMarker cityMarkers;
 
 	public Minards() {
 		// translate(0,800);
 	}
-	
+
 	public void settings() {
 		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
 		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT,
@@ -98,17 +99,17 @@ public class Minards extends PApplet {
 		pinImg = loadImage("img\\minard\\location.png");
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
 
-		locationMarkerList = new ArrayList<Marker>();
+/*		locationMarkerList = new ArrayList<Marker>();
 		for (Map.Entry<String, Location> entry : markerLocations.entrySet())
-			locationMarkerList.add(new LocationMarker(entry.getValue()));
-		
+			locationMarkerList.add(new LocationMarker(entry.getValue())); */
+
+		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.values()));
 		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet()));
 		group1RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet()));
 		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet()));
 		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()));
 		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet()));
 		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()));
-		
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 	}
@@ -116,16 +117,15 @@ public class Minards extends PApplet {
 	public void draw() {
 
 		map.draw();
-		
-		toggleDisplay(citiesMarkersToggle.getState(),locationMarkerList);
-		toggleDisplay(group1AttackToggle.getState(),group1AttackPath);
-		toggleDisplay(group1RetreatToggle.getState(),group1RetreatPath);
-		toggleDisplay(group2AttackToggle.getState(),group2AttackPath);
-		toggleDisplay(group2RetreatToggle.getState(),group2RetreatPath);
-		toggleDisplay(group3AttackToggle.getState(),group3AttackPath);
-		toggleDisplay(group3RetreatToggle.getState(),group3RetreatPath);
-		
-		
+
+		toggleDisplay(citiesMarkersToggle.getState(), cityMarkers);
+		toggleDisplay(group1AttackToggle.getState(), group1AttackPath);
+		toggleDisplay(group1RetreatToggle.getState(), group1RetreatPath);
+		toggleDisplay(group2AttackToggle.getState(), group2AttackPath);
+		toggleDisplay(group2RetreatToggle.getState(), group2RetreatPath);
+		toggleDisplay(group3AttackToggle.getState(), group3AttackPath);
+		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
+
 		// markerManager.addMarker(new AttackLineMarker(new
 		// LinkedList<Location>(attackPath.keySet())));
 		// markerManager.addMarker(new RetreatLineMarker(new
@@ -140,24 +140,25 @@ public class Minards extends PApplet {
 		popMatrix();
 
 	}
-	
+
 	private void toggleDisplay(boolean show, Marker marker) {
-		if(show)
+		if (show)
 			markerManager.addMarker(marker);
 		else
 			markerManager.removeMarker(marker);
-		
+
 	}
-	
+
+	/*
 	private void toggleDisplay(boolean show, List<Marker> markers) {
-		if(show)
+		if (show)
 			markerManager.addMarkers(markers);
 		else {
 			for (Marker marker : markers)
 				markerManager.removeMarker(marker);
 		}
-			
-	}
+
+	} */
 
 	public class GraphApplet extends PApplet {
 
