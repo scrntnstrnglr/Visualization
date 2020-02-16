@@ -52,7 +52,6 @@ public class Minards extends PApplet {
 	}
 
 	public void settings() {
-		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
 		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT,
 				VisualizerSettings.MINARD_RENDERER);
 	}
@@ -60,6 +59,7 @@ public class Minards extends PApplet {
 	@SuppressWarnings("deprecation")
 	public void setup() {
 		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
+		//map = new UnfoldingMap(this, 0, 0, width, height);
 		// map.setTweening(true);
 		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"));
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
@@ -74,9 +74,9 @@ public class Minards extends PApplet {
 		cp5 = new ControlP5(this); // controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
-		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(false)
+		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(75, 35).setSize(40, 20).setState(false)
+		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(75, 35).setSize(40, 20).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
 		cp5.addTextlabel("group2").setText("Group 2").setPosition(10, 90).setFont(createFont("Arial", 12)).setColor(0);
@@ -91,7 +91,7 @@ public class Minards extends PApplet {
 		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(75, 195).setSize(40, 20).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
-		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(15, 255).setSize(40, 20).setState(false)
+		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(15, 255).setSize(40, 20).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Show Cities");
 
 		markerManager = map.getDefaultMarkerManager();
@@ -112,6 +112,7 @@ public class Minards extends PApplet {
 		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()));
 
 		MapUtils.createDefaultEventDispatcher(this, map);
+
 	}
 
 	public void draw() {
