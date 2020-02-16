@@ -28,7 +28,7 @@ public  class VisualizerSettings {
 	public static final int[]  OTHERS_ARC_COLOR = new int[] {214, 234, 248};
 	public static final String TITLE="DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
 	public static final int MINARD_LOC_SCALE_FACTOR = 16;
-	public static final String MINARD_RENDERER = PConstants.P3D;
+	public static final String MINARD_RENDERER = PConstants.P2D;
 	public static final int MINARD_ZOOM_FACTOR=7,MINARD_PANNING_RESTRICTION=0;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
 	public static final float MINARD_CONTROL_PANEL_WIDTH=300, MINARD_CONTROL_PANEL_HEIGHT=300;
