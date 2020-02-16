@@ -7,16 +7,26 @@
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>
     <target name="create_run_jar">
-        <jar destfile="${dir.jarfile}/NIGHTINGALE.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/MINARD.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="com.tcd.visualization.cs7ds4.nightingale.CoxComb"/>
+                <attribute name="Main-Class" value="com.visualizationo.cs7ds4.minards.Minards"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.jarfile}/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/core.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/controlP5.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jython-standalone-2.7.2b2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/tracer.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/json4processing.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/log4j-1.2.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/Unfolding.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jogl-all.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/gluegen-rt.jar"/>
+            <fileset dir="${dir.jarfile}/natives"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/gluegen-rt-natives-windows-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/gluegen-rt.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/jogl-all-natives-windows-amd64.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/jogl-all.jar"/>
         </jar>
     </target>
 </project>
