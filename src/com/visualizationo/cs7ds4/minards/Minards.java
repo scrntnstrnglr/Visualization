@@ -46,11 +46,15 @@ public class Minards extends PApplet {
 	public Minards() {
 		// translate(0,800);
 	}
+	
+	public void settings() {
+		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
+		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT,
+				VisualizerSettings.MINARD_RENDERER);
+	}
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		size(VisualizerSettings.MINARD_SCREEN_WIDTH, VisualizerSettings.MINARD_SCREEN_HEIGHT,
-				VisualizerSettings.MINARD_RENDERER);
 		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
 		// map.setTweening(true);
 		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"));
