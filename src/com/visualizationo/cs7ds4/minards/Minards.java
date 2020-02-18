@@ -150,16 +150,6 @@ public class Minards extends PApplet {
 
 	}
 
-	/*
-	private void toggleDisplay(boolean show, List<Marker> markers) {
-		if (show)
-			markerManager.addMarkers(markers);
-		else {
-			for (Marker marker : markers)
-				markerManager.removeMarker(marker);
-		}
-
-	} */
 
 	public class GraphApplet extends PApplet {
 

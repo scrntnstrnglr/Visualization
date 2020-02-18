@@ -3,6 +3,8 @@ package com.visualizationo.cs7ds4.minards.markers;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
+
 import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
 import de.fhpotsdam.unfolding.utils.MapPosition;
@@ -16,8 +18,9 @@ public class RetreatLineMarker extends SimpleLinesMarker{
 	
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
 		pg.pushStyle();
-		pg.strokeWeight(3);
-		pg.stroke(0,0,255);
+		pg.strokeWeight(VisualizerSettings.MINARD_RETREAT_LINE_WEIGHT);
+		pg.stroke(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
+				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[3]);
 		pg.noFill();
 		pg.beginShape();
 		for (MapPosition mapPosition : mapPositions) {

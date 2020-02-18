@@ -10,16 +10,17 @@ import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
 import de.fhpotsdam.unfolding.utils.MapPosition;
 import processing.core.PGraphics;
 
-public class AttackLineMarker extends SimpleLinesMarker{
-	
+public class AttackLineMarker extends SimpleLinesMarker {
+
 	public AttackLineMarker(LinkedList<Location> locations) {
-		super(locations);			
+		super(locations);
 	}
-	
+
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
 		pg.pushStyle();
-		pg.strokeWeight(6);
-		pg.stroke(255, 0, 0);
+		pg.strokeWeight(VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT);
+		pg.stroke(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
+				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]);
 		pg.noFill();
 		pg.beginShape();
 		for (MapPosition mapPosition : mapPositions) {
@@ -27,7 +28,8 @@ public class AttackLineMarker extends SimpleLinesMarker{
 		}
 		pg.endShape();
 
-		pg.popStyle();;
+		pg.popStyle();
+		;
 	}
 
 }
