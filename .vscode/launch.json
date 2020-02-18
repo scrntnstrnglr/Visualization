@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "CodeLens (Launch) - CoxComb",
+      "request": "launch",
+      "mainClass": "com.tcd.visualization.cs7ds4.nightingale.CoxComb",
+      "projectName": "Visualization"
+    },
+    {
       "name": "Launch preprocess.py",
       "type": "python",
       "request": "launch",
