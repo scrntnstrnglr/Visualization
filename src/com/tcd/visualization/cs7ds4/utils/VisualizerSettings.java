@@ -27,6 +27,7 @@ public class VisualizerSettings {
 	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
 	public static final float MINARD_CONTROL_PANEL_WIDTH = 300, MINARD_CONTROL_PANEL_HEIGHT = 300;
+	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 10000;
 	
 	
 	// --Nightangle's Constants---
