@@ -46,6 +46,7 @@ public class Minards extends PApplet {
 	private PathMarker group1RetreatPath,group2RetreatPath,group3RetreatPath;
 	private LocationMarker cityMarkers;
 	private static LinkedHashMap<Location,Integer> thisPath;
+	private static List<MapPosition> labelMapPos;
 
 	public Minards() {
 		// translate(0,800);
@@ -135,7 +136,6 @@ public class Minards extends PApplet {
 		toggleDisplay(group3AttackToggle.getState(), group3AttackPath);
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
 
-
 		map.addMarkerManager(markerManager);
 
 		pushMatrix();
@@ -144,6 +144,24 @@ public class Minards extends PApplet {
 		rect(0, 0, VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
 		popMatrix();
 
+	}
+	
+	
+	
+	
+	@Override
+	public void mouseMoved() {
+		// TODO Auto-generated method stub
+		super.mouseMoved();
+		for (MapPosition mapPosition : cityMarkers.getMapPositions()) {
+			pushMatrix();
+			textAlign(CENTER);			
+			if( (mouseX<=mapPosition.x+10 && mouseX>=mapPosition.x-10) && (mouseY<=mapPosition.y+10 && mouseY>=mapPosition.y-10) )
+				cp5.addTextlabel("dummylabel").setText("dummylabel").setPosition(mapPosition.x, mapPosition.y).setFont(createFont("Arial", 12)).setColor(0);
+				
+			popMatrix();
+		}
+		
 	}
 
 	private void toggleDisplay(boolean show, Marker marker) {

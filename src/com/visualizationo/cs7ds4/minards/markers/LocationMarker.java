@@ -1,5 +1,6 @@
 package com.visualizationo.cs7ds4.minards.markers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +16,10 @@ import processing.core.PGraphics;
 
 public class LocationMarker extends SimpleLinesMarker {
 
+	private List<MapPosition> thisMapPositions;
 	public LocationMarker(LinkedList<Location> locations) {
-		super(locations);			
+		super(locations);		
+		thisMapPositions = new ArrayList<MapPosition>();
 	}
 	
 	public LocationMarker(LinkedList<Location> locations, HashMap<String, Object> properties) {
@@ -24,6 +27,7 @@ public class LocationMarker extends SimpleLinesMarker {
 	}
 
 	public void draw(PGraphics pg,List<MapPosition> mapPositions) {
+		thisMapPositions=mapPositions;
 		pg.pushStyle();
 		pg.noStroke();
 		for (MapPosition mapPosition : mapPositions) {
@@ -31,6 +35,10 @@ public class LocationMarker extends SimpleLinesMarker {
 		}
 		
 		pg.popStyle();
+	}
+	
+	public List<MapPosition> getMapPositions(){
+		return thisMapPositions;
 	}
 
 } 

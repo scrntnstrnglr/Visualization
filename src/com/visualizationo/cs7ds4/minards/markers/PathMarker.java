@@ -11,6 +11,7 @@ import com.visualizationo.cs7ds4.minards.Minards;
 
 //import de.fhpotsdam.unfolding.Map;
 import de.fhpotsdam.unfolding.geo.Location;
+import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
 import de.fhpotsdam.unfolding.utils.MapPosition;
 import processing.core.PGraphics;
@@ -52,6 +53,8 @@ public class PathMarker extends SimpleLinesMarker {
 		}
 		pg.endShape();
 		pg.popStyle();
+		
+		
 	}
 
 	public LinkedHashMap<MapPosition, Integer> getMapPositions() {
