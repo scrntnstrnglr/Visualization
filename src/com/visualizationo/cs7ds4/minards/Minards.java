@@ -12,6 +12,7 @@ import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.providers.Microsoft.AerialProvider;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,10 @@ public class Minards extends PApplet {
 	private static CSVLoader citiesTable, troopsTable, tempTable;
 	Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle, group3AttackToggle,
 			citiesMarkersToggle, group3RetreatToggle;
-	private static UnfoldingMap map;
+	public static UnfoldingMap map;
 	private Map<String, Location> markerLocations;
 	private Map<Location, Integer> attackPath, retreatPath;
-	//private static LinkedList<Location> locationMarkerList;
+	private static LinkedHashMap<MapPosition, Integer> thisMapPos;
 	MarkerManager<Marker> markerManager;
 	public static PImage pinImg;
 	private ControlP5 cp5;
@@ -46,6 +47,7 @@ public class Minards extends PApplet {
 	private AttackLineMarker group1AttackPath, group2AttackPath, group3AttackPath;
 	private RetreatLineMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
 	private LocationMarker cityMarkers;
+	private static LinkedHashMap<Location,Integer> thisPath;
 
 	public Minards() {
 		// translate(0,800);
@@ -69,8 +71,8 @@ public class Minards extends PApplet {
 		// https://nextjournal.com/data/QmZj2Pt2zyxZe8aX8e3BcJySqmzWw9TpzxS6tstKrJEErM?content-type=text%2Fplain&filename=temps.csv
 
 		markerLocations = citiesTable.getMarkerLocations();
-		attackPath = troopsTable.getPath("A", 1);
-		retreatPath = troopsTable.getPath("R", 1);
+		//attackPath = troopsTable.getPath("A", 1);
+		//retreatPath = troopsTable.getPath("R", 1);
 		cp5 = new ControlP5(this); // controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
@@ -99,18 +101,24 @@ public class Minards extends PApplet {
 		pinImg = loadImage("img\\minard\\location.png");
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
 
-/*		locationMarkerList = new ArrayList<Marker>();
-		for (Map.Entry<String, Location> entry : markerLocations.entrySet())
-			locationMarkerList.add(new LocationMarker(entry.getValue())); */
-
 		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.values()));
-		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 1).keySet()));
+		thisPath = new LinkedHashMap<Location,Integer>();
+		
+		thisPath = troopsTable.getPath("A", 1);
+		thisMapPos = troopsTable.getMapPositions("A", 1);
+		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisMapPos);
 		group1RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet()));
-		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 2).keySet()));
+		
+		/*
+		thisPath = troopsTable.getPath("A", 2);
+		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()));
 		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()));
-		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(troopsTable.getPath("A", 3).keySet()));
+		
+		thisPath = troopsTable.getPath("A", 3);
+		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()));
 		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()));
-
+        */
+		
 		MapUtils.createDefaultEventDispatcher(this, map);
 
 	}
@@ -127,10 +135,6 @@ public class Minards extends PApplet {
 		toggleDisplay(group3AttackToggle.getState(), group3AttackPath);
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
 
-		// markerManager.addMarker(new AttackLineMarker(new
-		// LinkedList<Location>(attackPath.keySet())));
-		// markerManager.addMarker(new RetreatLineMarker(new
-		// LinkedList<Location>(retreatPath.keySet())));
 
 		map.addMarkerManager(markerManager);
 

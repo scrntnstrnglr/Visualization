@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Minards",
+      "request": "launch",
+      "mainClass": "com.visualizationo.cs7ds4.minards.Minards",
+      "projectName": "Visualization"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - CoxComb",
       "request": "launch",
       "mainClass": "com.tcd.visualization.cs7ds4.nightingale.CoxComb",
