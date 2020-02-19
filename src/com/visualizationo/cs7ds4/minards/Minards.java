@@ -45,7 +45,8 @@ public class Minards extends PApplet {
 	private ControlP5 cp5;
 
 	private AttackLineMarker group1AttackPath, group2AttackPath, group3AttackPath;
-	private RetreatLineMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
+	AttackLineMarker group1RetreatPath;
+	private RetreatLineMarker group2RetreatPath, group3RetreatPath;
 	private LocationMarker cityMarkers;
 	private static LinkedHashMap<Location,Integer> thisPath;
 
@@ -105,18 +106,18 @@ public class Minards extends PApplet {
 		thisPath = new LinkedHashMap<Location,Integer>();
 		
 		thisPath = troopsTable.getPath("A", 1);
-		thisMapPos = troopsTable.getMapPositions("A", 1);
-		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisMapPos);
-		group1RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 1).keySet()));
+		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		thisPath = troopsTable.getPath("R", 1);
+		group1RetreatPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 		
 		/*
 		thisPath = troopsTable.getPath("A", 2);
-		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()));
-		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()));
+		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath);
+		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()),thisPath);
 		
 		thisPath = troopsTable.getPath("A", 3);
-		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()));
-		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()));
+		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath);
+		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()),thisPath);
         */
 		
 		MapUtils.createDefaultEventDispatcher(this, map);
@@ -152,18 +153,6 @@ public class Minards extends PApplet {
 		else
 			markerManager.removeMarker(marker);
 
-	}
-
-
-	public class GraphApplet extends PApplet {
-
-		public void settings() {
-			size(400, 400);
-		}
-
-		public void draw() {
-			background(80);
-		}
 	}
 
 	public static void main(String args[]) {
