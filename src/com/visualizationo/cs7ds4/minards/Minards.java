@@ -36,17 +36,17 @@ public class Minards extends PApplet {
 			citiesMarkersToggle, group3RetreatToggle;
 	public static UnfoldingMap map;
 	private Map<String, Location> markerLocations;
-	private Map<Location, Integer> attackPath, retreatPath;
-	private static LinkedHashMap<MapPosition, Integer> thisMapPos;
 	MarkerManager<Marker> markerManager;
 	public static PImage pinImg;
 	private ControlP5 cp5;
 
-	private PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
-	private PathMarker group1RetreatPath,group2RetreatPath,group3RetreatPath;
+	private static PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
+	private static PathMarker group1RetreatPath,group2RetreatPath,group3RetreatPath;
+	private static TemperatureMarker tempPath;
 	private LocationMarker cityMarkers;
 	private static LinkedHashMap<Location,Integer> thisPath;
 	private static List<MapPosition> labelMapPos;
+	private static LinkedHashMap<Location, String> temperatureData;
 
 	public Minards() {
 		// translate(0,800);
@@ -59,8 +59,8 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
-		//map = new UnfoldingMap(this, 0, 0, width, height);
+		//map = new UnfoldingMap(this, 0, 0, width, height, VisualizerSettings.MAP_PROVIDER);
+		map = new UnfoldingMap(this, 0, 0, width, height);
 		// map.setTweening(true);
 		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"));
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
@@ -101,7 +101,6 @@ public class Minards extends PApplet {
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
 
 		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.values()));
-		thisPath = new LinkedHashMap<Location,Integer>();
 		
 		thisPath = troopsTable.getPath("A", 1);
 		group1AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
@@ -118,7 +117,12 @@ public class Minards extends PApplet {
 		group3AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
 		thisPath = troopsTable.getPath("R", 3);
 		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
-        
+		
+		
+		temperatureData = tempTable.getTemperatureData();
+		//System.out.println(temperatureData);
+		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()));
+		
 		
 		MapUtils.createDefaultEventDispatcher(this, map);
 
@@ -135,6 +139,7 @@ public class Minards extends PApplet {
 		toggleDisplay(group2RetreatToggle.getState(), group2RetreatPath);
 		toggleDisplay(group3AttackToggle.getState(), group3AttackPath);
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
+		toggleDisplay(true, tempPath);
 
 		map.addMarkerManager(markerManager);
 

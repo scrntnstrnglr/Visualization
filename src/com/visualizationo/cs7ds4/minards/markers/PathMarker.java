@@ -20,7 +20,7 @@ import processing.data.TableRow;
 public class PathMarker extends SimpleLinesMarker {
 
 	int weight = VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT;
-	private final LinkedHashMap<Location, Integer> mapLoc;
+	private  LinkedHashMap<Location, Integer> mapLoc;
 	private LinkedHashMap<MapPosition, Integer> mapPos;
 	private final String pathMode;
 
