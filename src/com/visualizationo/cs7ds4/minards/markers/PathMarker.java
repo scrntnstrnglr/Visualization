@@ -16,14 +16,14 @@ import de.fhpotsdam.unfolding.utils.MapPosition;
 import processing.core.PGraphics;
 import processing.data.TableRow;
 
-public class AttackLineMarker extends SimpleLinesMarker {
+public class PathMarker extends SimpleLinesMarker {
 
 	int weight = VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT;
 	private final LinkedHashMap<Location, Integer> mapLoc;
 	private LinkedHashMap<MapPosition, Integer> mapPos;
 	private final String pathMode;
 
-	public AttackLineMarker(LinkedList<Location> locations, LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
+	public PathMarker(LinkedList<Location> locations, LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
 		super(locations);
 		this.mapLoc = mapLoc;
 		mapPos = new LinkedHashMap<MapPosition, Integer>();

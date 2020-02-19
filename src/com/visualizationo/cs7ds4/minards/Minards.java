@@ -19,9 +19,7 @@ import java.util.Map;
 
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
-import com.visualizationo.cs7ds4.minards.markers.AttackLineMarker;
-import com.visualizationo.cs7ds4.minards.markers.LocationMarker;
-import com.visualizationo.cs7ds4.minards.markers.RetreatLineMarker;
+import com.visualizationo.cs7ds4.minards.markers.*;
 
 import controlP5.Canvas;
 import controlP5.ControlP5;
@@ -44,9 +42,8 @@ public class Minards extends PApplet {
 	public static PImage pinImg;
 	private ControlP5 cp5;
 
-	private AttackLineMarker group1AttackPath, group2AttackPath, group3AttackPath;
-	AttackLineMarker group1RetreatPath;
-	private RetreatLineMarker group2RetreatPath, group3RetreatPath;
+	private PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
+	private PathMarker group1RetreatPath,group2RetreatPath,group3RetreatPath;
 	private LocationMarker cityMarkers;
 	private static LinkedHashMap<Location,Integer> thisPath;
 
@@ -106,19 +103,21 @@ public class Minards extends PApplet {
 		thisPath = new LinkedHashMap<Location,Integer>();
 		
 		thisPath = troopsTable.getPath("A", 1);
-		group1AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		group1AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
 		thisPath = troopsTable.getPath("R", 1);
-		group1RetreatPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
+		group1RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 		
-		/*
+		
 		thisPath = troopsTable.getPath("A", 2);
-		group2AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath);
-		group2RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 2).keySet()),thisPath);
+		group2AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		thisPath = troopsTable.getPath("R", 2);
+		group2RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 		
 		thisPath = troopsTable.getPath("A", 3);
-		group3AttackPath = new AttackLineMarker(new LinkedList<Location>(thisPath.keySet()),thisPath);
-		group3RetreatPath = new RetreatLineMarker(new LinkedList<Location>(troopsTable.getPath("R", 3).keySet()),thisPath);
-        */
+		group3AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		thisPath = troopsTable.getPath("R", 3);
+		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),thisPath,VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
+        
 		
 		MapUtils.createDefaultEventDispatcher(this, map);
 
