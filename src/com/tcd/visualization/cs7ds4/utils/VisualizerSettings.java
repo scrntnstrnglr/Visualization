@@ -19,6 +19,7 @@ public class VisualizerSettings {
 	// ---Minard's Constants---
 	public static final int[] MINARD_ATTACK_LINE_COLOR = new int[] { 216, 24, 24, 1 };
 	public static final int[] MINARD_RETREAT_LINE_COLOR = new int[] { 15, 79, 203, 1 };
+	public static final int[] MINARD_TEMPERATURE_LINE_COLOR = new int[] { 13, 134, 225, 1 };
 	public static final int MINARD_ATTACK_LINE_WEIGHT=20,MINARD_RETREAT_LINE_WEIGHT=20;
 	public static final int MINARD_SCREEN_WIDTH = 1900,MINARD_SCREEN_HEIGHT = 950;
 	public static final TonerBackground MAP_PROVIDER = new StamenMapProvider.TonerBackground();
@@ -27,7 +28,12 @@ public class VisualizerSettings {
 	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
 	public static final float MINARD_CONTROL_PANEL_WIDTH = 300, MINARD_CONTROL_PANEL_HEIGHT = 300;
-	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 10000;
+	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 10000-6100;
+	public static final String MINARDS_PATH_MODE_ATTACK="Attack";
+	public static final String MINARDS_PATH_MODE_RETREAT="Retreat";
+	public static final String MINARDS_MAP_YEAR = "1812";
+	public static final int MINARDS_TEMP_MARKER_WEIGHT = 10;
+	public static final int MINARDS_TEMP_SCALE_FACTOR = 20, MINARDS_TEMP_LATITUDE=53 ;
 	
 	
 	// --Nightangle's Constants---

@@ -1,9 +1,11 @@
 package com.tcd.visualization.cs7ds4.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -104,6 +106,20 @@ public class CSVLoader {
 		coordinates.add(cityData.getFloat("long"));
 
 		return coordinates;
+	}
+	
+	public LinkedHashMap<Location,String> getTemperatureData(){
+		LinkedHashMap<Location,String> temperatureData = new LinkedHashMap<Location,String>();
+		for (TableRow row : table.rows()) {
+			float longitude = row.getFloat("long");
+			float temp = (row.getFloat("temp")/VisualizerSettings.MINARDS_TEMP_SCALE_FACTOR)+VisualizerSettings.MINARDS_TEMP_LATITUDE;
+			Location loc = new Location(temp,longitude);
+			String date = row.getString("date");
+			temperatureData.put(loc, date);
+		}
+		
+		return temperatureData;
+		
 	}
 
 }

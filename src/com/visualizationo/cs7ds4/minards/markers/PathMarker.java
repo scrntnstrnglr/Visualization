@@ -20,7 +20,7 @@ import processing.data.TableRow;
 public class PathMarker extends SimpleLinesMarker {
 
 	int weight = VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT;
-	private  LinkedHashMap<Location, Integer> mapLoc;
+	private LinkedHashMap<Location, Integer> mapLoc;
 	private LinkedHashMap<MapPosition, Integer> mapPos;
 	private final String pathMode;
 
@@ -28,17 +28,17 @@ public class PathMarker extends SimpleLinesMarker {
 		super(locations);
 		this.mapLoc = mapLoc;
 		mapPos = new LinkedHashMap<MapPosition, Integer>();
-		this.pathMode=pathMode;
+		this.pathMode = pathMode;
 	}
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
 		pg.pushStyle();
 		// pg.strokeWeight(VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT);
 		pg.strokeWeight(weight);
-		if(pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_ATTACK))
+		if (pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_ATTACK))
 			pg.stroke(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
-				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]);
-		else if(pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_RETREAT))
+					VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]);
+		else if (pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_RETREAT))
 			pg.stroke(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
 					VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[3]);
 		pg.noFill();
@@ -53,8 +53,7 @@ public class PathMarker extends SimpleLinesMarker {
 		}
 		pg.endShape();
 		pg.popStyle();
-		
-		
+
 	}
 
 	public LinkedHashMap<MapPosition, Integer> getMapPositions() {

@@ -14,7 +14,7 @@ import processing.core.PGraphics;
 public class TemperatureMarker extends SimpleLinesMarker {
 
 	int weight = VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT;
-	//private  LinkedHashMap<Location, Integer> mapLoc;
+	// private LinkedHashMap<Location, Integer> mapLoc;
 
 	public TemperatureMarker(LinkedList<Location> locations) {
 		super(locations);
@@ -22,9 +22,11 @@ public class TemperatureMarker extends SimpleLinesMarker {
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
 		pg.pushStyle();
-		// pg.strokeWeight(VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT);
-		pg.strokeWeight(3);
-		pg.stroke(14,12,120);
+		pg.strokeWeight(VisualizerSettings.MINARDS_TEMP_MARKER_WEIGHT);
+		pg.stroke(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0],
+				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
+				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
+				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[3]);
 		pg.noFill();
 		pg.beginShape();
 		for (MapPosition mapPosition : mapPositions) {
@@ -32,8 +34,7 @@ public class TemperatureMarker extends SimpleLinesMarker {
 		}
 		pg.endShape();
 		pg.popStyle();
-		
-		
+
 	}
 
 }
