@@ -41,7 +41,7 @@ public class Minards extends PApplet {
 	public static UnfoldingMap map;
 	private Map<Location, String> markerLocations;
 	MarkerManager<Marker> markerManager;
-	public static PImage pinImg;
+	public static PImage pinImg, coldImg;
 	private ControlP5 cp5;
 
 	private static PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
@@ -51,11 +51,13 @@ public class Minards extends PApplet {
 	private static LinkedHashMap<Location, Integer> thisPath;
 	private static List<MapPosition> labelMapPos;
 	private static LinkedHashMap<Location, String> temperatureData;
-	private static Textlabel myLabel;
+	private static Textlabel myLabel, tempLabels;
 	private static LinkedHashMap<Float, Integer> allSurvivors;
 	private static final float markerVicinity = VisualizerSettings.MINARDS_LOCATION_MARKER_VICINITY;
 	private static DecimalFormat decimalFormatter;
 	private static Map<String, Integer> cityBasedSurvivors;
+	private static TemperaturePointMarker tempPoints;
+	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 
 	public Minards() {
 		// translate(0,800);
@@ -81,6 +83,7 @@ public class Minards extends PApplet {
 		// https://nextjournal.com/data/QmZj2Pt2zyxZe8aX8e3BcJySqmzWw9TpzxS6tstKrJEErM?content-type=text%2Fplain&filename=temps.csv
 
 		VisualizerSettings.createRetreatAndAttackCities(citiesTable, troopsTable);
+		VisualizerSettings.createTemperatureAxes(tempTable);
 
 		markerLocations = citiesTable.getMarkerLocations();
 		// attackPath = troopsTable.getPath("A", 1);
@@ -111,6 +114,9 @@ public class Minards extends PApplet {
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
 		pinImg = loadImage("img\\minard\\location.png");
+		pinImg.resize(32, 32);
+		coldImg = loadImage("img\\minard\\wind.png");
+		coldImg.resize(40, 40);
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
 
 		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.keySet()));
@@ -139,12 +145,14 @@ public class Minards extends PApplet {
 		temperatureData = tempTable.getTemperatureData();
 		// System.out.println(temperatureData);
 		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()));
+		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()));
+		tempYAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_Y_AXIS_LOCATIONS);
+		tempXAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_X_AXIS_LOCATIONS);
 
-		myLabel = cp5.addTextlabel("Dummdumm");
+		myLabel = cp5.addTextlabel("LocationMarkerLabels");
+		tempLabels = cp5.addTextlabel("TemperatureMarkerLabels");
 		allSurvivors = troopsTable.getAllSurvivors();
 		cityBasedSurvivors = getSurvivorDetailsForCities(markerLocations, allSurvivors);
-		System.out.println(cityBasedSurvivors);
-		System.out.println(cityMarkers.getMapPositions());
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 	}
@@ -161,6 +169,9 @@ public class Minards extends PApplet {
 		toggleDisplay(group3AttackToggle.getState(), group3AttackPath);
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
 		toggleDisplay(true, tempPath);
+		toggleDisplay(true, tempPoints);
+		toggleDisplay(true, tempYAxesLocations);
+		toggleDisplay(true, tempXAxesLocations);
 
 		map.addMarkerManager(markerManager);
 
@@ -176,9 +187,9 @@ public class Minards extends PApplet {
 	public void mouseMoved() { // TODO Auto-generated method stub
 		super.mouseMoved();
 		// System.out.println(cityMarkers.getMapPositions());
+		pushMatrix();
 		for (MapPosition mapPosition : cityMarkers.getMapPositions()) {
 			// System.out.println(map.getLocation(mapPosition.x, mapPosition.y));
-			pushMatrix();
 			textAlign(BOTTOM);
 			if ((mouseX <= mapPosition.x + 10 && mouseX >= mapPosition.x - 10)
 					&& (mouseY <= mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) {
@@ -190,9 +201,22 @@ public class Minards extends PApplet {
 					setMarkerLabels(markerLocations.get(thisLoc), mapPosition);
 				}
 			}
-			popMatrix();
 		}
 
+		for (MapPosition mapPosition : tempPoints.getMapPositions()) {
+			if ((mouseX <= mapPosition.x + 10 && mouseX >= mapPosition.x - 10)
+					&& (mouseY <= mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) {
+				Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
+				float x = Float.parseFloat(String.format("%.2f", myLoc.x));
+				float y = Float.parseFloat(String.format("%.2f", myLoc.y));
+				Location thisLoc = new Location(x, y);
+				// System.out.println(thisLoc);
+				if (temperatureData.containsKey(thisLoc)) {
+					setTemperatureLabels(thisLoc, temperatureData.get(thisLoc), mapPosition);
+				}
+			}
+		}
+		popMatrix();
 	}
 
 	private void toggleDisplay(boolean show, Marker marker) {
@@ -218,22 +242,31 @@ public class Minards extends PApplet {
 	private void setMarkerLabels(String cityName, MapPosition mapPosition) {
 		HashMap<String, List<String>> attackCities = VisualizerSettings.MINARDS_ATTACK_CITIES;
 		HashMap<String, List<String>> retreatCities = VisualizerSettings.MINARDS_RETREAT_CITIES;
-		String survivorText="";
+		String survivorText = "";
 		if (attackCities.containsKey(cityName) && retreatCities.containsKey(cityName)) {
 			if (!attackCities.get(cityName).isEmpty() && !retreatCities.get(cityName).isEmpty()) {
 				survivorText = " \nAttack: " + attackCities.get(cityName).get(0) + " \nRetreat: "
 						+ retreatCities.get(cityName).get(0);
 			}
 		} else {
-			if (attackCities.containsKey(cityName) && !retreatCities.containsKey(cityName) && !attackCities.get(cityName).isEmpty()) {
+			if (attackCities.containsKey(cityName) && !retreatCities.containsKey(cityName)
+					&& !attackCities.get(cityName).isEmpty()) {
 				survivorText = " \nAttack: " + attackCities.get(cityName).get(0);
 			}
-			if (!attackCities.containsKey(cityName) && retreatCities.containsKey(cityName) && !retreatCities.get(cityName).isEmpty()) {
+			if (!attackCities.containsKey(cityName) && retreatCities.containsKey(cityName)
+					&& !retreatCities.get(cityName).isEmpty()) {
 				survivorText = " \nRetreat: " + retreatCities.get(cityName).get(0);
 			}
 		}
-		myLabel.setText(cityName + survivorText).setPosition(mapPosition.x, mapPosition.y+4)
+		myLabel.setText(cityName + survivorText).setPosition(mapPosition.x, mapPosition.y + 4)
 				.setFont(createFont("Arial", 13)).setColor(0);
+	}
+
+	private void setTemperatureLabels(Location loc, String date, MapPosition mapPosition) {
+		// TODO Auto-generated method stub
+		float temperature = Float.parseFloat(String.format("%.0f", CSVLoader.convertTempToLatitude(loc.getLat(), true)));
+		tempLabels.setText("Temp: " + temperature + "\nDate: " + CSVLoader.formatDate(date, '.'))
+				.setPosition(mapPosition.x+10, mapPosition.y + 5).setFont(createFont("Arial", 13)).setColor(0);
 	}
 
 	public static void main(String args[]) {
