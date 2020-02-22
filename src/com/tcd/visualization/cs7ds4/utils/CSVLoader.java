@@ -20,10 +20,16 @@ public class CSVLoader {
 
 	private final Table table;
 	private Map<String, ArrayList> dateInfo;
-	private Map<String, Location> mapInfo;
+	private Map<Location, String> mapInfo;
+	private final String name;
 
-	public CSVLoader(Table table) {
+	public CSVLoader(Table table, String name) {
 		this.table = table;
+		this.name = name;
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 	public Map<String, ArrayList> getToggleButtonsForMonths() {
@@ -52,11 +58,11 @@ public class CSVLoader {
 		return dateInfo;
 	}
 
-	public Map<String, Location> getMarkerLocations() {
-		mapInfo = new LinkedHashMap<String, Location>();
+	public Map<Location, String> getMarkerLocations() {
+		mapInfo = new LinkedHashMap<Location, String>();
 		for (TableRow row : table.rows()) {
 			if (!row.getString("city").isEmpty())
-				mapInfo.put(row.getString("city"), new Location(row.getFloat("lat"), row.getFloat("long")));
+				mapInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), row.getString("city"));
 		}
 		return mapInfo;
 	}
@@ -86,14 +92,49 @@ public class CSVLoader {
 		}
 		return pathInfo;
 	}
-	
+
+	public LinkedHashMap<Location, List<String>> getPath() {
+		LinkedHashMap<Location, List<String>> pathInfo = new LinkedHashMap<Location, List<String>>();
+		for (TableRow row : table.rows()) {
+			List<String> thisLocList = new ArrayList<String>();
+			thisLocList.add(row.getString("direction"));
+			thisLocList.add(row.getString("survivors"));
+			thisLocList.add(row.getString("group"));
+			pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), thisLocList);
+
+		}
+		return pathInfo;
+	}
+
+	public LinkedHashMap<Location, List<String>> getPath(String mode) {
+		LinkedHashMap<Location, List<String>> pathInfo = new LinkedHashMap<Location, List<String>>();
+		for (TableRow row : table.rows()) {
+			List<String> thisLocList = new ArrayList<String>();
+			if (row.getString("direction").equals(mode)) {
+				thisLocList.add(row.getString("survivors"));
+				thisLocList.add(row.getString("group"));
+				pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), thisLocList);
+			}
+
+		}
+		return pathInfo;
+	}
+
+	public LinkedHashMap<Float, Integer> getAllSurvivors() {
+		LinkedHashMap<Float, Integer> pathInfo = new LinkedHashMap<Float, Integer>();
+		for (TableRow row : table.rows()) {
+			pathInfo.put(row.getFloat("long"), row.getInt("survivors"));
+		}
+		return pathInfo;
+	}
+
 	public LinkedHashMap<MapPosition, Integer> getMapPositions(String action, int division) {
 		LinkedHashMap<MapPosition, Integer> pathInfo = new LinkedHashMap<MapPosition, Integer>();
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
 				Location loc = new Location(row.getFloat("lat"), row.getFloat("long"));
 				MapPosition mapPos = new MapPosition(Minards.map.mapDisplay.getObjectFromLocation(loc));
-				pathInfo.put(mapPos,row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
+				pathInfo.put(mapPos, row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
 			}
 		}
 		return pathInfo;
@@ -107,19 +148,40 @@ public class CSVLoader {
 
 		return coordinates;
 	}
-	
-	public LinkedHashMap<Location,String> getTemperatureData(){
-		LinkedHashMap<Location,String> temperatureData = new LinkedHashMap<Location,String>();
+
+	public LinkedHashMap<Location, String> getTemperatureData() {
+		LinkedHashMap<Location, String> temperatureData = new LinkedHashMap<Location, String>();
 		for (TableRow row : table.rows()) {
 			float longitude = row.getFloat("long");
-			float temp = (row.getFloat("temp")/VisualizerSettings.MINARDS_TEMP_SCALE_FACTOR)+VisualizerSettings.MINARDS_TEMP_LATITUDE;
-			Location loc = new Location(temp,longitude);
+			float temp = convertTempToLatitude(row.getFloat("temp"),false);
+			Location loc = new Location(temp, longitude);
 			String date = row.getString("date");
 			temperatureData.put(loc, date);
 		}
-		
+
 		return temperatureData;
-		
+
 	}
+
+	public static float convertTempToLatitude(float value, boolean reverse) {
+		float toReturn;
+		if (reverse)
+			toReturn = (value - VisualizerSettings.MINARDS_TEMP_LATITUDE)
+					* VisualizerSettings.MINARDS_TEMP_SCALE_FACTOR;
+		else
+			toReturn = (value / VisualizerSettings.MINARDS_TEMP_SCALE_FACTOR)
+					+ VisualizerSettings.MINARDS_TEMP_LATITUDE;
+
+		return toReturn;
+	}
+	
+	public static String formatDate(String inDate, char separator) {
+		int len = inDate.length();
+		String year = inDate.substring(len-4,len);
+		String month = inDate.substring(len-7,len-4);
+		String day = inDate.substring(0,len-7);
+		return day+separator+month+separator+year;
+	}
+	
 
 }

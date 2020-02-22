@@ -16,17 +16,13 @@
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/controlP5.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jython-standalone-2.7.2b2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/tracer.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/json4processing.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/log4j-1.2.15.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/Unfolding.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/jogl-all.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/gluegen-rt.jar"/>
             <fileset dir="${dir.jarfile}/natives"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/core.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/gluegen-rt-natives-windows-amd64.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/gluegen-rt.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/jogl-all-natives-windows-amd64.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/2.2.1/jogl-all.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/processing 3/core.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/processing 3/gluegen-rt.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/processing 3/jogl-all.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/processing 3/json4processing.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/processing 3/log4j-1.2.15.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/unfolding.0.9.92.jar"/>
         </jar>
     </target>
 </project>

@@ -37,7 +37,7 @@ public class CoxComb extends PApplet {
 
 	public void settings() {
 		table = loadTable("nightingale-data.csv", "header");
-		csvLoader = new CSVLoader(table);
+		csvLoader = new CSVLoader(table,"Cox-Comb");
 		dateInfo = csvLoader.getToggleButtonsForMonths();
 
 		SCREEN_WIDTH = VisualizerSettings.SCREEN_WIDTH;

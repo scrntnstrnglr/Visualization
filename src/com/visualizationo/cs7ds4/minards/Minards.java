@@ -32,9 +32,6 @@ import processing.core.*;
 import processing.event.MouseEvent;
 
 public class Minards extends PApplet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static CSVLoader citiesTable, troopsTable, tempTable;
 	Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle, group3AttackToggle,
@@ -50,24 +47,14 @@ public class Minards extends PApplet {
 	private static TemperatureMarker tempPath;
 	private static LocationMarker cityMarkers;
 	private static LinkedHashMap<Location, Integer> thisPath;
-	private static List<MapPosition> labelMapPos;
 	private static LinkedHashMap<Location, String> temperatureData;
 	private static Textlabel myLabel, tempLabels, attackLegendLabel, retreatLegendLabel, temperatureLegendLabel, legendLabel, locLabel, tempTextLabel;
-	private static LinkedHashMap<Float, Integer> allSurvivors;
-	private static final float markerVicinity = VisualizerSettings.MINARDS_LOCATION_MARKER_VICINITY;
-	private static DecimalFormat decimalFormatter;
-	private static Map<String, Integer> cityBasedSurvivors;
 	private static TemperaturePointMarker tempPoints;
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 	private static List<SimpleLinesMarker> tempLineMarkers;
-	private static TemperatureMarker straightTempLines;
-	private static SimpleLinesMarker testMarker;
-	private static VisualizerSettings minardsConstants;
 
 	public Minards() throws IOException {
 		// translate(0,800);
-		decimalFormatter = new DecimalFormat(VisualizerSettings.MINARDS_DECIMAL_PRECISION);
-		minardsConstants = new VisualizerSettings("properties\\minards\\minards_constants.properties");
 	}
 
 	public void settings() {
@@ -77,11 +64,7 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		//String citiesData = getClass().getClassLoader().getResource("cities.csv");
-		// map = new UnfoldingMap(this, 0, 0, width, height,
-		// VisualizerSettings.MAP_PROVIDER);
 		map = new UnfoldingMap(this, 0, 0, width, height);
-		// map.setTweening(true);
 		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"), "CitiesData");
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
 		troopsTable = new CSVLoader(loadTable("minard-data\\troops1.csv", "header"), "TroopsData");
@@ -93,8 +76,6 @@ public class Minards extends PApplet {
 		VisualizerSettings.createTemperatureAxes(tempTable);
 
 		markerLocations = citiesTable.getMarkerLocations();
-		// attackPath = troopsTable.getPath("A", 1);
-		// retreatPath = troopsTable.getPath("R", 1);
 		cp5 = new ControlP5(this); // controlp5 object
 
 		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
@@ -160,8 +141,7 @@ public class Minards extends PApplet {
 		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
 				setMarkerName("Group3RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
-		temperatureData = tempTable.getTemperatureData();
-		// System.out.println(temperatureData);
+		temperatureData = tempTable.getTemperatureData();	
 		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()),
 				setMarkerName("TemperaturePath"));
 		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()),
@@ -187,9 +167,6 @@ public class Minards extends PApplet {
 		legendLabel = cp5.addTextlabel("LegendLabel");
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
-		allSurvivors = troopsTable.getAllSurvivors();
-		cityBasedSurvivors = getSurvivorDetailsForCities(markerLocations, allSurvivors);
-
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		
@@ -248,12 +225,11 @@ public class Minards extends PApplet {
 	}
 
 	@Override
-	public void mouseMoved() { // TODO Auto-generated method stub
+	public void mouseMoved() { 
+		// TODO Auto-generated method stub
 		super.mouseMoved();
-		// System.out.println(cityMarkers.getMapPositions());
 		pushMatrix();
 		for (MapPosition mapPosition : cityMarkers.getMapPositions()) {
-			// System.out.println(map.getLocation(mapPosition.x, mapPosition.y));
 			textAlign(BOTTOM);
 			if ((mouseX <= mapPosition.x + 10 && mouseX >= mapPosition.x - 10)
 					&& (mouseY <= mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) {
@@ -273,8 +249,7 @@ public class Minards extends PApplet {
 				Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
 				float x = Float.parseFloat(String.format("%.2f", myLoc.x));
 				float y = Float.parseFloat(String.format("%.2f", myLoc.y));
-				Location thisLoc = new Location(x, y);
-				// System.out.println(thisLoc);
+				Location thisLoc = new Location(x, y);				
 				if (temperatureData.containsKey(thisLoc)) {
 					setTemperatureLabels(thisLoc, temperatureData.get(thisLoc), mapPosition);
 				}
