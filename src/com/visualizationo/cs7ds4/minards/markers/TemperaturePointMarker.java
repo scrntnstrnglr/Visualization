@@ -1,6 +1,7 @@
 package com.visualizationo.cs7ds4.minards.markers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,8 +16,8 @@ import processing.core.PGraphics;
 public class TemperaturePointMarker extends SimpleLinesMarker {
 	
 	private List<MapPosition> thisMapPositions;
-	public TemperaturePointMarker(LinkedList<Location> locations) {
-		super(locations);	
+	public TemperaturePointMarker(LinkedList<Location> locations, HashMap<String, Object> properties) {
+		super(locations,properties);	
 		thisMapPositions = new ArrayList<MapPosition>();
 	}
 	

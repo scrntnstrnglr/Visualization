@@ -24,8 +24,8 @@ public class PathMarker extends SimpleLinesMarker {
 	private LinkedHashMap<MapPosition, Integer> mapPos;
 	private final String pathMode;
 
-	public PathMarker(LinkedList<Location> locations, LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
-		super(locations);
+	public PathMarker(LinkedList<Location> locations, HashMap<String, Object> properties, LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
+		super(locations,properties);
 		this.mapLoc = mapLoc;
 		mapPos = new LinkedHashMap<MapPosition, Integer>();
 		this.pathMode = pathMode;
@@ -64,5 +64,4 @@ public class PathMarker extends SimpleLinesMarker {
 		}
 		return pathInfo;
 	}
-
 }

@@ -1,5 +1,6 @@
 package com.visualizationo.cs7ds4.minards.markers;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,8 +14,8 @@ import processing.core.PGraphics;
 
 public class TemperatureAxesMarkers extends SimpleLinesMarker {
 
-	public TemperatureAxesMarkers(List<Location> locations) {
-		super(locations);
+	public TemperatureAxesMarkers(List<Location> locations, HashMap<String, Object> properties) {
+		super(locations, properties);
 	}
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
@@ -36,5 +37,4 @@ public class TemperatureAxesMarkers extends SimpleLinesMarker {
 		pg.popStyle();
 
 	}
-
 }

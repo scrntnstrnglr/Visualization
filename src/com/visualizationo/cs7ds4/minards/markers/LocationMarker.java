@@ -17,13 +17,9 @@ import processing.core.PGraphics;
 public class LocationMarker extends SimpleLinesMarker {
 
 	private List<MapPosition> thisMapPositions;
-	public LocationMarker(LinkedList<Location> locations) {
-		super(locations);		
+	public LocationMarker(LinkedList<Location> locations,HashMap<String, Object> properties) {
+		super(locations,properties);		
 		thisMapPositions = new ArrayList<MapPosition>();
-	}
-	
-	public LocationMarker(LinkedList<Location> locations, HashMap<String, Object> properties) {
-		super(locations,properties);			
 	}
 
 	public void draw(PGraphics pg,List<MapPosition> mapPositions) {

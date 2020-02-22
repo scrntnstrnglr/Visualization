@@ -47,17 +47,18 @@ public class Minards extends PApplet {
 	private static PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
 	private static PathMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
 	private static TemperatureMarker tempPath;
-	private LocationMarker cityMarkers;
+	private static LocationMarker cityMarkers;
 	private static LinkedHashMap<Location, Integer> thisPath;
 	private static List<MapPosition> labelMapPos;
 	private static LinkedHashMap<Location, String> temperatureData;
-	private static Textlabel myLabel, tempLabels ,attackLegendLabel, retreatLegendLabel,temperatureLegendLabel;
+	private static Textlabel myLabel, tempLabels, attackLegendLabel, retreatLegendLabel, temperatureLegendLabel, xAxisLabel, yAxisLabel;
 	private static LinkedHashMap<Float, Integer> allSurvivors;
 	private static final float markerVicinity = VisualizerSettings.MINARDS_LOCATION_MARKER_VICINITY;
 	private static DecimalFormat decimalFormatter;
 	private static Map<String, Integer> cityBasedSurvivors;
 	private static TemperaturePointMarker tempPoints;
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
+	private static List<TemperatureAxesMarkers> tempLineMarkers;
 
 	public Minards() {
 		// translate(0,800);
@@ -119,35 +120,42 @@ public class Minards extends PApplet {
 		coldImg.resize(40, 40);
 		map.setPanningRestriction(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_PANNING_RESTRICTION);
 
-		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.keySet()));
+		cityMarkers = new LocationMarker(new LinkedList<Location>(markerLocations.keySet()),
+				setMarkerName("cityMarker"));
 
 		thisPath = troopsTable.getPath("A", 1);
-		group1AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		group1AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group1RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
 		thisPath = troopsTable.getPath("R", 1);
-		group1RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
+		group1RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group1RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
 		thisPath = troopsTable.getPath("A", 2);
-		group2AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		group2AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group2AttackPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
 		thisPath = troopsTable.getPath("R", 2);
-		group2RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
+		group2RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group2RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
 		thisPath = troopsTable.getPath("A", 3);
-		group3AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
+		group3AttackPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group3AttackPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_ATTACK);
 		thisPath = troopsTable.getPath("R", 3);
-		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()), thisPath,
-				VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
+		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
+				setMarkerName("Group3RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
 		temperatureData = tempTable.getTemperatureData();
 		// System.out.println(temperatureData);
-		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()));
-		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()));
-		tempYAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_Y_AXIS_LOCATIONS);
-		tempXAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_X_AXIS_LOCATIONS);
+		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()),
+				setMarkerName("TemperaturePath"));
+		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()),
+				setMarkerName("TemperaturPoints"));
+		tempYAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_Y_AXIS_LOCATIONS,
+				setMarkerName("TemperatureYAxis"));
+		
+		
+		tempXAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_X_AXIS_LOCATIONS,
+				setMarkerName("TemperatureXAxis"));
 
 		myLabel = cp5.addTextlabel("LocationMarkerLabels");
 		tempLabels = cp5.addTextlabel("TemperatureMarkerLabels");
@@ -173,8 +181,8 @@ public class Minards extends PApplet {
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
 		toggleDisplay(true, tempPath);
 		toggleDisplay(true, tempPoints);
-		toggleDisplay(true, tempYAxesLocations);
-		toggleDisplay(true, tempXAxesLocations);
+		toggleDisplay(false, tempYAxesLocations);
+		toggleDisplay(false, tempXAxesLocations);
 
 		map.addMarkerManager(markerManager);
 
@@ -183,15 +191,21 @@ public class Minards extends PApplet {
 		stroke(0);
 		rect(10, 10, VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
 		rect(10, height - 100 - 10, 200, 100);
-		fill(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0],VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2]);
+		fill(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
+				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2]);
 		circle(30, height - 90, 20);
-		attackLegendLabel.setText(" - Advance").setPosition(39,height-100).setFont(createFont("Arial", 11)).setColor(0);
-		fill(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0],VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2]);
+		attackLegendLabel.setText(" - Advance").setPosition(39, height - 100).setFont(createFont("Arial", 11))
+				.setColor(0);
+		fill(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
+				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2]);
 		circle(30, height - 60, 20);
-		retreatLegendLabel.setText(" - Retreat").setPosition(39,height-70).setFont(createFont("Arial", 11)).setColor(0);
-		fill(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0],VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2]);
+		retreatLegendLabel.setText(" - Retreat").setPosition(39, height - 70).setFont(createFont("Arial", 11))
+				.setColor(0);
+		fill(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0], VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
+				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2]);
 		circle(30, height - 30, 20);
-		temperatureLegendLabel.setText(" - Temperature").setPosition(39,height-40).setFont(createFont("Arial", 11)).setColor(0);
+		temperatureLegendLabel.setText(" - Temperature").setPosition(39, height - 40).setFont(createFont("Arial", 11))
+				.setColor(0);
 		popMatrix();
 
 	}
@@ -281,6 +295,20 @@ public class Minards extends PApplet {
 				.parseFloat(String.format("%.0f", CSVLoader.convertTempToLatitude(loc.getLat(), true)));
 		tempLabels.setText("Temp: " + temperature + "\nDate: " + CSVLoader.formatDate(date, '.'))
 				.setPosition(mapPosition.x + 10, mapPosition.y + 5).setFont(createFont("Arial", 13)).setColor(0);
+	}
+
+	public Map<String, Object> getCurrentMarkerData() {
+		Map<String, Object> currentMapData = new HashMap<String, Object>();
+		for (Marker marker : map.getMarkers()) {
+			currentMapData.put(marker.getStringProperty("name"), marker);
+		}
+		return currentMapData;
+	}
+
+	public HashMap<String, Object> setMarkerName(String name) {
+		HashMap<String, Object> thisMarkerProperties = new HashMap<String, Object>();
+		thisMarkerProperties.put("name", name);
+		return thisMarkerProperties;
 	}
 
 	public static void main(String args[]) {

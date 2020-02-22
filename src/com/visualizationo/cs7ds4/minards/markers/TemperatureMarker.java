@@ -1,5 +1,6 @@
 package com.visualizationo.cs7ds4.minards.markers;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,9 +16,10 @@ public class TemperatureMarker extends SimpleLinesMarker {
 
 	int weight = VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT;
 	// private LinkedHashMap<Location, Integer> mapLoc;
+	
 
-	public TemperatureMarker(LinkedList<Location> locations) {
-		super(locations);
+	public TemperatureMarker(LinkedList<Location> locations, HashMap<String, Object> properties) {
+		super(locations,properties);
 	}
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
@@ -36,5 +38,4 @@ public class TemperatureMarker extends SimpleLinesMarker {
 		pg.popStyle();
 
 	}
-
 }
