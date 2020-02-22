@@ -29,7 +29,7 @@ public class VisualizerSettings {
 	public static final String MINARD_RENDERER = PConstants.P3D;
 	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
-	public static final float MINARD_CONTROL_PANEL_WIDTH = 250, MINARD_CONTROL_PANEL_HEIGHT = 300;
+	public static final float MINARD_CONTROL_PANEL_WIDTH = 250, MINARD_CONTROL_PANEL_HEIGHT = 240;
 	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3900;
 	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
 	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";
@@ -42,6 +42,7 @@ public class VisualizerSettings {
 	public static HashMap<String,List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
 	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS,MINARDS_TEMP_X_AXIS_LOCATIONS;
 	public static float MINARDS_TEMP_MAX_LONG;
+	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
 
 	// --Nightangle's Constants---
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
