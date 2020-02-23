@@ -24,8 +24,12 @@ import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
 import com.visualizationo.cs7ds4.minards.markers.*;
 
+import controlP5.ButtonBar;
+import controlP5.CallbackEvent;
+import controlP5.CallbackListener;
 import controlP5.Canvas;
 import controlP5.ControlP5;
+import controlP5.ListBox;
 import controlP5.Textlabel;
 import controlP5.Toggle;
 import processing.core.*;
@@ -86,40 +90,43 @@ public class Minards extends PApplet {
 				.setFont(createFont(VisualizerSettings.MINARDS_TITLE_FONT, VisualizerSettings.MINARDS_FONT_SIZE_MEDIUM))
 				.setColor(VisualizerSettings.MINARDS_TITLE_COLOR[0]);
 
-
 		float x = VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[0];
 		float y = VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[1];
-		cp5.addTextlabel("group1").setText("Group 1").setPosition(x+10, y+10).setFont(createFont("Arial", 12)).setColor(0);
-		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(x+15, y+30).setSize(32, 12).setState(true)
+		cp5.addTextlabel("group1").setText("Group 1").setPosition(x + 10, y + 10).setFont(createFont("Arial", 12))
+				.setColor(0);
+		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(x + 15, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(x+15, y+60).setSize(32, 12).setState(true)
+		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(x + 15, y + 60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
-		cp5.addTextlabel("group2").setText("Group 2").setPosition(x+90, y+10).setFont(createFont("Arial", 12)).setColor(0);
-		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(x+95, y+30).setSize(32, 12).setState(true)
+		cp5.addTextlabel("group2").setText("Group 2").setPosition(x + 90, y + 10).setFont(createFont("Arial", 12))
+				.setColor(0);
+		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(x + 95, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(x+95, y+60).setSize(32, 12).setState(true)
+		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(x + 95, y + 60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 
-		cp5.addTextlabel("group3").setText("Group 3").setPosition(x+170, y+10).setFont(createFont("Arial", 12)).setColor(0);
-		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(x+175, y+30).setSize(32, 12).setState(true)
+		cp5.addTextlabel("group3").setText("Group 3").setPosition(x + 170, y + 10).setFont(createFont("Arial", 12))
+				.setColor(0);
+		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(x + 175, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(x+175, y+60).setSize(32, 12).setState(true)
+		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(x + 175, y + 60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
-		
-		cp5.addTextlabel("cities").setText("Cities").setPosition(x+250, y+10).setFont(createFont("Arial", 12)).setColor(0);
-		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(x+255, y+30).setSize(32, 12).setState(true)
+
+		cp5.addTextlabel("cities").setText("Cities").setPosition(x + 250, y + 10).setFont(createFont("Arial", 12))
+				.setColor(0);
+		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(x + 255, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Show Cities");
-		
-		cp5.addTextlabel("temperatures").setText("Temperature").setPosition(x+330, y+10).setFont(createFont("Arial", 12)).setColor(0);
-		temperatureToggle = cp5.addToggle("temperatureToggle").setPosition(x+335, y+30).setSize(31, 12).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Path");
-		tempLinesToggle = cp5.addToggle("tempLinesToggle").setPosition(x+335, y+60).setSize(32, 12).setState(true)
+
+		cp5.addTextlabel("temperatures").setText("Temperature").setPosition(x + 330, y + 10)
+				.setFont(createFont("Arial", 12)).setColor(0);
+		temperatureToggle = cp5.addToggle("temperatureToggle").setPosition(x + 335, y + 30).setSize(31, 12)
+				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Path");
+		tempLinesToggle = cp5.addToggle("tempLinesToggle").setPosition(x + 335, y + 60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Lines");
-		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(x+385, y+30).setSize(32, 12).setState(true)
+		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(x + 385, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Markers");
-		
-		
+
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
 		pinImg = loadImage("img\\minard\\location.png");
@@ -182,8 +189,92 @@ public class Minards extends PApplet {
 		legendLabel = cp5.addTextlabel("LegendLabel");
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
+
+		createTabbedPaneForData();
+
 		MapUtils.createDefaultEventDispatcher(this, map);
 
+	}
+
+	private void createTabbedPaneForData() {
+		// TODO Auto-generated method stub
+		List<CSVLoader> minardsDataStrings = new ArrayList<CSVLoader>();
+		minardsDataStrings.add(citiesTable);
+		minardsDataStrings.add(troopsTable);
+		minardsDataStrings.add(tempTable);
+
+		Map<String, List<ListBox>> dataMap = new HashMap<String, List<ListBox>>(getViewableDataMap(minardsDataStrings));
+		//System.out.println(dataMap);
+
+		ButtonBar b = cp5.addButtonBar("bar").setPosition(0, 0).setSize(300, 20)
+				.addItems(split("Cities Troops Temperature", " "));
+
+		b.onClick(new CallbackListener() {
+
+			@Override
+			public void controlEvent(CallbackEvent arg0) {
+				// TODO Auto-generated method stub
+				ButtonBar bar = (ButtonBar) arg0.getController();
+				switch (bar.hover()) {
+				case 0:
+					//System.out.println("Cities");
+					setTableData(dataMap, "CitiesData");
+					break;
+				case 1:
+					//System.out.println("Troops");
+					setTableData(dataMap, "TroopsData");
+					break;
+				case 2:
+					//System.out.println("TemperaturData");
+					setTableData(dataMap, "TemperaturData");
+					break;
+				}
+			}
+
+			private void setTableData(Map<String, List<ListBox>> dataMap, String name) {
+				// TODO Auto-generated method stub
+				for (String thisTableData : dataMap.keySet()) {
+					if (!thisTableData.equals(name)) {
+						for (ListBox thisListBox : dataMap.get(thisTableData)) {
+							thisListBox.setVisible(false);
+
+						}
+					}
+				}
+				float startX = 0, startY = 20;
+				List<ListBox> thisListBox = new ArrayList<ListBox>(dataMap.get(name));
+				for (ListBox listBox : thisListBox) {
+					listBox.setPosition(startX, startY).setSize(80, 80).setItemHeight(15).setBarHeight(15)
+					.setColorBackground(0).setColorForeground(255);
+					if(name.equals("CitiesData"))
+						listBox.addItems(citiesTable.getColumnData(listBox.getName()));
+					if(name.equals("TroopsData"))
+						listBox.addItems(troopsTable.getColumnData(listBox.getName()));
+					if(name.equals("TemperatureData"))
+						listBox.addItems(tempTable.getColumnData(listBox.getName()));
+					listBox.setVisible(true);
+					startX += 80;
+				}
+
+			}
+
+			private void displayData(CSVLoader csvData) {
+			}
+
+		});
+
+	}
+
+	public Map<String, List<ListBox>> getViewableDataMap(List<CSVLoader> dataName) {
+		Map<String, List<ListBox>> thisListBoxMap = new HashMap<String, List<ListBox>>();
+		for (CSVLoader tableData : dataName) {
+			List<ListBox> thisListBox = new ArrayList<ListBox>();
+			for (String colName : tableData.getColumnHeaders()) {
+				thisListBox.add(cp5.addListBox(colName));
+			}
+			thisListBoxMap.put(tableData.getName(), thisListBox);
+		}
+		return thisListBoxMap;
 	}
 
 	public void draw() {
@@ -209,23 +300,25 @@ public class Minards extends PApplet {
 		pushMatrix();
 		fill(255);
 		stroke(0);
-		rect(VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[0], VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[1], VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
-		rect(VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[0], VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[1], VisualizerSettings.MINARD_LEGEND_PANEL_WIDTH, VisualizerSettings.MINARD_LEGEND_PANEL_HEIGHT);
-		
+		rect(VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[0], VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[1],
+				VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
+		rect(VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[0], VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[1],
+				VisualizerSettings.MINARD_LEGEND_PANEL_WIDTH, VisualizerSettings.MINARD_LEGEND_PANEL_HEIGHT);
+
 		legendLabel.setText("Legend").setPosition(20, height - 95).setFont(createFont("Arial", 13)).setColor(0);
-		
+
 		fill(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
 				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2]);
 		circle(30, height - 60, 20);
 		attackLegendLabel.setText(" - Advance").setPosition(39, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
-		
+
 		fill(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
 				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2]);
 		circle(130, height - 60, 20);
 		retreatLegendLabel.setText(" - Retreat").setPosition(140, height - 70).setFont(createFont("Arial", 11))
-				.setColor(0); 
-				
+				.setColor(0);
+
 		fill(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0], VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
 				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2]);
 		circle(230, height - 60, 20);
@@ -234,11 +327,10 @@ public class Minards extends PApplet {
 
 		image(pinImgLabel, 20, height - 38);
 		locLabel.setText(" - Cities").setPosition(40, height - 38).setFont(createFont("Arial", 11)).setColor(0);
-		
-		
+
 		image(coldImgLabel, 120, height - 38);
 		tempTextLabel.setText(" - Temperature points").setPosition(140, height - 38).setFont(createFont("Arial", 11))
-				.setColor(0); 
+				.setColor(0);
 		popMatrix();
 
 	}
