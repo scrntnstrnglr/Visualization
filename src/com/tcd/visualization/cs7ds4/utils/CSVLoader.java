@@ -31,6 +31,26 @@ public class CSVLoader {
 	public String getName() {
 		return this.name;
 	}
+	
+	public int getRowCount() {
+		return this.table.getRowCount();
+	}
+	
+	public int getColumnCount() {
+		return this.table.getColumnCount();
+	}
+	
+	public List<String> getColumnData(String columnName){
+		List<String> thisColumnData = new LinkedList<String>();
+		for(String item : this.table.getStringColumn(columnName)) {
+			thisColumnData.add(item);
+		}
+		return thisColumnData;
+	}
+	
+	public String[] getColumnHeaders() {
+		return this.table.getColumnTitles();
+	}
 
 	public Map<String, ArrayList> getToggleButtonsForMonths() {
 		dateInfo = new LinkedHashMap<String, ArrayList>();
@@ -62,7 +82,7 @@ public class CSVLoader {
 		mapInfo = new LinkedHashMap<Location, String>();
 		for (TableRow row : table.rows()) {
 			if (!row.getString("city").isEmpty())
-				mapInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), row.getString("city"));
+				mapInfo.put(new Location(row.getFloat("latc"), row.getFloat("longc")), row.getString("city"));
 		}
 		return mapInfo;
 	}
@@ -72,7 +92,7 @@ public class CSVLoader {
 		int i = 0;
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
-				pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")),
+				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")),
 						row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
 			}
 			i++;
@@ -86,7 +106,7 @@ public class CSVLoader {
 		LinkedHashMap<Location, Integer> pathInfo = new LinkedHashMap<Location, Integer>();
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
-				pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")),
+				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")),
 						row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
 			}
 		}
@@ -100,7 +120,7 @@ public class CSVLoader {
 			thisLocList.add(row.getString("direction"));
 			thisLocList.add(row.getString("survivors"));
 			thisLocList.add(row.getString("group"));
-			pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), thisLocList);
+			pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")), thisLocList);
 
 		}
 		return pathInfo;
@@ -113,7 +133,7 @@ public class CSVLoader {
 			if (row.getString("direction").equals(mode)) {
 				thisLocList.add(row.getString("survivors"));
 				thisLocList.add(row.getString("group"));
-				pathInfo.put(new Location(row.getFloat("lat"), row.getFloat("long")), thisLocList);
+				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")), thisLocList);
 			}
 
 		}
@@ -123,7 +143,7 @@ public class CSVLoader {
 	public LinkedHashMap<Float, Integer> getAllSurvivors() {
 		LinkedHashMap<Float, Integer> pathInfo = new LinkedHashMap<Float, Integer>();
 		for (TableRow row : table.rows()) {
-			pathInfo.put(row.getFloat("long"), row.getInt("survivors"));
+			pathInfo.put(row.getFloat("longp"), row.getInt("survivors"));
 		}
 		return pathInfo;
 	}
@@ -132,7 +152,7 @@ public class CSVLoader {
 		LinkedHashMap<MapPosition, Integer> pathInfo = new LinkedHashMap<MapPosition, Integer>();
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
-				Location loc = new Location(row.getFloat("lat"), row.getFloat("long"));
+				Location loc = new Location(row.getFloat("latp"), row.getFloat("longp"));
 				MapPosition mapPos = new MapPosition(Minards.map.mapDisplay.getObjectFromLocation(loc));
 				pathInfo.put(mapPos, row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
 			}
@@ -143,8 +163,8 @@ public class CSVLoader {
 	public LinkedList<Float> getCoordinates(TableRow cityData) {
 		LinkedList<Float> coordinates = new LinkedList<Float>();
 
-		coordinates.add(cityData.getFloat("lat"));
-		coordinates.add(cityData.getFloat("long"));
+		coordinates.add(cityData.getFloat("latc"));
+		coordinates.add(cityData.getFloat("longc"));
 
 		return coordinates;
 	}
@@ -152,7 +172,7 @@ public class CSVLoader {
 	public LinkedHashMap<Location, String> getTemperatureData() {
 		LinkedHashMap<Location, String> temperatureData = new LinkedHashMap<Location, String>();
 		for (TableRow row : table.rows()) {
-			float longitude = row.getFloat("long");
+			float longitude = row.getFloat("longt");
 			float temp = convertTempToLatitude(row.getFloat("temp"),false);
 			Location loc = new Location(temp, longitude);
 			String date = row.getString("date");
