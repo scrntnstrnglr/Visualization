@@ -71,6 +71,7 @@ public class Minards extends PApplet {
 	public void setup() {
 		map = new UnfoldingMap(this, VisualizerSettings.MINARD_WINDOW_LOCATION[0],
 				VisualizerSettings.MINARD_WINDOW_LOCATION[1], width, height);
+		
 		citiesTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_CITIES_DATASET, "header"), "CitiesData");
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
 		troopsTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_TROOPS_DATASET, "header"), "TroopsData");
@@ -190,10 +191,47 @@ public class Minards extends PApplet {
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
 
-		createTabbedPaneForData();
+		//createTabbedPaneForData();
+		//createTableDataUI();
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 
+	}
+
+	private void createTableDataUI() {
+		// TODO Auto-generated method stub
+		List<CSVLoader> minardsDataStrings = new LinkedList<CSVLoader>();
+		minardsDataStrings.add(citiesTable);
+		minardsDataStrings.add(troopsTable);
+		minardsDataStrings.add(tempTable);
+		
+		Map<String, List<ListBox>> dataMap = new HashMap<String, List<ListBox>>(getViewableDataMap(minardsDataStrings));
+		float startX=10,startY=10;
+		for(String item : dataMap.keySet()) {
+			startX=10;
+			ListBox lastListBox = null;
+			CSVLoader thisCSVData = null;
+			for(ListBox thisListBox : dataMap.get(item)) {
+				thisListBox.setPosition(startX, startY).setSize(70, 600).setItemHeight(10).setBarHeight(10)
+				.setColorBackground(0).setColorForeground(255);
+				if(item.equals("CitiesData")) {
+					thisCSVData=citiesTable;
+					thisListBox.addItems(citiesTable.getColumnData(thisListBox.getName()));
+				}
+				if(item.equals("TroopsData")) {
+					thisCSVData=troopsTable;
+					thisListBox.addItems(troopsTable.getColumnData(thisListBox.getName()));
+				}
+				if(item.equals("TemperaturData")) {
+					thisCSVData=tempTable;
+					thisListBox.addItems(tempTable.getColumnData(thisListBox.getName()));
+				}
+				startX+=70;
+				lastListBox=thisListBox;
+				
+			}
+			startY+=lastListBox.getBarHeight()*thisCSVData.getRowCount()+10;
+		}
 	}
 
 	private void createTabbedPaneForData() {
@@ -244,14 +282,16 @@ public class Minards extends PApplet {
 				float startX = 0, startY = 20;
 				List<ListBox> thisListBox = new ArrayList<ListBox>(dataMap.get(name));
 				for (ListBox listBox : thisListBox) {
-					listBox.setPosition(startX, startY).setSize(80, 80).setItemHeight(15).setBarHeight(15)
+					listBox.setPosition(startX, startY).setSize(80, 100).setItemHeight(15).setBarHeight(15)
 					.setColorBackground(0).setColorForeground(255);
-					if(name.equals("CitiesData"))
+					if(name.equals("CitiesData")) {
 						listBox.addItems(citiesTable.getColumnData(listBox.getName()));
+					}
 					if(name.equals("TroopsData"))
 						listBox.addItems(troopsTable.getColumnData(listBox.getName()));
-					if(name.equals("TemperatureData"))
+					if(name.equals("TemperaturData")) {
 						listBox.addItems(tempTable.getColumnData(listBox.getName()));
+					}
 					listBox.setVisible(true);
 					startX += 80;
 				}
@@ -266,7 +306,7 @@ public class Minards extends PApplet {
 	}
 
 	public Map<String, List<ListBox>> getViewableDataMap(List<CSVLoader> dataName) {
-		Map<String, List<ListBox>> thisListBoxMap = new HashMap<String, List<ListBox>>();
+		Map<String, List<ListBox>> thisListBoxMap = new LinkedHashMap<String, List<ListBox>>();
 		for (CSVLoader tableData : dataName) {
 			List<ListBox> thisListBox = new ArrayList<ListBox>();
 			for (String colName : tableData.getColumnHeaders()) {
