@@ -14,22 +14,35 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.providers.StamenMapProvider;
 import de.fhpotsdam.unfolding.providers.StamenMapProvider.TonerBackground;
 import processing.core.*;
+
 public class VisualizerSettings {
 
 	private static Properties minardsProperties;
-	
+
 	// ---Minard's Constants---
+	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
+	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
+	public static final String MINARD_CITIES_DATASET = "minard-data\\cities.csv",
+			MINARD_TROOPS_DATASET = "minard-data\\troops1.csv",
+			MINARD_TEMPERATURE_DATASET = "minard-data\\temp.csv";
+	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
+	public static final float[] MINARDS_TITLE_POISITION = new float[] {MINARD_SCREEN_WIDTH/2-300,10};
+	public static final String MINARDS_TITLE_FONT = "Segoe Script";
+	public static final float MINARDS_FONT_SIZE_LARGE=40,MINARDS_FONT_SIZE_MEDIUM=30,MINARDS_FONT_SIZE_SMALL=10;
+	public static final int[] MINARDS_TITLE_COLOR= new int[] {0,0,0};
 	public static final int[] MINARD_ATTACK_LINE_COLOR = new int[] { 216, 24, 24, 1 };
 	public static final int[] MINARD_RETREAT_LINE_COLOR = new int[] { 15, 79, 203, 1 };
 	public static final int[] MINARD_TEMPERATURE_LINE_COLOR = new int[] { 13, 134, 225, 1 };
 	public static final int MINARD_ATTACK_LINE_WEIGHT = 20, MINARD_RETREAT_LINE_WEIGHT = 20;
-	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
 	public static final TonerBackground MAP_PROVIDER = new StamenMapProvider.TonerBackground();
 	public static final int MINARD_LOC_SCALE_FACTOR = 16;
 	public static final String MINARD_RENDERER = PConstants.P3D;
 	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
-	public static final float MINARD_CONTROL_PANEL_WIDTH = 250, MINARD_CONTROL_PANEL_HEIGHT = 240;
+	public static final float MINARD_CONTROL_PANEL_WIDTH = 550, MINARD_CONTROL_PANEL_HEIGHT = 90;
+	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT-100};
+	public static final float MINARD_LEGEND_PANEL_WIDTH = 350, MINARD_LEGEND_PANEL_HEIGHT = 90;
+	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT-100 };
 	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3900;
 	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
 	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";
@@ -39,10 +52,9 @@ public class VisualizerSettings {
 			MINARDS_MOUSE_ENTER_EXIT_RANGE = 10;
 	public static final float MINARDS_LOCATION_MARKER_VICINITY = 0.1f;
 	public static final String MINARDS_DECIMAL_PRECISION = "#.#";
-	public static HashMap<String,List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
-	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS,MINARDS_TEMP_X_AXIS_LOCATIONS;
+	public static HashMap<String, List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
+	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS, MINARDS_TEMP_X_AXIS_LOCATIONS;
 	public static float MINARDS_TEMP_MAX_LONG;
-	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
 
 	// --Nightangle's Constants---
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
@@ -54,88 +66,88 @@ public class VisualizerSettings {
 
 	public VisualizerSettings() throws IOException {
 	}
-	
+
 	public static void createRetreatAndAttackCities(CSVLoader citiesData, CSVLoader troopsData) {
 		// TODO Auto-generated method stub
-		MINARDS_ATTACK_CITIES = new HashMap<String,List<String>>();
-		MINARDS_RETREAT_CITIES = new HashMap<String,List<String>>();
+		MINARDS_ATTACK_CITIES = new HashMap<String, List<String>>();
+		MINARDS_RETREAT_CITIES = new HashMap<String, List<String>>();
 		Map<Location, String> markerLocations = new HashMap<Location, String>(citiesData.getMarkerLocations());
-		LinkedHashMap<Location, List<String>> attackPathInfo =new LinkedHashMap<Location,List<String>>(troopsData.getPath("A"));
-		LinkedHashMap<Location, List<String>> retreatPathInfo =new LinkedHashMap<Location,List<String>>(troopsData.getPath("R"));
+		LinkedHashMap<Location, List<String>> attackPathInfo = new LinkedHashMap<Location, List<String>>(
+				troopsData.getPath("A"));
+		LinkedHashMap<Location, List<String>> retreatPathInfo = new LinkedHashMap<Location, List<String>>(
+				troopsData.getPath("R"));
 		double min = 999999999;
-		Location minLoc = new Location(0,0);
-		
-		for(Location markerLoc : markerLocations.keySet()) {
-			for(Location loc : attackPathInfo.keySet()) {
+		Location minLoc = new Location(0, 0);
+
+		for (Location markerLoc : markerLocations.keySet()) {
+			for (Location loc : attackPathInfo.keySet()) {
 				double distance = markerLoc.getDistance(loc);
-				if(distance<=min) {
-					min=distance;
+				if (distance <= min) {
+					min = distance;
 					minLoc = loc;
 				}
 			}
-			
-			
+
 			ArrayList<String> thisCityDataList = new ArrayList<String>();
-			if(attackPathInfo.containsKey(minLoc))
+			if (attackPathInfo.containsKey(minLoc))
 				thisCityDataList.add(attackPathInfo.get(minLoc).get(0).toString());
-			MINARDS_ATTACK_CITIES.put(markerLocations.get(markerLoc),thisCityDataList);
-			
-			
-			min=999999999;
-			minLoc = new Location(0,0);
-			for(Location loc : retreatPathInfo.keySet()) {
+			MINARDS_ATTACK_CITIES.put(markerLocations.get(markerLoc), thisCityDataList);
+
+			min = 999999999;
+			minLoc = new Location(0, 0);
+			for (Location loc : retreatPathInfo.keySet()) {
 				double distance = markerLoc.getDistance(loc);
-				if(distance<=min) {
-					min=distance;
+				if (distance <= min) {
+					min = distance;
 					minLoc = loc;
 				}
 			}
 			thisCityDataList = new ArrayList<String>();
-			if(retreatPathInfo.containsKey(minLoc))
+			if (retreatPathInfo.containsKey(minLoc))
 				thisCityDataList.add(retreatPathInfo.get(minLoc).get(0).toString());
-			MINARDS_RETREAT_CITIES.put(markerLocations.get(markerLoc),thisCityDataList); 
-			
+			MINARDS_RETREAT_CITIES.put(markerLocations.get(markerLoc), thisCityDataList);
+
 		}
 	}
-	
+
 	public static void createTemperatureAxes(CSVLoader tempData) {
-		LinkedHashMap<Location, String> temperatureData = new LinkedHashMap<Location,String>(tempData.getTemperatureData());
+		LinkedHashMap<Location, String> temperatureData = new LinkedHashMap<Location, String>(
+				tempData.getTemperatureData());
 		MINARDS_TEMP_Y_AXIS_LOCATIONS = new ArrayList<Location>();
 		MINARDS_TEMP_X_AXIS_LOCATIONS = new ArrayList<Location>();
-		//finding largest longitude.
-		float maxLong=-999999999;
-		for(Location loc : temperatureData.keySet()) {
-			if(loc.getLon()>=maxLong)
-				maxLong=loc.getLon();
+		// finding largest longitude.
+		float maxLong = -999999999;
+		for (Location loc : temperatureData.keySet()) {
+			if (loc.getLon() >= maxLong)
+				maxLong = loc.getLon();
 		}
-		
-		for(Location loc : temperatureData.keySet()) {
-			MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(loc.x,maxLong+1));
+
+		for (Location loc : temperatureData.keySet()) {
+			MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(loc.x, maxLong + 1));
 		}
-		
-		float maxLat = -999999999, minLat=999999999;
-		for(Location loc : MINARDS_TEMP_Y_AXIS_LOCATIONS) {
-			if(loc.x>=maxLat)
-				maxLat=loc.x;
-			if(loc.x<=minLat)
-				minLat=loc.x;
+
+		float maxLat = -999999999, minLat = 999999999;
+		for (Location loc : MINARDS_TEMP_Y_AXIS_LOCATIONS) {
+			if (loc.x >= maxLat)
+				maxLat = loc.x;
+			if (loc.x <= minLat)
+				minLat = loc.x;
 		}
-		MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(maxLat+0.5,maxLong+1));
-		MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(minLat-0.5,maxLong+1));
-		
-		for(Location loc : temperatureData.keySet()) {
-			MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat-0.5,loc.getLon()));
+		MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(maxLat + 0.5, maxLong + 1));
+		MINARDS_TEMP_Y_AXIS_LOCATIONS.add(new Location(minLat - 0.5, maxLong + 1));
+
+		for (Location loc : temperatureData.keySet()) {
+			MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat - 0.5, loc.getLon()));
 		}
-		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat-0.5,maxLong+1));
-		
-		float minLong=999999999;
-		for(Location loc : MINARDS_TEMP_X_AXIS_LOCATIONS) {
-			if(loc.y<=minLong)
-				minLong=loc.y;
+		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat - 0.5, maxLong + 1));
+
+		float minLong = 999999999;
+		for (Location loc : MINARDS_TEMP_X_AXIS_LOCATIONS) {
+			if (loc.y <= minLong)
+				minLong = loc.y;
 		}
-		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat-0.5,minLong-0.5));
-		MINARDS_TEMP_MAX_LONG = maxLong+1;
+		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat - 0.5, minLong - 0.5));
+		MINARDS_TEMP_MAX_LONG = maxLong + 1;
 	}
-	
 
 }
