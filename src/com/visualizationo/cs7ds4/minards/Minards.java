@@ -35,7 +35,7 @@ public class Minards extends PApplet {
 	private static final long serialVersionUID = 1L;
 	private static CSVLoader citiesTable, troopsTable, tempTable;
 	Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle, group3AttackToggle,
-			citiesMarkersToggle, group3RetreatToggle, tempLinesToggle,temperatureToggle, tempPointsToggle;
+			citiesMarkersToggle, group3RetreatToggle, tempLinesToggle, temperatureToggle, tempPointsToggle;
 	public static UnfoldingMap map;
 	private Map<Location, String> markerLocations;
 	MarkerManager<Marker> markerManager;
@@ -48,7 +48,8 @@ public class Minards extends PApplet {
 	private static LocationMarker cityMarkers;
 	private static LinkedHashMap<Location, Integer> thisPath;
 	private static LinkedHashMap<Location, String> temperatureData;
-	private static Textlabel myLabel, tempLabels, attackLegendLabel, retreatLegendLabel, temperatureLegendLabel, legendLabel, locLabel, tempTextLabel;
+	private static Textlabel myLabel, tempLabels, attackLegendLabel, retreatLegendLabel, temperatureLegendLabel,
+			legendLabel, locLabel, tempTextLabel;
 	private static TemperaturePointMarker tempPoints;
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 	private static List<SimpleLinesMarker> tempLineMarkers;
@@ -64,12 +65,13 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
-		map = new UnfoldingMap(this, 0, 0, width, height);
-		citiesTable = new CSVLoader(loadTable("minard-data\\cities.csv", "header"), "CitiesData");
+		map = new UnfoldingMap(this, VisualizerSettings.MINARD_WINDOW_LOCATION[0],
+				VisualizerSettings.MINARD_WINDOW_LOCATION[1], width, height);
+		citiesTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_CITIES_DATASET, "header"), "CitiesData");
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
-		troopsTable = new CSVLoader(loadTable("minard-data\\troops1.csv", "header"), "TroopsData");
+		troopsTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_TROOPS_DATASET, "header"), "TroopsData");
 		// https://nextjournal.com/data/QmdjuymUhcWL6KDiLp1BFkYisjqbdRaxMqz5eKp6ZjxoDj?content-type=text%2Fplain&filename=troops.csv
-		tempTable = new CSVLoader(loadTable("minard-data\\temp.csv", "header"), "TemperaturData");
+		tempTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_TEMPERATURE_DATASET, "header"), "TemperaturData");
 		// https://nextjournal.com/data/QmZj2Pt2zyxZe8aX8e3BcJySqmzWw9TpzxS6tstKrJEErM?content-type=text%2Fplain&filename=temps.csv
 
 		VisualizerSettings.createRetreatAndAttackCities(citiesTable, troopsTable);
@@ -77,43 +79,51 @@ public class Minards extends PApplet {
 
 		markerLocations = citiesTable.getMarkerLocations();
 		cp5 = new ControlP5(this); // controlp5 object
-		
-		
-		cp5.addTextlabel("titleLabel").setText(VisualizerSettings.MINARDS_TITLE).setPosition(width/2-300, 10)
-		.setFont(createFont("Segoe Script", 30)).setColor(0);
+
+		cp5.addTextlabel("titleLabel").setText(VisualizerSettings.MINARDS_TITLE)
+				.setPosition(VisualizerSettings.MINARDS_TITLE_POISITION[0],
+						VisualizerSettings.MINARDS_TITLE_POISITION[1])
+				.setFont(createFont(VisualizerSettings.MINARDS_TITLE_FONT, VisualizerSettings.MINARDS_FONT_SIZE_MEDIUM))
+				.setColor(VisualizerSettings.MINARDS_TITLE_COLOR[0]);
 
 
-		cp5.addTextlabel("group1").setText("Group 1").setPosition(10, 10).setFont(createFont("Arial", 12)).setColor(0);
-		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(15, 35).setSize(40, 20).setState(true)
+		float x = VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[0];
+		float y = VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[1];
+		cp5.addTextlabel("group1").setText("Group 1").setPosition(x+10, y+10).setFont(createFont("Arial", 12)).setColor(0);
+		group1AttackToggle = cp5.addToggle("goup1Attack").setPosition(x+15, y+30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(75, 35).setSize(40, 20).setState(true)
+		group1RetreatToggle = cp5.addToggle("group1Retreat").setPosition(x+15, y+60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
-		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(135, 35).setSize(40, 20).setState(true)
+
+		cp5.addTextlabel("group2").setText("Group 2").setPosition(x+90, y+10).setFont(createFont("Arial", 12)).setColor(0);
+		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(x+95, y+30).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
+		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(x+95, y+60).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
+
+		cp5.addTextlabel("group3").setText("Group 3").setPosition(x+170, y+10).setFont(createFont("Arial", 12)).setColor(0);
+		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(x+175, y+30).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
+		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(x+175, y+60).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
+		
+		cp5.addTextlabel("cities").setText("Cities").setPosition(x+250, y+10).setFont(createFont("Arial", 12)).setColor(0);
+		citiesMarkersToggle = cp5.addToggle("citiesToggle").setPosition(x+255, y+30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Show Cities");
-		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(195, 35).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Temperature\nPoints");
-
-		cp5.addTextlabel("group2").setText("Group 2").setPosition(10, 90).setFont(createFont("Arial", 12)).setColor(0);
-		group2AttackToggle = cp5.addToggle("goup2Attack").setPosition(15, 115).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group2RetreatToggle = cp5.addToggle("group2Retreat").setPosition(75, 115).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
-		temperatureToggle = cp5.addToggle("temperatureToggle").setPosition(135,115).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Temperature");
-		tempLinesToggle = cp5.addToggle("tempLinesToggle").setPosition(195, 115).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Temperature\nLines");
-
-		cp5.addTextlabel("group3").setText("Group 3").setPosition(10, 170).setFont(createFont("Arial", 12)).setColor(0);
-		group3AttackToggle = cp5.addToggle("goup3Attack").setPosition(15, 195).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack");
-		group3RetreatToggle = cp5.addToggle("group3Retreat").setPosition(75, 195).setSize(40, 20).setState(true)
-				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat");
 		
-
+		cp5.addTextlabel("temperatures").setText("Temperature").setPosition(x+330, y+10).setFont(createFont("Arial", 12)).setColor(0);
+		temperatureToggle = cp5.addToggle("temperatureToggle").setPosition(x+335, y+30).setSize(31, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Path");
+		tempLinesToggle = cp5.addToggle("tempLinesToggle").setPosition(x+335, y+60).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Lines");
+		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(x+385, y+30).setSize(32, 12).setState(true)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Markers");
+		
+		
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
 		pinImg = loadImage("img\\minard\\location.png");
-		pinImgLabel =loadImage("img\\minard\\location.png");
+		pinImgLabel = loadImage("img\\minard\\location.png");
 		pinImgLabel.resize(22, 22);
 		pinImg.resize(32, 32);
 		coldImg = loadImage("img\\minard\\wind.png");
@@ -146,21 +156,21 @@ public class Minards extends PApplet {
 		group3RetreatPath = new PathMarker(new LinkedList<Location>(thisPath.keySet()),
 				setMarkerName("Group3RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
-		temperatureData = tempTable.getTemperatureData();	
+		temperatureData = tempTable.getTemperatureData();
 		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()),
 				setMarkerName("TemperaturePath"));
 		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()),
 				setMarkerName("TemperaturPoints"));
 		tempYAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_Y_AXIS_LOCATIONS,
 				setMarkerName("TemperatureYAxis"));
-		
-		List<Location> tempLocations  =  new ArrayList<Location>(tempPoints.getLocations());
+
+		List<Location> tempLocations = new ArrayList<Location>(tempPoints.getLocations());
 		tempLineMarkers = new ArrayList<SimpleLinesMarker>();
 
-		for(Location tempPoints : tempLocations) {
-			tempLineMarkers.add(new SimpleLinesMarker(tempPoints , getEndMarkerCity(tempPoints)));
+		for (Location tempPoints : tempLocations) {
+			tempLineMarkers.add(new SimpleLinesMarker(tempPoints, getEndMarkerCity(tempPoints)));
 		}
-	
+
 		tempXAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_X_AXIS_LOCATIONS,
 				setMarkerName("TemperatureXAxis"));
 
@@ -173,8 +183,7 @@ public class Minards extends PApplet {
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
 		MapUtils.createDefaultEventDispatcher(this, map);
-		
-		
+
 	}
 
 	public void draw() {
@@ -192,45 +201,50 @@ public class Minards extends PApplet {
 		toggleDisplay(tempPointsToggle.getState(), tempPoints);
 		toggleDisplay(false, tempYAxesLocations);
 		toggleDisplay(false, tempXAxesLocations);
-		for(SimpleLinesMarker tempLineMarker : tempLineMarkers)
-			toggleDisplay(tempLinesToggle.getState(),tempLineMarker);
+		for (SimpleLinesMarker tempLineMarker : tempLineMarkers)
+			toggleDisplay(tempLinesToggle.getState(), tempLineMarker);
 
 		map.addMarkerManager(markerManager);
 
 		pushMatrix();
 		fill(255);
 		stroke(0);
-		rect(10, 10, VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
-		rect(10, height - 100 - 30, 250, 120);
-		legendLabel.setText("Legend").setPosition(20,height-126).setFont(createFont("Arial",13)).setColor(0);
+		rect(VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[0], VisualizerSettings.MINARD_CONTROL_PANEL_LOCATION[1], VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
+		rect(VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[0], VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[1], VisualizerSettings.MINARD_LEGEND_PANEL_WIDTH, VisualizerSettings.MINARD_LEGEND_PANEL_HEIGHT);
+		
+		legendLabel.setText("Legend").setPosition(20, height - 95).setFont(createFont("Arial", 13)).setColor(0);
+		
 		fill(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
 				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2]);
-		circle(30, height - 90, 20);
-		attackLegendLabel.setText(" - Advance").setPosition(39, height - 100).setFont(createFont("Arial", 11))
+		circle(30, height - 60, 20);
+		attackLegendLabel.setText(" - Advance").setPosition(39, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
+		
 		fill(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
 				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2]);
-		circle(30, height - 60, 20);
-		retreatLegendLabel.setText(" - Retreat").setPosition(39, height - 70).setFont(createFont("Arial", 11))
-				.setColor(0);
+		circle(130, height - 60, 20);
+		retreatLegendLabel.setText(" - Retreat").setPosition(140, height - 70).setFont(createFont("Arial", 11))
+				.setColor(0); 
+				
 		fill(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0], VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
 				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2]);
-		circle(30, height - 30, 20);
-		temperatureLegendLabel.setText(" - Temperature").setPosition(39, height - 40).setFont(createFont("Arial", 11))
+		circle(230, height - 60, 20);
+		temperatureLegendLabel.setText(" - Temperature").setPosition(240, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
-	
-		image(pinImgLabel,120,height-100);
-		locLabel.setText(" - Cities").setPosition(140,height-100).setFont(createFont("Arial",11)).setColor(0);
-		image(coldImgLabel,120,height-70);
-		tempTextLabel.setText(" - Temperature points").setPosition(140,height-70).setFont(createFont("Arial",11)).setColor(0);
+
+		image(pinImgLabel, 20, height - 38);
+		locLabel.setText(" - Cities").setPosition(40, height - 38).setFont(createFont("Arial", 11)).setColor(0);
+		
+		
+		image(coldImgLabel, 120, height - 38);
+		tempTextLabel.setText(" - Temperature points").setPosition(140, height - 38).setFont(createFont("Arial", 11))
+				.setColor(0); 
 		popMatrix();
-		
-		
 
 	}
 
 	@Override
-	public void mouseMoved() { 
+	public void mouseMoved() {
 		// TODO Auto-generated method stub
 		super.mouseMoved();
 		pushMatrix();
@@ -254,7 +268,7 @@ public class Minards extends PApplet {
 				Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
 				float x = Float.parseFloat(String.format("%.2f", myLoc.x));
 				float y = Float.parseFloat(String.format("%.2f", myLoc.y));
-				Location thisLoc = new Location(x, y);				
+				Location thisLoc = new Location(x, y);
 				if (temperatureData.containsKey(thisLoc)) {
 					setTemperatureLabels(thisLoc, temperatureData.get(thisLoc), mapPosition);
 				}
@@ -327,17 +341,17 @@ public class Minards extends PApplet {
 		thisMarkerProperties.put("name", name);
 		return thisMarkerProperties;
 	}
-	
+
 	public Location getEndMarkerCity(Location tempMarker) {
 		float lon = tempMarker.getLon();
-		float x=0,y=0;
-		for(Location loc : cityMarkers.getLocations()) {
+		float x = 0, y = 0;
+		for (Location loc : cityMarkers.getLocations()) {
 			x = loc.getLat();
 			y = loc.getLon();
-			if(y==lon)
+			if (y == lon)
 				break;
 		}
-		return new Location(x,y);
+		return new Location(x, y);
 	}
 
 	public static void main(String args[]) {
