@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.visualizationo.cs7ds4.minards.Minards;
+import com.tcd.visualization.cs7ds4.minards.Minards;
 
 import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.utils.MapPosition;
