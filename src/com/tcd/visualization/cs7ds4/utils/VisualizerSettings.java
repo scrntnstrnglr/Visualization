@@ -43,6 +43,8 @@ public class VisualizerSettings {
 	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT-100};
 	public static final float MINARD_LEGEND_PANEL_WIDTH = 350, MINARD_LEGEND_PANEL_HEIGHT = 90;
 	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT-100 };
+	public static final float MINARD_DESCRIPTION_PANEL_WIDTH=MINARD_LEGEND_PANEL_WIDTH,MINARD_DESCRIPTION_PANEL_HEIGHT=400;
+	public static final float[] MINARD_DESCRIPTION_PANEL_LOCATION = new float[] { 10,MINARD_SCREEN_HEIGHT-(MINARD_DESCRIPTION_PANEL_HEIGHT+MINARD_LEGEND_PANEL_HEIGHT+20) };
 	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3900;
 	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
 	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";

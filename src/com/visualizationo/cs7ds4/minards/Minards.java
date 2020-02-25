@@ -14,6 +14,8 @@ import de.fhpotsdam.unfolding.providers.Microsoft.AerialProvider;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -27,7 +29,6 @@ import com.visualizationo.cs7ds4.minards.markers.*;
 import controlP5.ButtonBar;
 import controlP5.CallbackEvent;
 import controlP5.CallbackListener;
-import controlP5.Canvas;
 import controlP5.ControlP5;
 import controlP5.ListBox;
 import controlP5.Textlabel;
@@ -39,7 +40,8 @@ public class Minards extends PApplet {
 	private static final long serialVersionUID = 1L;
 	private static CSVLoader citiesTable, troopsTable, tempTable;
 	Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle, group3AttackToggle,
-			citiesMarkersToggle, group3RetreatToggle, tempLinesToggle, temperatureToggle, tempPointsToggle;
+			citiesMarkersToggle, group3RetreatToggle, tempLinesToggle, temperatureToggle, tempPointsToggle,
+			tempDataToggle;
 	public static UnfoldingMap map;
 	private Map<Location, String> markerLocations;
 	MarkerManager<Marker> markerManager;
@@ -51,12 +53,15 @@ public class Minards extends PApplet {
 	private static TemperatureMarker tempPath;
 	private static LocationMarker cityMarkers;
 	private static LinkedHashMap<Location, Integer> thisPath;
-	private static LinkedHashMap<Location, String> temperatureData;
+	public static LinkedHashMap<Location, String> temperatureData;
 	private static Textlabel myLabel, tempLabels, attackLegendLabel, retreatLegendLabel, temperatureLegendLabel,
 			legendLabel, locLabel, tempTextLabel;
 	private static TemperaturePointMarker tempPoints;
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 	private static List<SimpleLinesMarker> tempLineMarkers;
+	private static TemperatureTextMarker tempTextMarker;
+	private static List<Textlabel> tempTextLabelList, survivorTextLabelList;
+	private static int tracker;
 
 	public Minards() throws IOException {
 		// translate(0,800);
@@ -69,9 +74,10 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
+		tracker = 0;
 		map = new UnfoldingMap(this, VisualizerSettings.MINARD_WINDOW_LOCATION[0],
 				VisualizerSettings.MINARD_WINDOW_LOCATION[1], width, height);
-		
+
 		citiesTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_CITIES_DATASET, "header"), "CitiesData");
 		// https://nextjournal.com/data/QmNmebghsPHsrbL6MwLKVapcp9EtJKFm4hwtAafnPGiRwh?content-type=text%2Fplain&filename=cities.csv
 		troopsTable = new CSVLoader(loadTable(VisualizerSettings.MINARD_TROOPS_DATASET, "header"), "TroopsData");
@@ -127,6 +133,8 @@ public class Minards extends PApplet {
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Lines");
 		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(x + 385, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Markers");
+		tempDataToggle = cp5.addToggle("tempDataToggle").setPosition(x + 385, y + 60).setSize(32, 12).setState(false)
+				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Data");
 
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
@@ -182,6 +190,12 @@ public class Minards extends PApplet {
 		tempXAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_X_AXIS_LOCATIONS,
 				setMarkerName("TemperatureXAxis"));
 
+		HashMap<String, Object> tempTextMarkerProps = new HashMap<String, Object>();
+		tempTextMarkerProps.put("name", "TemperatureText");
+		tempTextMarkerProps.put("contropP5Object", cp5);
+		tempTextMarker = new TemperatureTextMarker(new LinkedList<Location>(temperatureData.keySet()),
+				tempTextMarkerProps, cp5);
+
 		myLabel = cp5.addTextlabel("LocationMarkerLabels");
 		tempLabels = cp5.addTextlabel("TemperatureMarkerLabels");
 		attackLegendLabel = cp5.addTextlabel("AttackLegend");
@@ -191,11 +205,30 @@ public class Minards extends PApplet {
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
 
-		//createTabbedPaneForData();
-		//createTableDataUI();
+		tempTextLabelList = new ArrayList<Textlabel>(getTempTextLabels(temperatureData, "tempTextLabel"));
+		survivorTextLabelList = new ArrayList<Textlabel>(getSurvivorLabels(troopsTable.getPath("A", 1), "survivorA1"));
+
+		// createTabbedPaneForData();
+		// createTableDataUI();
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 
+	}
+
+	private List<Textlabel> getTempTextLabels(LinkedHashMap<Location, String> dataSet, String name) {
+		List<Textlabel> thisLabels = new ArrayList<Textlabel>();
+		for (int i = 0; i < dataSet.size(); i++) {
+			thisLabels.add(cp5.addTextlabel(name + i));
+		}
+		return thisLabels;
+	}
+
+	private List<Textlabel> getSurvivorLabels(LinkedHashMap<Location, Integer> dataSet, String name) {
+		List<Textlabel> thisLabels = new ArrayList<Textlabel>();
+		for (int i = 0; i < dataSet.size(); i++) {
+			thisLabels.add(cp5.addTextlabel(name + i));
+		}
+		return thisLabels;
 	}
 
 	private void createTableDataUI() {
@@ -204,33 +237,33 @@ public class Minards extends PApplet {
 		minardsDataStrings.add(citiesTable);
 		minardsDataStrings.add(troopsTable);
 		minardsDataStrings.add(tempTable);
-		
+
 		Map<String, List<ListBox>> dataMap = new HashMap<String, List<ListBox>>(getViewableDataMap(minardsDataStrings));
-		float startX=10,startY=10;
-		for(String item : dataMap.keySet()) {
-			startX=10;
+		float startX = 10, startY = 10;
+		for (String item : dataMap.keySet()) {
+			startX = 10;
 			ListBox lastListBox = null;
 			CSVLoader thisCSVData = null;
-			for(ListBox thisListBox : dataMap.get(item)) {
+			for (ListBox thisListBox : dataMap.get(item)) {
 				thisListBox.setPosition(startX, startY).setSize(70, 600).setItemHeight(10).setBarHeight(10)
-				.setColorBackground(0).setColorForeground(255);
-				if(item.equals("CitiesData")) {
-					thisCSVData=citiesTable;
+						.setColorBackground(0).setColorForeground(255);
+				if (item.equals("CitiesData")) {
+					thisCSVData = citiesTable;
 					thisListBox.addItems(citiesTable.getColumnData(thisListBox.getName()));
 				}
-				if(item.equals("TroopsData")) {
-					thisCSVData=troopsTable;
+				if (item.equals("TroopsData")) {
+					thisCSVData = troopsTable;
 					thisListBox.addItems(troopsTable.getColumnData(thisListBox.getName()));
 				}
-				if(item.equals("TemperaturData")) {
-					thisCSVData=tempTable;
+				if (item.equals("TemperaturData")) {
+					thisCSVData = tempTable;
 					thisListBox.addItems(tempTable.getColumnData(thisListBox.getName()));
 				}
-				startX+=70;
-				lastListBox=thisListBox;
-				
+				startX += 70;
+				lastListBox = thisListBox;
+
 			}
-			startY+=lastListBox.getBarHeight()*thisCSVData.getRowCount()+10;
+			startY += lastListBox.getBarHeight() * thisCSVData.getRowCount() + 10;
 		}
 	}
 
@@ -242,7 +275,7 @@ public class Minards extends PApplet {
 		minardsDataStrings.add(tempTable);
 
 		Map<String, List<ListBox>> dataMap = new HashMap<String, List<ListBox>>(getViewableDataMap(minardsDataStrings));
-		//System.out.println(dataMap);
+		// System.out.println(dataMap);
 
 		ButtonBar b = cp5.addButtonBar("bar").setPosition(0, 0).setSize(300, 20)
 				.addItems(split("Cities Troops Temperature", " "));
@@ -255,15 +288,15 @@ public class Minards extends PApplet {
 				ButtonBar bar = (ButtonBar) arg0.getController();
 				switch (bar.hover()) {
 				case 0:
-					//System.out.println("Cities");
+					// System.out.println("Cities");
 					setTableData(dataMap, "CitiesData");
 					break;
 				case 1:
-					//System.out.println("Troops");
+					// System.out.println("Troops");
 					setTableData(dataMap, "TroopsData");
 					break;
 				case 2:
-					//System.out.println("TemperaturData");
+					// System.out.println("TemperaturData");
 					setTableData(dataMap, "TemperaturData");
 					break;
 				}
@@ -283,22 +316,19 @@ public class Minards extends PApplet {
 				List<ListBox> thisListBox = new ArrayList<ListBox>(dataMap.get(name));
 				for (ListBox listBox : thisListBox) {
 					listBox.setPosition(startX, startY).setSize(80, 100).setItemHeight(15).setBarHeight(15)
-					.setColorBackground(0).setColorForeground(255);
-					if(name.equals("CitiesData")) {
+							.setColorBackground(0).setColorForeground(255);
+					if (name.equals("CitiesData")) {
 						listBox.addItems(citiesTable.getColumnData(listBox.getName()));
 					}
-					if(name.equals("TroopsData"))
+					if (name.equals("TroopsData"))
 						listBox.addItems(troopsTable.getColumnData(listBox.getName()));
-					if(name.equals("TemperaturData")) {
+					if (name.equals("TemperaturData")) {
 						listBox.addItems(tempTable.getColumnData(listBox.getName()));
 					}
 					listBox.setVisible(true);
 					startX += 80;
 				}
 
-			}
-
-			private void displayData(CSVLoader csvData) {
 			}
 
 		});
@@ -330,10 +360,12 @@ public class Minards extends PApplet {
 		toggleDisplay(group3RetreatToggle.getState(), group3RetreatPath);
 		toggleDisplay(temperatureToggle.getState(), tempPath);
 		toggleDisplay(tempPointsToggle.getState(), tempPoints);
-		toggleDisplay(false, tempYAxesLocations);
-		toggleDisplay(false, tempXAxesLocations);
+		// toggleDisplay(true, tempYAxesLocations);
+		// toggleDisplay(false, tempXAxesLocations);
 		for (SimpleLinesMarker tempLineMarker : tempLineMarkers)
 			toggleDisplay(tempLinesToggle.getState(), tempLineMarker);
+
+		// toggleDisplay(true, tempTextMarker);
 
 		map.addMarkerManager(markerManager);
 
@@ -344,6 +376,8 @@ public class Minards extends PApplet {
 				VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
 		rect(VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[0], VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[1],
 				VisualizerSettings.MINARD_LEGEND_PANEL_WIDTH, VisualizerSettings.MINARD_LEGEND_PANEL_HEIGHT);
+		rect(VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[0], VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[1],
+				VisualizerSettings.MINARD_DESCRIPTION_PANEL_WIDTH, VisualizerSettings.MINARD_DESCRIPTION_PANEL_HEIGHT);
 
 		legendLabel.setText("Legend").setPosition(20, height - 95).setFont(createFont("Arial", 13)).setColor(0);
 
@@ -371,43 +405,82 @@ public class Minards extends PApplet {
 		image(coldImgLabel, 120, height - 38);
 		tempTextLabel.setText(" - Temperature points").setPosition(140, height - 38).setFont(createFont("Arial", 11))
 				.setColor(0);
+		
+
+
+		createTemperatureDataLabels();
+		createSurvivorDataLabels();
 		popMatrix();
 
+	}
+
+	private void createSurvivorDataLabels() {
+		// TODO Auto-generated method stub
+		tracker = 0;
+		for (MapPosition mapPosition : group1AttackPath.getCanvasLocations()) {
+			Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
+			float x = Float.parseFloat(String.format("%.2f", myLoc.x));
+			float y = Float.parseFloat(String.format("%.2f", myLoc.y));
+			Location thisLoc = new Location(x, y);
+			if (troopsTable.getPath("A", 1).containsKey(thisLoc)) {
+				setSurvivorLabels(survivorTextLabelList.get(tracker++), thisLoc,
+						troopsTable.getPath("A", 1).get(thisLoc), mapPosition);
+			}
+
+		}
+
+	}
+
+	private void setSurvivorLabels(Textlabel label, Location thisLoc, int survivor, MapPosition mapPosition) {
+
+		label.setText(survivor*VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR + "").setPosition(mapPosition.x, mapPosition.y).setFont(createFont("Segoe Script", 9))
+				.setColor(0).setVisible(tempDataToggle.getState());
+	}
+
+	private void createTemperatureDataLabels() {
+		tracker = 0;
+		for (MapPosition mapPosition : tempPoints.getMapPositions()) {
+			Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
+			float x = Float.parseFloat(String.format("%.2f", myLoc.x));
+			float y = Float.parseFloat(String.format("%.2f", myLoc.y));
+			Location thisLoc = new Location(x, y);
+			if (temperatureData.containsKey(thisLoc)) {
+				setTemperatureLabels(tempTextLabelList.get(tracker++), thisLoc, temperatureData.get(thisLoc),
+						mapPosition);
+			}
+
+		}
 	}
 
 	@Override
-	public void mouseMoved() {
+	public void mouseWheel() {
 		// TODO Auto-generated method stub
-		super.mouseMoved();
-		pushMatrix();
-		for (MapPosition mapPosition : cityMarkers.getMapPositions()) {
-			textAlign(BOTTOM);
-			if ((mouseX <= mapPosition.x + 10 && mouseX >= mapPosition.x - 10)
-					&& (mouseY <= mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) {
-				Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
-				float x = Float.parseFloat(String.format("%.1f", myLoc.x));
-				float y = Float.parseFloat(String.format("%.1f", myLoc.y));
-				Location thisLoc = new Location(x, y);
-				if (markerLocations.containsKey(thisLoc)) {
-					setMarkerLabels(markerLocations.get(thisLoc), mapPosition);
-				}
-			}
-		}
-
-		for (MapPosition mapPosition : tempPoints.getMapPositions()) {
-			if ((mouseX <= mapPosition.x + 10 && mouseX >= mapPosition.x - 10)
-					&& (mouseY <= mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) {
-				Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
-				float x = Float.parseFloat(String.format("%.2f", myLoc.x));
-				float y = Float.parseFloat(String.format("%.2f", myLoc.y));
-				Location thisLoc = new Location(x, y);
-				if (temperatureData.containsKey(thisLoc)) {
-					setTemperatureLabels(thisLoc, temperatureData.get(thisLoc), mapPosition);
-				}
-			}
-		}
-		popMatrix();
+		super.mouseWheel();
+		tempLabels.setVisible(false);
 	}
+
+	/*
+	 * @Override public void mouseMoved() { // TODO Auto-generated method stub
+	 * super.mouseMoved(); pushMatrix(); for (MapPosition mapPosition :
+	 * cityMarkers.getMapPositions()) { textAlign(BOTTOM); if ((mouseX <=
+	 * mapPosition.x + 10 && mouseX >= mapPosition.x - 10) && (mouseY <=
+	 * mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) { Location myLoc =
+	 * map.getLocation(mapPosition.x, mapPosition.y); float x =
+	 * Float.parseFloat(String.format("%.1f", myLoc.x)); float y =
+	 * Float.parseFloat(String.format("%.1f", myLoc.y)); Location thisLoc = new
+	 * Location(x, y); if (markerLocations.containsKey(thisLoc)) {
+	 * setMarkerLabels(markerLocations.get(thisLoc), mapPosition); } } }
+	 * 
+	 * for (MapPosition mapPosition : tempPoints.getMapPositions()) { if ((mouseX <=
+	 * mapPosition.x + 10 && mouseX >= mapPosition.x - 10) && (mouseY <=
+	 * mapPosition.y + 10 && mouseY >= mapPosition.y - 10)) { Location myLoc =
+	 * map.getLocation(mapPosition.x, mapPosition.y); float x =
+	 * Float.parseFloat(String.format("%.2f", myLoc.x)); float y =
+	 * Float.parseFloat(String.format("%.2f", myLoc.y)); Location thisLoc = new
+	 * Location(x, y); if (temperatureData.containsKey(thisLoc)) {
+	 * setTemperatureLabels(thisLoc, temperatureData.get(thisLoc), mapPosition); } }
+	 * } popMatrix(); }
+	 */
 
 	private void toggleDisplay(boolean show, Marker marker) {
 		if (show)
@@ -430,34 +503,15 @@ public class Minards extends PApplet {
 	}
 
 	private void setMarkerLabels(String cityName, MapPosition mapPosition) {
-		HashMap<String, List<String>> attackCities = VisualizerSettings.MINARDS_ATTACK_CITIES;
-		HashMap<String, List<String>> retreatCities = VisualizerSettings.MINARDS_RETREAT_CITIES;
-		String survivorText = "";
-		if (attackCities.containsKey(cityName) && retreatCities.containsKey(cityName)) {
-			if (!attackCities.get(cityName).isEmpty() && !retreatCities.get(cityName).isEmpty()) {
-				survivorText = " \nAttack: " + attackCities.get(cityName).get(0) + " \nRetreat: "
-						+ retreatCities.get(cityName).get(0);
-			}
-		} else {
-			if (attackCities.containsKey(cityName) && !retreatCities.containsKey(cityName)
-					&& !attackCities.get(cityName).isEmpty()) {
-				survivorText = " \nAttack: " + attackCities.get(cityName).get(0);
-			}
-			if (!attackCities.containsKey(cityName) && retreatCities.containsKey(cityName)
-					&& !retreatCities.get(cityName).isEmpty()) {
-				survivorText = " \nRetreat: " + retreatCities.get(cityName).get(0);
-			}
-		}
-		myLabel.setText(cityName + survivorText).setPosition(mapPosition.x, mapPosition.y + 4)
-				.setFont(createFont("Arial", 13)).setColor(0);
 	}
 
-	private void setTemperatureLabels(Location loc, String date, MapPosition mapPosition) {
+	private void setTemperatureLabels(Textlabel label, Location loc, String date, MapPosition mapPosition) {
 		// TODO Auto-generated method stub
 		float temperature = Float
 				.parseFloat(String.format("%.0f", CSVLoader.convertTempToLatitude(loc.getLat(), true)));
-		tempLabels.setText("Temp: " + temperature + "\nDate: " + CSVLoader.formatDate(date, '.'))
-				.setPosition(mapPosition.x + 10, mapPosition.y + 5).setFont(createFont("Arial", 13)).setColor(0);
+		label.setText(temperature + " \u00B0" + "C\n" + CSVLoader.formatDate(date, '.'))
+				.setPosition(mapPosition.x, mapPosition.y + 20).setFont(createFont("Segoe Script", 9)).setColor(0)
+				.setVisible(tempDataToggle.getState());
 	}
 
 	public Map<String, Object> getCurrentMarkerData() {
