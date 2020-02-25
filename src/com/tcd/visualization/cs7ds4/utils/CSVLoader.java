@@ -31,23 +31,23 @@ public class CSVLoader {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public int getRowCount() {
 		return this.table.getRowCount();
 	}
-	
+
 	public int getColumnCount() {
 		return this.table.getColumnCount();
 	}
-	
-	public List<String> getColumnData(String columnName){
+
+	public List<String> getColumnData(String columnName) {
 		List<String> thisColumnData = new LinkedList<String>();
-		for(String item : this.table.getStringColumn(columnName)) {
+		for (String item : this.table.getStringColumn(columnName)) {
 			thisColumnData.add(item);
 		}
 		return thisColumnData;
 	}
-	
+
 	public String[] getColumnHeaders() {
 		return this.table.getColumnTitles();
 	}
@@ -113,6 +113,50 @@ public class CSVLoader {
 		return pathInfo;
 	}
 
+	private LinkedHashMap<Location, Integer> getUnscaledSurvivorPathMap(String action, int division) {
+
+		LinkedHashMap<Location, Integer> pathInfo = new LinkedHashMap<Location, Integer>();
+		for (TableRow row : table.rows()) {
+			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
+				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")), row.getInt("survivors"));
+			}
+		}
+		return pathInfo;
+
+	}
+
+	public LinkedHashMap<Float, Integer> getSurvivorDataLongitude(String action) {
+		LinkedHashMap<Float, Integer> pathInfo = new LinkedHashMap<Float, Integer>();
+		for (TableRow row : table.rows()) {
+			if (row.getString("direction").equalsIgnoreCase(action)) {
+				float longp = row.getFloat("longp");
+				if (pathInfo.keySet().contains(longp)) {
+					int survivors = pathInfo.get(longp);
+					pathInfo.put(longp, survivors + row.getInt("survivors"));
+				} else {
+					pathInfo.put(longp, row.getInt("survivors"));
+				}
+
+			}
+		}
+		return pathInfo;
+
+	}
+
+	public LinkedHashMap<Location, String> getSurvivorMakersData(String action, int division) {
+		LinkedHashMap<Location, Integer> pathInfo = new LinkedHashMap<Location, Integer>(
+				this.getUnscaledSurvivorPathMap(action, division));
+		LinkedHashMap<Location, String> survivorData = new LinkedHashMap<Location, String>();
+		int index = 0;
+		for (Location loc : pathInfo.keySet()) {
+			if (index == 0 || index == pathInfo.size() / 2 || index == pathInfo.size() - 1) {
+				survivorData.put(loc, pathInfo.get(loc).toString());
+			}
+			++index;
+		}
+		return survivorData;
+	}
+
 	public LinkedHashMap<Location, List<String>> getPath() {
 		LinkedHashMap<Location, List<String>> pathInfo = new LinkedHashMap<Location, List<String>>();
 		for (TableRow row : table.rows()) {
@@ -173,7 +217,7 @@ public class CSVLoader {
 		LinkedHashMap<Location, String> temperatureData = new LinkedHashMap<Location, String>();
 		for (TableRow row : table.rows()) {
 			float longitude = row.getFloat("longt");
-			float temp = convertTempToLatitude(row.getFloat("temp"),false);
+			float temp = convertTempToLatitude(row.getFloat("temp"), false);
 			Location loc = new Location(temp, longitude);
 			String date = row.getString("date");
 			temperatureData.put(loc, date);
@@ -194,14 +238,30 @@ public class CSVLoader {
 
 		return toReturn;
 	}
-	
+
 	public static String formatDate(String inDate, char separator) {
 		int len = inDate.length();
-		String year = inDate.substring(len-4,len);
-		String month = inDate.substring(len-7,len-4);
-		String day = inDate.substring(0,len-7);
-		return day+separator+month+separator+year;
+		String year = inDate.substring(len - 4, len);
+		String month = inDate.substring(len - 7, len - 4);
+		String day = inDate.substring(0, len - 7);
+		return day + separator + month + separator + year;
 	}
-	
+
+	public LinkedHashMap<Location, String> createLongitudeBasedSurvivorCount(String action) {
+		LinkedHashMap<Float, Integer> allSurvivors = new LinkedHashMap<Float, Integer>(
+				this.getSurvivorDataLongitude(action));
+		LinkedHashMap<Location, List<String>> thisActionLocationData = new LinkedHashMap<Location, List<String>>(
+				this.getPath(action));
+		LinkedHashMap<Location, String> survivorMarkerData = new LinkedHashMap<Location, String>();
+		for (Float longp : allSurvivors.keySet()) {
+			for (Location loc : thisActionLocationData.keySet()) {
+				if (loc.y == longp) {
+					survivorMarkerData.put(loc, allSurvivors.get(longp).toString());
+					break;
+				}
+			}
+		}
+		return survivorMarkerData;
+	}
 
 }

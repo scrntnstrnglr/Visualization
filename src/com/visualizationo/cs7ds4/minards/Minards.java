@@ -17,10 +17,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
@@ -60,7 +62,8 @@ public class Minards extends PApplet {
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 	private static List<SimpleLinesMarker> tempLineMarkers;
 	private static TemperatureTextMarker tempTextMarker;
-	private static List<Textlabel> tempTextLabelList, survivorTextLabelList;
+	private static List<Textlabel> tempTextLabelList, survivorTextLabelListA1, survivorTextLabelListA2,
+			survivorTextLabelListA3, survivorTextLabelListR1, survivorTextLabelListR2, survivorTextLabelListR3;
 	private static int tracker;
 
 	public Minards() throws IOException {
@@ -205,25 +208,13 @@ public class Minards extends PApplet {
 		locLabel = cp5.addTextlabel("LocationTextLabel");
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
 
-		tempTextLabelList = new ArrayList<Textlabel>(getTempTextLabels(temperatureData, "tempTextLabel"));
-		survivorTextLabelList = new ArrayList<Textlabel>(getSurvivorLabels(troopsTable.getPath("A", 1), "survivorA1"));
-
-		// createTabbedPaneForData();
-		// createTableDataUI();
+		tempTextLabelList = new ArrayList<Textlabel>(getTextLabels(temperatureData, "tempTextLabel"));
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 
 	}
 
-	private List<Textlabel> getTempTextLabels(LinkedHashMap<Location, String> dataSet, String name) {
-		List<Textlabel> thisLabels = new ArrayList<Textlabel>();
-		for (int i = 0; i < dataSet.size(); i++) {
-			thisLabels.add(cp5.addTextlabel(name + i));
-		}
-		return thisLabels;
-	}
-
-	private List<Textlabel> getSurvivorLabels(LinkedHashMap<Location, Integer> dataSet, String name) {
+	private List<Textlabel> getTextLabels(LinkedHashMap<Location, String> dataSet, String name) {
 		List<Textlabel> thisLabels = new ArrayList<Textlabel>();
 		for (int i = 0; i < dataSet.size(); i++) {
 			thisLabels.add(cp5.addTextlabel(name + i));
@@ -376,7 +367,8 @@ public class Minards extends PApplet {
 				VisualizerSettings.MINARD_CONTROL_PANEL_WIDTH, VisualizerSettings.MINARD_CONTROL_PANEL_HEIGHT);
 		rect(VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[0], VisualizerSettings.MINARD_LEGEND_PANEL_LOCATION[1],
 				VisualizerSettings.MINARD_LEGEND_PANEL_WIDTH, VisualizerSettings.MINARD_LEGEND_PANEL_HEIGHT);
-		rect(VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[0], VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[1],
+		rect(VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[0],
+				VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[1],
 				VisualizerSettings.MINARD_DESCRIPTION_PANEL_WIDTH, VisualizerSettings.MINARD_DESCRIPTION_PANEL_HEIGHT);
 
 		legendLabel.setText("Legend").setPosition(20, height - 95).setFont(createFont("Arial", 13)).setColor(0);
@@ -405,36 +397,45 @@ public class Minards extends PApplet {
 		image(coldImgLabel, 120, height - 38);
 		tempTextLabel.setText(" - Temperature points").setPosition(140, height - 38).setFont(createFont("Arial", 11))
 				.setColor(0);
-		
-
 
 		createTemperatureDataLabels();
-		createSurvivorDataLabels();
+	    createSurvivorDataLabels("A");
+		//createSurvivorDataLabels("R");
+
 		popMatrix();
 
 	}
 
-	private void createSurvivorDataLabels() {
-		// TODO Auto-generated method stub
+	private void createSurvivorDataLabels(String action) {
+		LinkedHashMap<Location, String> var = troopsTable.createLongitudeBasedSurvivorCount(action);
+		var = removeDuplicateValues(var);
 		tracker = 0;
-		for (MapPosition mapPosition : group1AttackPath.getCanvasLocations()) {
-			Location myLoc = map.getLocation(mapPosition.x, mapPosition.y);
-			float x = Float.parseFloat(String.format("%.2f", myLoc.x));
-			float y = Float.parseFloat(String.format("%.2f", myLoc.y));
-			Location thisLoc = new Location(x, y);
-			if (troopsTable.getPath("A", 1).containsKey(thisLoc)) {
-				setSurvivorLabels(survivorTextLabelList.get(tracker++), thisLoc,
-						troopsTable.getPath("A", 1).get(thisLoc), mapPosition);
-			}
-
+		for (Location loc : var.keySet()) {
+			ScreenPosition pos = map.getScreenPosition(loc);
+			fill(0);
+			cp5.addTextlabel("surv"+tracker++).setText(var.get(loc)).setPosition(pos.x, pos.y)
+					.setFont(createFont("Segoe Script", 9)).setColor(0).setVisible(tempDataToggle.getState());
 		}
-
 	}
 
-	private void setSurvivorLabels(Textlabel label, Location thisLoc, int survivor, MapPosition mapPosition) {
-
-		label.setText(survivor*VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR + "").setPosition(mapPosition.x, mapPosition.y).setFont(createFont("Segoe Script", 9))
-				.setColor(0).setVisible(tempDataToggle.getState());
+	private LinkedHashMap<Location, String> removeDuplicateValues(LinkedHashMap<Location, String> map) {
+		// TODO Auto-generated method stub
+		LinkedHashMap<String,Location> tempMap = new LinkedHashMap<String,Location>();
+		LinkedHashMap<Location,String> revMap = new LinkedHashMap<Location,String>();
+		Set<Location> keys = map.keySet();
+		Iterator<Location> keyIter = keys.iterator();
+		while(keyIter.hasNext()) {
+			Location key = keyIter.next();
+		    String value = map.get(key);
+		    tempMap.put(value, key);
+		}
+		
+		//reversing map
+		for(Map.Entry<String, Location> entry : tempMap.entrySet()) {
+			revMap.put(entry.getValue(), entry.getKey());
+		}
+		
+		return revMap;
 	}
 
 	private void createTemperatureDataLabels() {
