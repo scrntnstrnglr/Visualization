@@ -41,9 +41,9 @@ import processing.event.MouseEvent;
 public class Minards extends PApplet {
 	private static final long serialVersionUID = 1L;
 	private static CSVLoader citiesTable, troopsTable, tempTable;
-	Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle, group3AttackToggle,
-			citiesMarkersToggle, group3RetreatToggle, tempLinesToggle, temperatureToggle, tempPointsToggle,
-			tempDataToggle;
+	private static Toggle group1AttackToggle, group1RetreatToggle, group2AttackToggle, group2RetreatToggle,
+			group3AttackToggle, citiesMarkersToggle, group3RetreatToggle, tempLinesToggle, temperatureToggle,
+			tempPointsToggle, tempDataToggle, survivorLabelAttackToggle, survivorLabelRetreatToggle;
 	public static UnfoldingMap map;
 	private Map<Location, String> markerLocations;
 	MarkerManager<Marker> markerManager;
@@ -62,8 +62,8 @@ public class Minards extends PApplet {
 	private static TemperatureAxesMarkers tempYAxesLocations, tempXAxesLocations;
 	private static List<SimpleLinesMarker> tempLineMarkers;
 	private static TemperatureTextMarker tempTextMarker;
-	private static List<Textlabel> tempTextLabelList, survivorTextLabelListA1, survivorTextLabelListA2,
-			survivorTextLabelListA3, survivorTextLabelListR1, survivorTextLabelListR2, survivorTextLabelListR3;
+	private static List<Textlabel> tempTextLabelList, survivorLabelListAttack, survivorLabelListRetreat;
+	private static LinkedHashMap<Location, String> survivorDataAttack, survivorDataRetreat;
 	private static int tracker;
 
 	public Minards() throws IOException {
@@ -139,6 +139,13 @@ public class Minards extends PApplet {
 		tempDataToggle = cp5.addToggle("tempDataToggle").setPosition(x + 385, y + 60).setSize(32, 12).setState(false)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Data");
 
+		cp5.addTextlabel("survivorslabel").setText("Survivors").setPosition(x + 450, y + 10)
+				.setFont(createFont("Arial", 12)).setColor(0);
+		survivorLabelAttackToggle = cp5.addToggle("survivorsAttack").setPosition(x + 455, y + 30).setSize(31, 12)
+				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack").setState(false);
+		survivorLabelRetreatToggle = cp5.addToggle("survivorsRetreat").setPosition(x + 455, y + 60).setSize(31, 12)
+				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat").setState(false);
+
 		markerManager = map.getDefaultMarkerManager();
 		map.zoomAndPanTo(VisualizerSettings.MINARD_ZOOM_LOC, VisualizerSettings.MINARD_ZOOM_FACTOR);
 		pinImg = loadImage("img\\minard\\location.png");
@@ -209,6 +216,18 @@ public class Minards extends PApplet {
 		tempTextLabel = cp5.addTextlabel("TemperatureTextLabel");
 
 		tempTextLabelList = new ArrayList<Textlabel>(getTextLabels(temperatureData, "tempTextLabel"));
+
+		survivorDataAttack = troopsTable.createLongitudeBasedSurvivorCount("A");
+		survivorDataRetreat = troopsTable.createLongitudeBasedSurvivorCount("R");
+
+		survivorLabelListAttack = new ArrayList<Textlabel>();
+		survivorLabelListRetreat = new ArrayList<Textlabel>();
+		for (int i = 0; i < survivorDataAttack.size(); i++)
+			survivorLabelListAttack.add(cp5.addTextlabel("attackLabel" + i));
+
+		for (int i = 0; i < survivorDataRetreat.size(); i++) {
+			survivorLabelListRetreat.add(cp5.addTextlabel("retreatLabel" + i));
+		}
 
 		MapUtils.createDefaultEventDispatcher(this, map);
 
@@ -399,42 +418,60 @@ public class Minards extends PApplet {
 				.setColor(0);
 
 		createTemperatureDataLabels();
-	    createSurvivorDataLabels("A");
-		//createSurvivorDataLabels("R");
+		createSurvivorDataLabels("A");
+		createSurvivorDataLabels("R");
 
 		popMatrix();
 
 	}
 
 	private void createSurvivorDataLabels(String action) {
-		LinkedHashMap<Location, String> var = troopsTable.createLongitudeBasedSurvivorCount(action);
-		var = removeDuplicateValues(var);
-		tracker = 0;
-		for (Location loc : var.keySet()) {
-			ScreenPosition pos = map.getScreenPosition(loc);
-			fill(0);
-			cp5.addTextlabel("surv"+tracker++).setText(var.get(loc)).setPosition(pos.x, pos.y)
-					.setFont(createFont("Segoe Script", 9)).setColor(0).setVisible(tempDataToggle.getState());
+		LinkedHashMap<Location, String> var = new LinkedHashMap<Location, String>();
+		List<Textlabel> labelList = new ArrayList<Textlabel>();
+		if (action.equals("A")) {
+			var = survivorDataAttack;
+			labelList = survivorLabelListAttack;
+			var = removeDuplicateValues(var);
+			tracker = 0;
+			for (Location loc : var.keySet()) {
+				ScreenPosition pos = map.getScreenPosition(loc);
+				fill(0);
+				labelList.get(tracker++).setText(var.get(loc)).setPosition(pos.x, pos.y)
+						.setFont(createFont("Segoe Script", 9)).setColor(0)
+						.setVisible(survivorLabelAttackToggle.getState());
+			}
+		} else if (action.equals("R")) {
+			var = survivorDataRetreat;
+			labelList = survivorLabelListRetreat;
+			var = removeDuplicateValues(var);
+			tracker = 0;
+			for (Location loc : var.keySet()) {
+				ScreenPosition pos = map.getScreenPosition(loc);
+				fill(0);
+				labelList.get(tracker++).setText(var.get(loc)).setPosition(pos.x, pos.y)
+						.setFont(createFont("Segoe Script", 9)).setColor(0)
+						.setVisible(survivorLabelRetreatToggle.getState());
+			}
 		}
 	}
 
 	private LinkedHashMap<Location, String> removeDuplicateValues(LinkedHashMap<Location, String> map) {
 		// TODO Auto-generated method stub
-		LinkedHashMap<String,Location> tempMap = new LinkedHashMap<String,Location>();
-		LinkedHashMap<Location,String> revMap = new LinkedHashMap<Location,String>();
+		LinkedHashMap<String, Location> tempMap = new LinkedHashMap<String, Location>();
+		LinkedHashMap<Location, String> revMap = new LinkedHashMap<Location, String>();
 		Set<Location> keys = map.keySet();
 		Iterator<Location> keyIter = keys.iterator();
-		while(keyIter.hasNext()) {
+		while (keyIter.hasNext()) {
 			Location key = keyIter.next();
-		    String value = map.get(key);
-		    tempMap.put(value, key);
+			String value = map.get(key);
+			tempMap.put(value, key);
 		}
-		
-		//reversing map
-		for(Map.Entry<String, Location> entry : tempMap.entrySet()) {
+
+		// reversing map
+		for (Map.Entry<String, Location> entry : tempMap.entrySet()) {
 			revMap.put(entry.getValue(), entry.getKey());
 		}
-		
+
 		return revMap;
 	}
 
