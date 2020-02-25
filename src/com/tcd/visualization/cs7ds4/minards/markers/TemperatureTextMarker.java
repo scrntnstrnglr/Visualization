@@ -1,4 +1,4 @@
-package com.visualizationo.cs7ds4.minards.markers;
+package com.tcd.visualization.cs7ds4.minards.markers;
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
-import com.visualizationo.cs7ds4.minards.Minards;
+import com.tcd.visualization.cs7ds4.minards.Minards;
 
 import controlP5.ControlP5;
 import controlP5.Textlabel;

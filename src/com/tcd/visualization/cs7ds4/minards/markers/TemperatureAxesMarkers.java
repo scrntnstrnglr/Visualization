@@ -1,11 +1,11 @@
-package com.visualizationo.cs7ds4.minards.markers;
+package com.tcd.visualization.cs7ds4.minards.markers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
-import com.visualizationo.cs7ds4.minards.Minards;
+import com.tcd.visualization.cs7ds4.minards.Minards;
 
 import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;

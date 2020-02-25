@@ -1,4 +1,4 @@
-package com.visualizationo.cs7ds4.minards;
+package com.tcd.visualization.cs7ds4.minards;
 
 
 import processing.core.PApplet;

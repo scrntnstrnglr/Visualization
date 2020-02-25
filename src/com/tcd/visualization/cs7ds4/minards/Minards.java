@@ -1,4 +1,4 @@
-package com.visualizationo.cs7ds4.minards;
+package com.tcd.visualization.cs7ds4.minards;
 
 import de.fhpotsdam.unfolding.*;
 import de.fhpotsdam.unfolding.geo.Location;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
-import com.visualizationo.cs7ds4.minards.markers.*;
+import com.tcd.visualization.cs7ds4.minards.markers.*;
 
 import controlP5.ButtonBar;
 import controlP5.CallbackEvent;
@@ -36,7 +36,6 @@ import controlP5.ListBox;
 import controlP5.Textlabel;
 import controlP5.Toggle;
 import processing.core.*;
-import processing.event.MouseEvent;
 
 public class Minards extends PApplet {
 	private static final long serialVersionUID = 1L;

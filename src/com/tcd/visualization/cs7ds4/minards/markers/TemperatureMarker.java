@@ -1,4 +1,4 @@
-package com.visualizationo.cs7ds4.minards.markers;
+package com.tcd.visualization.cs7ds4.minards.markers;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
