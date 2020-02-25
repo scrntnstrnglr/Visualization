@@ -1,5 +1,6 @@
 package com.visualizationo.cs7ds4.minards.markers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -23,15 +24,19 @@ public class PathMarker extends SimpleLinesMarker {
 	private LinkedHashMap<Location, Integer> mapLoc;
 	private LinkedHashMap<MapPosition, Integer> mapPos;
 	private final String pathMode;
+	private List<MapPosition> thisMapPositions;
 
-	public PathMarker(LinkedList<Location> locations, HashMap<String, Object> properties, LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
-		super(locations,properties);
+	public PathMarker(LinkedList<Location> locations, HashMap<String, Object> properties,
+			LinkedHashMap<Location, Integer> mapLoc, String pathMode) {
+		super(locations, properties);
 		this.mapLoc = mapLoc;
 		mapPos = new LinkedHashMap<MapPosition, Integer>();
 		this.pathMode = pathMode;
+		thisMapPositions = new ArrayList<MapPosition>();
 	}
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
+		thisMapPositions = mapPositions;
 		pg.pushStyle();
 		// pg.strokeWeight(VisualizerSettings.MINARD_ATTACK_LINE_WEIGHT);
 		pg.strokeWeight(weight);
@@ -63,5 +68,9 @@ public class PathMarker extends SimpleLinesMarker {
 			pathInfo.put(mapPos, mapLoc.get(loc));
 		}
 		return pathInfo;
+	}
+
+	public List<MapPosition> getCanvasLocations() {
+		return thisMapPositions;
 	}
 }
