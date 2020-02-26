@@ -250,25 +250,27 @@ public class CSVLoader {
 	public LinkedHashMap<Location, String> createLongitudeBasedSurvivorCount(String action) {
 		LinkedHashMap<Float, Integer> allSurvivors = new LinkedHashMap<Float, Integer>(
 				this.getSurvivorDataLongitude(action));
-		LinkedHashMap<Location,List<String>> allSurvivorsRetreat = new LinkedHashMap<Location,List<String>>(this.getPath(action));
+		LinkedHashMap<Location, List<String>> allSurvivorsRetreat = new LinkedHashMap<Location, List<String>>(
+				this.getPath(action));
 		LinkedHashMap<Location, List<String>> thisActionLocationData = new LinkedHashMap<Location, List<String>>(
 				this.getPath(action));
 		LinkedHashMap<Location, String> survivorMarkerData = new LinkedHashMap<Location, String>();
 		if (action.equals("A")) {
+			int index = 0;
 			for (Float longp : allSurvivors.keySet()) {
 				for (Location loc : thisActionLocationData.keySet()) {
-					if (loc.y == longp) {
+					if (loc.y == longp && index % 2 != 0) {
 						survivorMarkerData.put(loc, allSurvivors.get(longp).toString());
 						break;
 					}
 				}
+				index++;
 			}
-		} 
-		else if (action.equals("R")) {
-			int index=0;
-			for(Location loc : allSurvivorsRetreat.keySet()) {
-				if(index%2!=0)
-					survivorMarkerData.put(loc,allSurvivorsRetreat.get(loc).get(0));
+		} else if (action.equals("R")) {
+			int index = 0;
+			for (Location loc : allSurvivorsRetreat.keySet()) {
+				if (index % 2 != 0)
+					survivorMarkerData.put(loc, allSurvivorsRetreat.get(loc).get(0));
 				index++;
 			}
 		}

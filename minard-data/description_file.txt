@@ -1,7 +1,24 @@
-The visualization depicts Napolean's 1812 attempted advance towards Moscow
-and inevitable retreat caused by Russia's adverse weather conditions. It is 
-a replica of Charles Joseph Minard's take on the same historical event. Napolean 
-attempted to attack Russia, however his troops were forced to retreat because of the onslaught 
-of cold weather as depicted in this diagram. Several soldiers perished given the 
-lack of food and water.
-The map depicts the very same conditions during this period of time.
+The visualization depicts Napolean's
+advance towards Moscow from France 
+and their inevitable retreat 
+caused by Russia's adverse 
+weather conditions.It is a 
+replica of Charles Joseph 
+Minard's take on the same 
+historical event. Napolean attempted
+to attack Russia, however his troops
+were forced to retreat because of 
+the onslaught of cold weather 
+as depicted in this diagram. 
+Several soldiers perished given 
+the lack of food and water. The map 
+depicts the very same conditions 
+during this period of time.
+
+On being forced to retreat out 
+of a burning and deserted Moscow,
+the strarving French army began to
+drop in numbers. By the time they
+could arrive at their rendezvous 
+back home, their numbers had dropped
+by more than half.

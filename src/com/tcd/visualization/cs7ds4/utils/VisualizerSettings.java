@@ -1,8 +1,11 @@
 package com.tcd.visualization.cs7ds4.utils;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,10 +29,10 @@ public class VisualizerSettings {
 			MINARD_TROOPS_DATASET = "minard-data\\R\\Minard.troops.csv",
 			MINARD_TEMPERATURE_DATASET = "minard-data\\R\\Minard.temp.csv";
 	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
-	public static final float[] MINARDS_TITLE_POISITION = new float[] {MINARD_SCREEN_WIDTH/2-300,10};
+	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
 	public static final String MINARDS_TITLE_FONT = "Segoe Script";
-	public static final float MINARDS_FONT_SIZE_LARGE=40,MINARDS_FONT_SIZE_MEDIUM=30,MINARDS_FONT_SIZE_SMALL=10;
-	public static final int[] MINARDS_TITLE_COLOR= new int[] {0,0,0};
+	public static final float MINARDS_FONT_SIZE_LARGE = 40, MINARDS_FONT_SIZE_MEDIUM = 30, MINARDS_FONT_SIZE_SMALL = 10;
+	public static final int[] MINARDS_TITLE_COLOR = new int[] { 0, 0, 0 };
 	public static final int[] MINARD_ATTACK_LINE_COLOR = new int[] { 216, 24, 24, 1 };
 	public static final int[] MINARD_RETREAT_LINE_COLOR = new int[] { 15, 79, 203, 1 };
 	public static final int[] MINARD_TEMPERATURE_LINE_COLOR = new int[] { 13, 134, 225, 1 };
@@ -40,11 +43,13 @@ public class VisualizerSettings {
 	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
 	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
 	public static final float MINARD_CONTROL_PANEL_WIDTH = 550, MINARD_CONTROL_PANEL_HEIGHT = 90;
-	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT-100};
+	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT - 100 };
 	public static final float MINARD_LEGEND_PANEL_WIDTH = 350, MINARD_LEGEND_PANEL_HEIGHT = 90;
-	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT-100 };
-	public static final float MINARD_DESCRIPTION_PANEL_WIDTH=MINARD_LEGEND_PANEL_WIDTH,MINARD_DESCRIPTION_PANEL_HEIGHT=400;
-	public static final float[] MINARD_DESCRIPTION_PANEL_LOCATION = new float[] { 10,MINARD_SCREEN_HEIGHT-(MINARD_DESCRIPTION_PANEL_HEIGHT+MINARD_LEGEND_PANEL_HEIGHT+20) };
+	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT - 100 };
+	public static final float MINARD_DESCRIPTION_PANEL_WIDTH = MINARD_LEGEND_PANEL_WIDTH,
+			MINARD_DESCRIPTION_PANEL_HEIGHT = 400;
+	public static final float[] MINARD_DESCRIPTION_PANEL_LOCATION = new float[] { 10,
+			MINARD_SCREEN_HEIGHT - (MINARD_DESCRIPTION_PANEL_HEIGHT + MINARD_LEGEND_PANEL_HEIGHT + 20) };
 	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3700;
 	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
 	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";
@@ -57,6 +62,12 @@ public class VisualizerSettings {
 	public static HashMap<String, List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
 	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS, MINARDS_TEMP_X_AXIS_LOCATIONS;
 	public static float MINARDS_TEMP_MAX_LONG;
+	public static final boolean MINARDS_SURVIVOR_ATTACK_TOGGLE_DEFAULT = false,
+			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
+	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
+			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X =22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y =0;
+	private static final String MINARDS_DESCRIPTION_FILE = "minard-data\\description_file.txt";
+	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
 	// --Nightangle's Constants---
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
@@ -150,6 +161,23 @@ public class VisualizerSettings {
 		}
 		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat - 0.5, minLong - 0.5));
 		MINARDS_TEMP_MAX_LONG = maxLong + 1;
+	}
+	
+	public static String getDescriptionText() throws IOException {
+		InputStream is = new FileInputStream(MINARDS_DESCRIPTION_FILE);
+		BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+		        
+		String line = buf.readLine();
+		StringBuilder sb = new StringBuilder();
+		        
+		while(line != null){
+		   sb.append(line).append("\n");
+		   line = buf.readLine();
+		}
+		        
+		String fileAsString = sb.toString();
+		buf.close();
+		return fileAsString;
 	}
 
 }
