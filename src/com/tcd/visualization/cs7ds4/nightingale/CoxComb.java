@@ -3,18 +3,21 @@ package com.tcd.visualization.cs7ds4.nightingale;
 import controlP5.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import processing.core.*;
 import processing.data.*;
+import processing.event.MouseEvent;
 
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
 
 public class CoxComb extends PApplet {
 	private static CSVLoader csvLoader;
-	private  static int SCREEN_WIDTH;
+	private static int SCREEN_WIDTH;
 	private static int SCREEN_HEIGHT;
 	private static Table table;
 	private static PFont f;
@@ -28,6 +31,12 @@ public class CoxComb extends PApplet {
 	private static Range range;
 	private static String[] title;
 	private static PImage img;
+	private static double arcLengthZD, arcLengthWI, arcLengthAC, arcLengthZD_Z, arcLengthWI_Z, arcLengthAC_Z;
+	private static float start, start_z, radians;
+	private static String monthYear;
+	private static int zoomFactor = VisualizerSettings.COX_ORIGINAL_ZOOM;
+	private static double radius;
+	private static List<Float> arcLengths;
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
@@ -36,8 +45,8 @@ public class CoxComb extends PApplet {
 	}
 
 	public void settings() {
-		table = loadTable("nightingale-data.csv", "header");
-		csvLoader = new CSVLoader(table,"Cox-Comb");
+		table = loadTable(VisualizerSettings.COX_DATA_SET, "header");
+		csvLoader = new CSVLoader(table, "Cox-Comb");
 		dateInfo = csvLoader.getToggleButtonsForMonths();
 
 		SCREEN_WIDTH = VisualizerSettings.SCREEN_WIDTH;
@@ -70,7 +79,7 @@ public class CoxComb extends PApplet {
 			}
 			index++;
 		}
-		
+
 		// validating the visualizing period
 		int rowIter = startRow, count = 0;
 		TableRow row = table.getRow(rowIter);
@@ -105,22 +114,20 @@ public class CoxComb extends PApplet {
 				indexInner++;
 			}
 		}
-		
-		//---setting title---
-		cp5.addTextlabel("title0").setText(title[0]).setPosition(width/2-250, 40).setFont(createFont("Arial",25));
-		cp5.addTextlabel("title1").setText(title[1]).setPosition(width/2-120, 50).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title2").setText(title[2]).setPosition(width/2-90, 50).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title3").setText(title[3]).setPosition(width/2-46, 40).setFont(createFont("Arial",25));
-		cp5.addTextlabel("title4").setText(title[4]).setPosition(width/2+68, 50).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title5").setText(title[5]).setPosition(width/2+100, 40).setFont(createFont("Arial",25));
-		cp5.addTextlabel("title6").setText(title[6]).setPosition(width/2-80, 70).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title7").setText(title[7]).setPosition(width/2-60, 70).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title8").setText(title[8]).setPosition(width/2-25, 70).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title9").setText(title[9]).setPosition(width/2+20, 70).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title10").setText(title[10]).setPosition(width/2+40, 70).setFont(createFont("Arial",13));
-		cp5.addTextlabel("title11").setText(title[11]).setPosition(width/2+70, 70).setFont(createFont("Arial",13));
-	
-		
+
+		// ---setting title---
+		cp5.addTextlabel("title0").setText(title[0]).setPosition(width / 2 - 250, 40).setFont(createFont("Arial", 25));
+		cp5.addTextlabel("title1").setText(title[1]).setPosition(width / 2 - 120, 50).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title2").setText(title[2]).setPosition(width / 2 - 90, 50).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title3").setText(title[3]).setPosition(width / 2 - 46, 40).setFont(createFont("Arial", 25));
+		cp5.addTextlabel("title4").setText(title[4]).setPosition(width / 2 + 68, 50).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title5").setText(title[5]).setPosition(width / 2 + 100, 40).setFont(createFont("Arial", 25));
+		cp5.addTextlabel("title6").setText(title[6]).setPosition(width / 2 - 80, 70).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title7").setText(title[7]).setPosition(width / 2 - 60, 70).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title8").setText(title[8]).setPosition(width / 2 - 25, 70).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title9").setText(title[9]).setPosition(width / 2 + 20, 70).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title10").setText(title[10]).setPosition(width / 2 + 40, 70).setFont(createFont("Arial", 13));
+		cp5.addTextlabel("title11").setText(title[11]).setPosition(width / 2 + 70, 70).setFont(createFont("Arial", 13));
 
 	}
 
@@ -131,23 +138,23 @@ public class CoxComb extends PApplet {
 			public void controlEvent(ControlEvent event) {
 				// TODO Auto-generated method stub
 				Controller<?> r = event.getController();
-				// System.out.println(r.getArrayValue(0)+" "+r.getArrayValue(1));
-
 				startRow = (int) r.getArrayValue(0);
 				int endRow = (int) r.getArrayValue(1);
 				visualizationPeriod = (int) (r.getArrayValue(1) - r.getArrayValue(0)) + 1;
-				// System.out.println(startRow + "-->" + endRow+"-->"+visualizationPeriod);
 			}
 		});
+		arcLengths = new ArrayList<Float>();
 		clear();
-		background(VisualizerSettings.VIZ_BACKGROUND[0],VisualizerSettings.VIZ_BACKGROUND[1],VisualizerSettings.VIZ_BACKGROUND[2]);
-		float radians = 0.0f;
+		background(VisualizerSettings.VIZ_BACKGROUND[0], VisualizerSettings.VIZ_BACKGROUND[1],
+				VisualizerSettings.VIZ_BACKGROUND[2]);
+		radians = 0.0f;
 		try {
 			radians = (PI * (360 / visualizationPeriod)) / 180;
 		} catch (Exception e) {
 			visualizationPeriod = 1;
 		}
-		float start = 0.0F;
+		start = 0.0F;
+		start_z = 90.0F;
 		Map<String, Integer> dataSet = new HashMap<String, Integer>();
 		int yearNo = visualizationPeriod;
 		int rowIter = startRow;
@@ -155,40 +162,130 @@ public class CoxComb extends PApplet {
 		int limit = rowIter + visualizationPeriod;
 		while (rowIter < limit) {
 			row = table.getRow(rowIter);
-			String monthYear = row.getString("Month");
+			monthYear = row.getString("Month");
 			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
 			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
 			float zymoticDiseases = row.getFloat("AZymotic diseases");
 			float woundsAndInjueries = row.getFloat("AWounds & injuries");
 			float allOtherCauses = row.getFloat("AAll other causes");
-			double arcLengthZD = 13 * Math.sqrt((zymoticDiseases * visualizationPeriod) / 3.142);
-			double arcLengthWI = 13 * Math.sqrt((woundsAndInjueries * visualizationPeriod) / 3.142);
-			double arcLengthAC = 13 * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
-			pushMatrix();
-			translate(width / 2, height / 2 + 80);
-			fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1], VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
-			stroke(0);
+			arcLengthZD = VisualizerSettings.COX_ORIGINAL_ZOOM
+					* Math.sqrt((zymoticDiseases * visualizationPeriod) / 3.142);
+			arcLengthWI = VisualizerSettings.COX_ORIGINAL_ZOOM
+					* Math.sqrt((woundsAndInjueries * visualizationPeriod) / 3.142);
+			arcLengthAC = VisualizerSettings.COX_ORIGINAL_ZOOM
+					* Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 
-			if (zygmoticToggle.getState()) {
-				arc(0, 0, (float) arcLengthZD, (float) arcLengthZD, start, start + radians, PIE);
-			}
-			fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1], VisualizerSettings.WOUNDS_ARC_COLOR[2]);
-			if (woundsToggle.getState()) {
-				arc(0, 0, (float) arcLengthWI, (float) arcLengthWI, start, start + radians, PIE);
-			}
-			fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1], VisualizerSettings.OTHERS_ARC_COLOR[2]);
-			if (otherToggle.getState()) {
-				arc(0, 0, (float) arcLengthAC, (float) arcLengthAC, start, start + radians, PIE);
-			}
-			fill(255, 0, 0);
-			rotate((start + (start + radians)) / 2);
-			text(monthYear, 150, 0);
+			arcLengthZD_Z = zoomFactor * Math.sqrt((zymoticDiseases * visualizationPeriod) / 3.142);
+			arcLengthWI_Z = zoomFactor * Math.sqrt((woundsAndInjueries * visualizationPeriod) / 3.142);
+			arcLengthAC_Z = zoomFactor * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 
-			popMatrix();
+			drawMainCoxComb(arcLengthZD, arcLengthWI, arcLengthAC);
+			drawZoomedCoxComb();
+
 			start += radians;
+			start_z += radians;
 			yearNo++;
 			rowIter++;
 		}
+	}
+
+	public void drawMainCoxComb(double a, double b, double c) {
+		float max = -1;
+		pushMatrix();
+		translate((width / 2) - 290, height / 2 + 15);
+		fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
+				VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
+		stroke(0);
+
+		if (zygmoticToggle.getState()) {
+			arc(0, 0, (float) a, (float) a, start, start + radians, PIE);
+		}
+		fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1],
+				VisualizerSettings.WOUNDS_ARC_COLOR[2]);
+		if (woundsToggle.getState()) {
+			arc(0, 0, (float) b, (float) b, start, start + radians, PIE);
+		}
+		fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1],
+				VisualizerSettings.OTHERS_ARC_COLOR[2]);
+		if (otherToggle.getState()) {
+			arc(0, 0, (float) c, (float) c, start, start + radians, PIE);
+		}
+		fill(255, 0, 0);
+
+		translate((float) 170 * cos((start + (start + radians)) / 2),
+				(float) 170 * sin((start + (start + radians)) / 2));
+		rotate((start + (start + radians)) / 2 + PI / 2);
+		text(monthYear, 0, 0);
+
+		popMatrix();
+	}
+
+	public void drawZoomedCoxComb() {
+		pushMatrix();
+		translate((width / 2) + 300, height / 2 + 15);
+		fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
+				VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
+		stroke(0);
+
+		if (zygmoticToggle.getState()) {
+			arc(0, 0, (float) arcLengthZD_Z, (float) arcLengthZD_Z, start_z, start_z + radians, PIE);
+		}
+		fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1],
+				VisualizerSettings.WOUNDS_ARC_COLOR[2]);
+		if (woundsToggle.getState()) {
+			arc(0, 0, (float) arcLengthWI_Z, (float) arcLengthWI_Z, start_z, start_z + radians, PIE);
+		}
+		fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1],
+				VisualizerSettings.OTHERS_ARC_COLOR[2]);
+		if (otherToggle.getState()) {
+			arc(0, 0, (float) arcLengthAC_Z, (float) arcLengthAC_Z, start_z, start_z + radians, PIE);
+		}
+		
+		pushMatrix();
+		fill(255, 0, 0);
+		translate((float) 170 * cos((start_z + (start_z + radians)) / 2),
+				(float) 170 * sin((start_z + (start_z + radians)) / 2));
+		rotate((start_z + (start_z + radians)) / 2 + PI / 2);
+		text(monthYear, 0, 0);
+		popMatrix();
+		
+		popMatrix();
+	}
+
+	public void drawText(String text, float r, float angle) {
+		float arclength = 0;
+
+		// For every box
+		for (int i = 0; i < text.length(); i++) {
+			// Instead of a constant width, we check the width of each character.
+			char currentChar = text.charAt(i);
+			float w = textWidth(currentChar);
+
+			// Each box is centered so we move half the width
+			arclength += w / 2;
+			// Angle in radians is the arclength divided by the radius
+			// Starting on the left side of the circle by adding PI
+			float theta = (angle + arclength / r);
+
+			pushMatrix();
+			// Polar to cartesian coordinate conversion
+			translate(r * cos(theta), r * sin(theta));
+			// Rotate the box
+			rotate(theta + angle / 2); // rotation is offset by 90 degrees
+			// Display the character
+			fill(0);
+			text(currentChar, 0, 0);
+			popMatrix();
+			// Move halfway again
+			arclength += w / 2;
+		}
+	}
+
+	@Override
+	public void mouseWheel(MouseEvent event) {
+		// TODO Auto-generated method stub
+		super.mouseWheel(event);
+		zoomFactor -= event.getCount();
 	}
 
 	public static void main(String args[]) {
