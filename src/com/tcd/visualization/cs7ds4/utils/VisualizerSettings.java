@@ -25,9 +25,9 @@ public class VisualizerSettings {
 	// ---Minard's Constants---
 	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
 	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
-	public static final String MINARD_CITIES_DATASET = "minard-data\\R\\Minard.cities.csv",
-			MINARD_TROOPS_DATASET = "minard-data\\R\\Minard.troops.csv",
-			MINARD_TEMPERATURE_DATASET = "minard-data\\R\\Minard.temp.csv";
+	public static final String MINARD_CITIES_DATASET = "data\\minard-data\\R\\Minard.cities.csv",
+			MINARD_TROOPS_DATASET = "data\\minard-data\\R\\Minard.troops.csv",
+			MINARD_TEMPERATURE_DATASET = "data\\minard-data\\R\\Minard.temp.csv";
 	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
 	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
 	public static final String MINARDS_TITLE_FONT = "Segoe Script";
@@ -70,12 +70,14 @@ public class VisualizerSettings {
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
 	// --Nightangle's Constants---
+	public static final String COX_DATA_SET = "data\\nightingale\\nightingale-data.csv";
+	public static final String TITLE = "DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
-	public static final int SCREEN_WIDTH = 820, SCREEN_HEIGHT = 930;
+	public static final int SCREEN_WIDTH = 1820, SCREEN_HEIGHT = 930;
 	public static final int[] ZYGMOTIC_ARC_COLOR = new int[] { 27, 79, 114 };
 	public static final int[] WOUNDS_ARC_COLOR = new int[] { 52, 152, 219 };
 	public static final int[] OTHERS_ARC_COLOR = new int[] { 214, 234, 248 };
-	public static final String TITLE = "DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
+	public static final int COX_ORIGINAL_ZOOM = 9;
 
 	public VisualizerSettings() throws IOException {
 	}
