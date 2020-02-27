@@ -1,6 +1,7 @@
 package com.tcd.visualization.cs7ds4.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,9 +26,9 @@ public class VisualizerSettings {
 	// ---Minard's Constants---
 	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
 	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
-	public static final String MINARD_CITIES_DATASET = "data\\minard-data\\R\\Minard.cities.csv",
-			MINARD_TROOPS_DATASET = "data\\minard-data\\R\\Minard.troops.csv",
-			MINARD_TEMPERATURE_DATASET = "data\\minard-data\\R\\Minard.temp.csv";
+	public static final String MINARD_CITIES_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.cities.csv",
+			MINARD_TROOPS_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.troops.csv",
+			MINARD_TEMPERATURE_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.temp.csv";
 	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
 	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
 	public static final String MINARDS_TITLE_FONT = "Segoe Script";
@@ -66,11 +67,11 @@ public class VisualizerSettings {
 			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
 	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
 			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X =22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y =0;
-	private static final String MINARDS_DESCRIPTION_FILE = "minard-data\\description_file.txt";
+	private static final String MINARDS_DESCRIPTION_FILE = "minard-data"+File.separator+"description_file.txt";
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
 	// --Nightangle's Constants---
-	public static final String COX_DATA_SET = "data\\nightingale\\nightingale-data.csv";
+	public static final String COX_DATA_SET = "data"+File.separator+"nightingale"+File.separator+"nightingale-data.csv";
 	public static final String TITLE = "DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
 	public static final int SCREEN_WIDTH = 1820, SCREEN_HEIGHT = 930;
