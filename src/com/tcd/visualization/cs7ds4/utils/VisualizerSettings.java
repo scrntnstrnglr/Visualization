@@ -67,7 +67,7 @@ public class VisualizerSettings {
 			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
 	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
 			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X =22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y =0;
-	private static final String MINARDS_DESCRIPTION_FILE = "minard-data"+File.separator+"description_file.txt";
+	private static final String MINARDS_DESCRIPTION_FILE = "data"+File.separator+"minard-data"+File.separator+"description_file.txt";
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
 	// --Nightangle's Constants---
