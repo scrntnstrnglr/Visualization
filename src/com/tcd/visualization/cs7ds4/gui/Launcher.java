@@ -1,6 +1,9 @@
 package com.tcd.visualization.cs7ds4.gui;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 
 import javax.swing.JFrame;
@@ -22,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -55,18 +59,28 @@ public class Launcher {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
+	 * @throws FontFormatException 
 	 */
-	public Launcher() {
+	public Launcher() throws FontFormatException, IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
+	 * @throws FontFormatException 
 	 */
-	private void initialize() {
+	private void initialize() throws FontFormatException, IOException {
+	    /*
+		String fName = "Michroma.ttf";
+	    InputStream is = getClass().getResourceAsStream(fName);
+	    Font font = Font.createFont(Font.TRUETYPE_FONT, is); */
+	    
 		frame = new JFrame();
 		frame.setBounds(100, 100, 503, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		frame.getContentPane().setLayout(null);
 		
 		btnLaunch = new JButton("Launch");
@@ -80,8 +94,9 @@ public class Launcher {
 		comboBox.addItem("Nightangle's CoxComb");
 		comboBox.addItem("Minard's Map");
 		
-		labelTitle = new Label("Launcher");
-		labelTitle.setBounds(138, 10, 198, 97);
+		labelTitle = new Label("L a u n c h e r");
+		labelTitle.setFont(new Font("Bahnschrift", Font.BOLD, 32));
+		labelTitle.setBounds(134, 32, 230, 46);
 		frame.getContentPane().add(labelTitle);
 		
 		btnLaunch.addActionListener(new ActionListener() {

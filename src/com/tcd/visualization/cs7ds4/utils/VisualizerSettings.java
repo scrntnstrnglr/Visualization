@@ -78,7 +78,7 @@ public class VisualizerSettings {
 	public static final int[] ZYGMOTIC_ARC_COLOR = new int[] { 27, 79, 114 };
 	public static final int[] WOUNDS_ARC_COLOR = new int[] { 52, 152, 219 };
 	public static final int[] OTHERS_ARC_COLOR = new int[] { 214, 234, 248 };
-	public static final int COX_ORIGINAL_ZOOM = 9;
+	public static final int COX_ORIGINAL_ZOOM = 9, COX_ORIGINAL_ZOOM_FACTOR=16;
 
 	public VisualizerSettings() throws IOException {
 	}

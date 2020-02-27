@@ -7,9 +7,9 @@
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>
     <target name="create_run_jar">
-        <jar destfile="${dir.jarfile}/MINARDS.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/VISUALIZER.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="com.tcd.visualization.cs7ds4.minards.Minards"/>
+                <attribute name="Main-Class" value="com.tcd.visualization.cs7ds4.gui.Launcher"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.jarfile}/bin"/>

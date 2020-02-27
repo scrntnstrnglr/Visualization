@@ -34,7 +34,7 @@ public class CoxComb extends PApplet {
 	private static double arcLengthZD, arcLengthWI, arcLengthAC, arcLengthZD_Z, arcLengthWI_Z, arcLengthAC_Z;
 	private static float start, start_z, radians;
 	private static String monthYear;
-	private static int zoomFactor = VisualizerSettings.COX_ORIGINAL_ZOOM;
+	private static int zoomFactor = VisualizerSettings.COX_ORIGINAL_ZOOM_FACTOR;
 	private static double radius;
 	private static List<Float> arcLengths;
 	private static float totalDeathsZygmotic = 0, totalDeathsWounds = 0, totalDeathsOthers = 0;
@@ -63,11 +63,11 @@ public class CoxComb extends PApplet {
 		textAlign(CENTER);
 		smooth();
 		cp5 = new ControlP5(this);
-		zygmoticToggle = cp5.addToggle("Zygmotic Diseases").setPosition(40, height / 2 + 100).setSize(50, 20)
+		zygmoticToggle = cp5.addToggle("Zygmotic Diseases").setPosition(50, height / 2 + 60).setSize(50, 20)
 				.setValue(true).setMode(ControlP5.SWITCH);
-		woundsToggle = cp5.addToggle("Wound and Injuries").setPosition(40, height / 2 + 140).setSize(50, 20)
+		woundsToggle = cp5.addToggle("Wound and Injuries").setPosition(50, height / 2 + 100).setSize(50, 20)
 				.setValue(true).setMode(ControlP5.SWITCH);
-		otherToggle = cp5.addToggle("Others").setPosition(40, height / 2 + 180).setSize(50, 20).setValue(true)
+		otherToggle = cp5.addToggle("Others").setPosition(50, height / 2 + 140).setSize(50, 20).setValue(true)
 				.setMode(ControlP5.SWITCH);
 		toggleData = new HashMap<Toggle, Map<Boolean, Boolean>>();
 		int index = 0;
@@ -260,7 +260,7 @@ public class CoxComb extends PApplet {
 				(float) 210 * sin((start + (start + radians)) / 2));
 		rotate((start + (start + radians)) / 2 + PI / 2);
 		textSize(13);
-		text(monthYear, 0, 0);
+		text("|"+monthYear+"|", 0, 0);
 
 		popMatrix();
 	}
@@ -292,7 +292,7 @@ public class CoxComb extends PApplet {
 				(float) 230 * sin((start_z + (start_z + radians)) / 2));
 		rotate((start_z + (start_z + radians)) / 2 + PI / 2);
 		textSize(13);
-		text(monthYear, 0, 0);
+		text("|"+monthYear+"|", 0, 0);
 		popMatrix();
 
 		popMatrix();
