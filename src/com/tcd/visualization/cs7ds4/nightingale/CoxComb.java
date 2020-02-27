@@ -37,6 +37,8 @@ public class CoxComb extends PApplet {
 	private static int zoomFactor = VisualizerSettings.COX_ORIGINAL_ZOOM;
 	private static double radius;
 	private static List<Float> arcLengths;
+	private static float totalDeathsZygmotic = 0, totalDeathsWounds = 0, totalDeathsOthers = 0;
+	private static int avgArmySize;
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
@@ -132,6 +134,11 @@ public class CoxComb extends PApplet {
 	}
 
 	public void draw() {
+
+		totalDeathsZygmotic = 0;
+		totalDeathsWounds = 0;
+		totalDeathsOthers = 0;
+		
 		range.addListener(new ControlListener() {
 
 			@Override
@@ -160,14 +167,30 @@ public class CoxComb extends PApplet {
 		int rowIter = startRow;
 		TableRow row;
 		int limit = rowIter + visualizationPeriod;
+		float x=20+((startRow+1)*30),y=height/2+340;
 		while (rowIter < limit) {
 			row = table.getRow(rowIter);
 			monthYear = row.getString("Month");
+			avgArmySize = row.getInt("Average size of army");
+			
+			pushMatrix();
+			fill(0);
+			textSize(8);
+			line(x, y, x, y-avgArmySize/250);
+			text(avgArmySize,x,y-avgArmySize/250);
+			x+=30;
+			popMatrix();
+			
 			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
 			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
 			float zymoticDiseases = row.getFloat("AZymotic diseases");
 			float woundsAndInjueries = row.getFloat("AWounds & injuries");
 			float allOtherCauses = row.getFloat("AAll other causes");
+			
+			totalDeathsZygmotic+=zymoticDiseases;
+			totalDeathsWounds+=woundsAndInjueries;
+			totalDeathsOthers+=allOtherCauses;
+			
 			arcLengthZD = VisualizerSettings.COX_ORIGINAL_ZOOM
 					* Math.sqrt((zymoticDiseases * visualizationPeriod) / 3.142);
 			arcLengthWI = VisualizerSettings.COX_ORIGINAL_ZOOM
@@ -179,7 +202,21 @@ public class CoxComb extends PApplet {
 			arcLengthWI_Z = zoomFactor * Math.sqrt((woundsAndInjueries * visualizationPeriod) / 3.142);
 			arcLengthAC_Z = zoomFactor * Math.sqrt((allOtherCauses * visualizationPeriod) / 3.142);
 
-			drawMainCoxComb(arcLengthZD, arcLengthWI, arcLengthAC);
+			pushMatrix();
+
+			fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
+					VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
+			arc(35, 140, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+			fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1],
+					VisualizerSettings.WOUNDS_ARC_COLOR[2]);
+			arc(35, 260, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+			fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1],
+					VisualizerSettings.OTHERS_ARC_COLOR[2]);
+			arc(35, 380, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+
+			popMatrix();
+
+			drawMainCoxComb(arcLengthZD, zymoticDiseases, arcLengthWI, woundsAndInjueries, arcLengthAC, allOtherCauses);
 			drawZoomedCoxComb();
 
 			start += radians;
@@ -187,16 +224,23 @@ public class CoxComb extends PApplet {
 			yearNo++;
 			rowIter++;
 		}
+		
+		pushMatrix();
+		textSize(13);
+		text("Zygmotic Diseases:\n"+totalDeathsZygmotic, 110, 140);
+		text("Wounds and Injuries:\n"+totalDeathsWounds+"", 110, 260);
+		text("Other Causes:\n"+totalDeathsOthers, 110, 380);
+		popMatrix();
+		
 	}
 
-	public void drawMainCoxComb(double a, double b, double c) {
+	public void drawMainCoxComb(double a, float ax, double b, float bx, double c, float cx) {
 		float max = -1;
 		pushMatrix();
-		translate((width / 2) - 290, height / 2 + 15);
+		translate((width / 2) - 380, height / 2 -150);
 		fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
 				VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
 		stroke(0);
-
 		if (zygmoticToggle.getState()) {
 			arc(0, 0, (float) a, (float) a, start, start + radians, PIE);
 		}
@@ -210,11 +254,12 @@ public class CoxComb extends PApplet {
 		if (otherToggle.getState()) {
 			arc(0, 0, (float) c, (float) c, start, start + radians, PIE);
 		}
-		fill(255, 0, 0);
+		fill(0);
 
-		translate((float) 170 * cos((start + (start + radians)) / 2),
-				(float) 170 * sin((start + (start + radians)) / 2));
+		translate((float) 210 * cos((start + (start + radians)) / 2),
+				(float) 210 * sin((start + (start + radians)) / 2));
 		rotate((start + (start + radians)) / 2 + PI / 2);
+		textSize(13);
 		text(monthYear, 0, 0);
 
 		popMatrix();
@@ -240,15 +285,16 @@ public class CoxComb extends PApplet {
 		if (otherToggle.getState()) {
 			arc(0, 0, (float) arcLengthAC_Z, (float) arcLengthAC_Z, start_z, start_z + radians, PIE);
 		}
-		
+
 		pushMatrix();
-		fill(255, 0, 0);
-		translate((float) 170 * cos((start_z + (start_z + radians)) / 2),
-				(float) 170 * sin((start_z + (start_z + radians)) / 2));
+		fill(0);
+		translate((float) 230 * cos((start_z + (start_z + radians)) / 2),
+				(float) 230 * sin((start_z + (start_z + radians)) / 2));
 		rotate((start_z + (start_z + radians)) / 2 + PI / 2);
+		textSize(13);
 		text(monthYear, 0, 0);
 		popMatrix();
-		
+
 		popMatrix();
 	}
 
