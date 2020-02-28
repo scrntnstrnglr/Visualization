@@ -42,7 +42,7 @@ public class CoxComb extends PApplet {
 	private static int totalDeathsZygmotic = 0, totalDeathsWounds = 0, totalDeathsOthers = 0;
 	private static int avgArmySize;
 	private static Button rotateButton;
-	private static String descriptionText; 
+	private static String descriptionText, instructionText;
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
@@ -148,17 +148,35 @@ public class CoxComb extends PApplet {
 		rotateButton = cp5.addButton("rotate").setPosition(width - 130, height - 20)
 				.setVisible(VisualizerSettings.COX_ROTATE_BUTTON_VISIBILE);
 
+		displayDescription();
+
 	}
-	
+
 	private void displayDescription() {
 		try {
 			descriptionText = VisualizerSettings.getDescriptionText(VisualizerSettings.COX_DESCRIPTION_FILE);
+			instructionText = VisualizerSettings.getDescriptionText(VisualizerSettings.COX_INSTRUCTION_FILE);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+		cp5.addTextlabel("description").setText(descriptionText)
+				.setPosition(VisualizerSettings.COX_DESCRIPTION_PANEL_LOCATION[0] + 7,
+						VisualizerSettings.COX_DESCRIPTION_PANEL_LOCATION[1] + 27)
+				.setFont(createFont("Segoe Script", 15)).setColor(0).setVisible(true);
+
+		cp5.addTextlabel("descriptionTitle").setText(VisualizerSettings.COX_DESCRIPTION_TITLE)
+				.setPosition(VisualizerSettings.COX_DESCRIPTION_TITLE_LOCATION[0],
+						VisualizerSettings.COX_DESCRIPTION_TITLE_LOCATION[1])
+				.setFont(createFont("Segoe Script", 17)).setColor(0).setVisible(true);
+
+		/*
+		 * cp5.addTextlabel("instruction").setText(instructionText)
+		 * .setPosition(VisualizerSettings.COX_DESCRIPTION_PANEL_LOCATION[0]+7,
+		 * VisualizerSettings.COX_DESCRIPTION_PANEL_LOCATION[1]+27)
+		 * .setFont(createFont("Segoe Script", 15)).setColor(0) .setVisible(true);
+		 */
+
 	}
 
 	public void draw() {
@@ -280,7 +298,8 @@ public class CoxComb extends PApplet {
 		// TODO Auto-generated method stub
 		pushMatrix();
 		textSize(VisualizerSettings.COX_ARMY_LABEL_SIZE);
-		text("MONTHLY AVERAGE ARMY SIZE (IN THOUSANDS)", width - 1450, height - 15);
+		text(VisualizerSettings.COX_AVERAGE_ARMY_SIZE_LABEL, VisualizerSettings.COX_ARMY_SIZE_LABEL_LOC[0],
+				VisualizerSettings.COX_ARMY_SIZE_LABEL_LOC[1]);
 		popMatrix();
 
 	}
