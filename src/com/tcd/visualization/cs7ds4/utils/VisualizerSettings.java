@@ -71,7 +71,7 @@ public class VisualizerSettings extends PApplet {
 			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
 	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
 			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X = 22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y = 0;
-	private static final String MINARDS_DESCRIPTION_FILE = "data" + File.separator + "minard-data" + File.separator
+	public static final String MINARDS_DESCRIPTION_FILE = "data" + File.separator + "minard-data" + File.separator
 			+ "description_file.txt";
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
@@ -110,7 +110,13 @@ public class VisualizerSettings extends PApplet {
 	public static int COX_ORIGINAL_MONTH_LABEL_SIZE = 13, COX_ZOOMED_MONTH_LABEL_SIZE=13;
 	public static float[] COX_ORIGINAL_DIAGRAM_CENTER = {(COX_SCREEN_WIDTH / 2) - 400,COX_SCREEN_HEIGHT / 2 - 150};
 	public static float[] COX_ZOOMED_DIAGRAM_CENTER = {(COX_SCREEN_WIDTH / 2) + 300,COX_SCREEN_HEIGHT / 2 -50};
-	public static String COX_DESCRIPTION_FILE = "data"+File.separator+"nightingale"+File.separator+"description.txt";
+	public static String COX_DESCRIPTION_FILE = "data"+File.separator+"nightingale"+File.separator+"description_file.txt";
+	public static String COX_INSTRUCTION_FILE = "data"+File.separator+"nightingale"+File.separator+"instruction_file.txt";
+	public static final int[] COX_DESCRIPTION_PANEL_LOCATION = {COX_SCREEN_WIDTH-1120,COX_SCREEN_HEIGHT-150};
+	public static final int[] COX_DESCRIPTION_TITLE_LOCATION = {COX_SCREEN_WIDTH-1120,COX_SCREEN_HEIGHT-150};
+	public static final String COX_DESCRIPTION_TITLE="~ History ~";
+	public static final String COX_AVERAGE_ARMY_SIZE_LABEL = "MONTHLY AVERAGE ARMY SIZE (IN THOUSANDS)";
+	public static final int[] COX_ARMY_SIZE_LABEL_LOC = {COX_SCREEN_WIDTH - 1500, COX_SCREEN_HEIGHT - 15};
 	
 	public VisualizerSettings() throws IOException {
 	}
