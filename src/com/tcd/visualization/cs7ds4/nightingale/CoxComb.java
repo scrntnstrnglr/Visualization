@@ -2,6 +2,7 @@ package com.tcd.visualization.cs7ds4.nightingale;
 
 import controlP5.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,13 +33,16 @@ public class CoxComb extends PApplet {
 	private static String[] title;
 	private static PImage img;
 	private static double arcLengthZD, arcLengthWI, arcLengthAC, arcLengthZD_Z, arcLengthWI_Z, arcLengthAC_Z;
-	private static float start, start_z, radians;
+	private static float start = VisualizerSettings.COX_ORIGINAL_START_DEGREE,
+			start_z = VisualizerSettings.COX_ZOOM_START_DEGREE, radians;
 	private static String monthYear;
 	private static int zoomFactor = VisualizerSettings.COX_ORIGINAL_ZOOM_FACTOR;
 	private static double radius;
 	private static List<Float> arcLengths;
-	private static float totalDeathsZygmotic = 0, totalDeathsWounds = 0, totalDeathsOthers = 0;
+	private static int totalDeathsZygmotic = 0, totalDeathsWounds = 0, totalDeathsOthers = 0;
 	private static int avgArmySize;
+	private static Button rotateButton;
+	private static String descriptionText; 
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
@@ -48,11 +52,11 @@ public class CoxComb extends PApplet {
 
 	public void settings() {
 		table = loadTable(VisualizerSettings.COX_DATA_SET, "header");
-		csvLoader = new CSVLoader(table, "Cox-Comb");
+		csvLoader = new CSVLoader(table, VisualizerSettings.COX_DATA_SET_NAME);
 		dateInfo = csvLoader.getToggleButtonsForMonths();
 
-		SCREEN_WIDTH = VisualizerSettings.SCREEN_WIDTH;
-		SCREEN_HEIGHT = VisualizerSettings.SCREEN_HEIGHT;
+		SCREEN_WIDTH = VisualizerSettings.COX_SCREEN_WIDTH;
+		SCREEN_HEIGHT = VisualizerSettings.COX_SCREEN_HEIGHT;
 		title = VisualizerSettings.TITLE.split(" ");
 		size(SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
@@ -63,11 +67,16 @@ public class CoxComb extends PApplet {
 		textAlign(CENTER);
 		smooth();
 		cp5 = new ControlP5(this);
-		zygmoticToggle = cp5.addToggle("Zygmotic Diseases").setPosition(50, height / 2 + 60).setSize(50, 20)
-				.setValue(true).setMode(ControlP5.SWITCH);
-		woundsToggle = cp5.addToggle("Wound and Injuries").setPosition(50, height / 2 + 100).setSize(50, 20)
-				.setValue(true).setMode(ControlP5.SWITCH);
-		otherToggle = cp5.addToggle("Others").setPosition(50, height / 2 + 140).setSize(50, 20).setValue(true)
+		zygmoticToggle = cp5.addToggle("Zygmotic Diseases")
+				.setPosition(VisualizerSettings.COX_TOGGLE_POSITIONS[0], height / 2 + 60)
+				.setSize(VisualizerSettings.COX_TOGGLE_SIZE[0], VisualizerSettings.COX_TOGGLE_SIZE[1]).setValue(true)
+				.setMode(ControlP5.SWITCH);
+		woundsToggle = cp5.addToggle("Wound and Injuries")
+				.setPosition(VisualizerSettings.COX_TOGGLE_POSITIONS[0], height / 2 + 100)
+				.setSize(VisualizerSettings.COX_TOGGLE_SIZE[0], VisualizerSettings.COX_TOGGLE_SIZE[1]).setValue(true)
+				.setMode(ControlP5.SWITCH);
+		otherToggle = cp5.addToggle("Others").setPosition(VisualizerSettings.COX_TOGGLE_POSITIONS[0], height / 2 + 140)
+				.setSize(VisualizerSettings.COX_TOGGLE_SIZE[0], VisualizerSettings.COX_TOGGLE_SIZE[1]).setValue(true)
 				.setMode(ControlP5.SWITCH);
 		toggleData = new HashMap<Toggle, Map<Boolean, Boolean>>();
 		int index = 0;
@@ -97,22 +106,27 @@ public class CoxComb extends PApplet {
 		}
 		visualizationPeriod = count;
 
-		range = cp5.addRange("rangeController")
-				// disable broadcasting since setRange and setRangeValues will trigger an event
-				.setBroadcast(false).setRange(0, 23).setRangeValues(0, 11).setPosition(40, height / 2 + 348)
-				.setSize(730, 40).setHandleSize(20)
-				// after the initialization we turn broadcast back on again
-				.setBroadcast(true).setColorForeground(color(255, 40)).setColorBackground(color(255, 40))
-				.setNumberOfTickMarks(24).setLabelVisible(false);
+		range = cp5.addRange("rangeController").setBroadcast(false)
+				.setRange(VisualizerSettings.COX_SLIDER_RANGE[0], VisualizerSettings.COX_SLIDER_RANGE[1])
+				.setRangeValues(VisualizerSettings.COX_SLIDER_RANGE_VALUES[0],
+						VisualizerSettings.COX_SLIDER_RANGE_VALUES[1])
+				.setPosition(VisualizerSettings.COX_SLIDER_POSITION[0], height / 2 + 348)
+				.setSize(VisualizerSettings.COX_SLIDER_SIZE[0], VisualizerSettings.COX_SLIDER_SIZE[1])
+				.setHandleSize(VisualizerSettings.COX_SLIDER_HANDLE_SIZE).setBroadcast(true)
+				.setColorForeground(color(VisualizerSettings.COX_SLIDER_FOREGROUND_COLOR[0],
+						VisualizerSettings.COX_SLIDER_FOREGROUND_COLOR[1]))
+				.setColorBackground(color(VisualizerSettings.COX_SLIDER_BACKGROUND_COLOR[0],
+						VisualizerSettings.COX_SLIDER_BACKGROUND_COLOR[1]))
+				.setNumberOfTickMarks(VisualizerSettings.COX_SLIDER_TICKS).setLabelVisible(false);
 
-		int initialX = 40, item = 1;
+		int initialX = VisualizerSettings.COX_SLIDER_LABELS_INITIAL_X, item = 1;
 		for (Map.Entry<String, ArrayList> entrySet : dateInfo.entrySet()) {
 			cp5.addTextlabel("labelItem" + item++).setText(entrySet.getKey()).setPosition(initialX, height / 2 + 415);
 			int indexInner = 0;
 			while (indexInner < entrySet.getValue().size()) {
 				cp5.addTextlabel("labelItem" + item++).setText(entrySet.getValue().get(indexInner).toString())
 						.setPosition(initialX, height / 2 + 400);
-				initialX += 30;
+				initialX += VisualizerSettings.COX_SLIDER_LABELS_X_GAPS;
 				indexInner++;
 			}
 		}
@@ -131,6 +145,20 @@ public class CoxComb extends PApplet {
 		cp5.addTextlabel("title10").setText(title[10]).setPosition(width / 2 + 40, 70).setFont(createFont("Arial", 13));
 		cp5.addTextlabel("title11").setText(title[11]).setPosition(width / 2 + 70, 70).setFont(createFont("Arial", 13));
 
+		rotateButton = cp5.addButton("rotate").setPosition(width - 130, height - 20)
+				.setVisible(VisualizerSettings.COX_ROTATE_BUTTON_VISIBILE);
+
+	}
+	
+	private void displayDescription() {
+		try {
+			descriptionText = VisualizerSettings.getDescriptionText(VisualizerSettings.COX_DESCRIPTION_FILE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public void draw() {
@@ -138,7 +166,9 @@ public class CoxComb extends PApplet {
 		totalDeathsZygmotic = 0;
 		totalDeathsWounds = 0;
 		totalDeathsOthers = 0;
-		
+		start = 0.0F;
+		start_z = 90.0F;
+
 		range.addListener(new ControlListener() {
 
 			@Override
@@ -150,6 +180,17 @@ public class CoxComb extends PApplet {
 				visualizationPeriod = (int) (r.getArrayValue(1) - r.getArrayValue(0)) + 1;
 			}
 		});
+
+		rotateButton.addListener(new ControlListener() {
+
+			@Override
+			public void controlEvent(ControlEvent arg0) {
+				// TODO Auto-generated method stub
+				start_z += 5;
+				System.out.println(start_z);
+			}
+		});
+
 		arcLengths = new ArrayList<Float>();
 		clear();
 		background(VisualizerSettings.VIZ_BACKGROUND[0], VisualizerSettings.VIZ_BACKGROUND[1],
@@ -160,37 +201,36 @@ public class CoxComb extends PApplet {
 		} catch (Exception e) {
 			visualizationPeriod = 1;
 		}
-		start = 0.0F;
-		start_z = 90.0F;
 		Map<String, Integer> dataSet = new HashMap<String, Integer>();
 		int yearNo = visualizationPeriod;
 		int rowIter = startRow;
 		TableRow row;
 		int limit = rowIter + visualizationPeriod;
-		float x=20+((startRow+1)*30),y=height/2+340;
+		float x = 20 + ((startRow + 1) * 30), y = height / 2 + 340;
 		while (rowIter < limit) {
 			row = table.getRow(rowIter);
 			monthYear = row.getString("Month");
 			avgArmySize = row.getInt("Average size of army");
-			
+
 			pushMatrix();
 			fill(0);
-			textSize(8);
-			line(x, y, x, y-avgArmySize/250);
-			text(avgArmySize,x,y-avgArmySize/250);
-			x+=30;
+			textSize(12);
+			line(x, y, x, y - avgArmySize / VisualizerSettings.COX_AVERAGE_ARMY_SIZE_LINE_SCALE_FACTOR);
+			text(avgArmySize / VisualizerSettings.COX_AVERAGE_ARMY_SIZE_VALUE_SCALE_FACTOR, x,
+					y - avgArmySize / VisualizerSettings.COX_AVERAGE_ARMY_SIZE_LINE_SCALE_FACTOR - 5);
+			x += VisualizerSettings.COX_SLIDER_LABELS_X_GAPS;
 			popMatrix();
-			
+
 			String extractedMonth = monthYear.substring(0, monthYear.indexOf(' '));
 			String extractedYear = monthYear.substring(monthYear.indexOf(' ') + 1);
 			float zymoticDiseases = row.getFloat("AZymotic diseases");
 			float woundsAndInjueries = row.getFloat("AWounds & injuries");
 			float allOtherCauses = row.getFloat("AAll other causes");
-			
-			totalDeathsZygmotic+=zymoticDiseases;
-			totalDeathsWounds+=woundsAndInjueries;
-			totalDeathsOthers+=allOtherCauses;
-			
+
+			totalDeathsZygmotic += zymoticDiseases;
+			totalDeathsWounds += woundsAndInjueries;
+			totalDeathsOthers += allOtherCauses;
+
 			arcLengthZD = VisualizerSettings.COX_ORIGINAL_ZOOM
 					* Math.sqrt((zymoticDiseases * visualizationPeriod) / 3.142);
 			arcLengthWI = VisualizerSettings.COX_ORIGINAL_ZOOM
@@ -204,15 +244,21 @@ public class CoxComb extends PApplet {
 
 			pushMatrix();
 
-			fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
-					VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
-			arc(35, 140, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+			float R = VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], G = VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
+					B = VisualizerSettings.ZYGMOTIC_ARC_COLOR[2];
+			float xPos = VisualizerSettings.COX_TOTAL_DEATHS_ARCS_POSITION[0],
+					yPos = VisualizerSettings.COX_TOTAL_DEATHS_ARCS_POSITION[1],
+					radius = VisualizerSettings.COX_TOTAL_DEATHS_ARCS_RADIUS,
+					startDegree = VisualizerSettings.COX_TOTAL_DEATHS_START_DEGREE,
+					endDegree = VisualizerSettings.COX_TOTAL_DEATHS_END_DEGREE;
+			fill(R, G, B);
+			arc(xPos, yPos, radius, radius, startDegree, endDegree);
 			fill(VisualizerSettings.WOUNDS_ARC_COLOR[0], VisualizerSettings.WOUNDS_ARC_COLOR[1],
 					VisualizerSettings.WOUNDS_ARC_COLOR[2]);
-			arc(35, 260, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+			arc(xPos, yPos + 120, radius, radius, startDegree, endDegree);
 			fill(VisualizerSettings.OTHERS_ARC_COLOR[0], VisualizerSettings.OTHERS_ARC_COLOR[1],
 					VisualizerSettings.OTHERS_ARC_COLOR[2]);
-			arc(35, 380, 280, 280, PI + QUARTER_PI + QUARTER_PI + QUARTER_PI, TWO_PI + QUARTER_PI);
+			arc(xPos, yPos + 240, radius, radius, startDegree, endDegree);
 
 			popMatrix();
 
@@ -224,20 +270,47 @@ public class CoxComb extends PApplet {
 			yearNo++;
 			rowIter++;
 		}
-		
+
+		createTotalDeathsViz();
+		createAverageArmyLabel();
+
+	}
+
+	private void createAverageArmyLabel() {
+		// TODO Auto-generated method stub
 		pushMatrix();
-		textSize(13);
-		text("Zygmotic Diseases:\n"+totalDeathsZygmotic, 110, 140);
-		text("Wounds and Injuries:\n"+totalDeathsWounds+"", 110, 260);
-		text("Other Causes:\n"+totalDeathsOthers, 110, 380);
+		textSize(VisualizerSettings.COX_ARMY_LABEL_SIZE);
+		text("MONTHLY AVERAGE ARMY SIZE (IN THOUSANDS)", width - 1450, height - 15);
 		popMatrix();
-		
+
+	}
+
+	private void createTotalDeathsViz() {
+		// TODO Auto-generated method stub
+		pushMatrix();
+		pushMatrix();
+		textSize(VisualizerSettings.COX_DEATHS_LABEL_SIZE);
+		float x = VisualizerSettings.COX_DEATHS_LABEL_POS[0], y = VisualizerSettings.COX_DEATHS_LABEL_POS[1];
+		translate(x, y);
+		rotate(VisualizerSettings.COX_DEATHS_LABEL_ROTATE_FACTOR);
+		translate(-(x - 10), -y);
+		text(VisualizerSettings.COX_DEATHS_LABEL, (x - 10), y);
+		popMatrix();
+
+		textSize(VisualizerSettings.COX_DEATHS_LABEL_ITEMS_SIZE);
+		text("Zygmotic Diseases:\n" + totalDeathsZygmotic, VisualizerSettings.COX_DEATHS_ITEM_POSITION[0],
+				VisualizerSettings.COX_DEATHS_ITEM_POSITION[1]);
+		text("Wounds & Injuries:\n" + totalDeathsWounds, VisualizerSettings.COX_DEATHS_ITEM_POSITION[0],
+				VisualizerSettings.COX_DEATHS_ITEM_POSITION[1] + 120);
+		text("Other Causes:\n" + totalDeathsOthers, VisualizerSettings.COX_DEATHS_ITEM_POSITION[0],
+				VisualizerSettings.COX_DEATHS_ITEM_POSITION[0] + 270);
+		popMatrix();
 	}
 
 	public void drawMainCoxComb(double a, float ax, double b, float bx, double c, float cx) {
 		float max = -1;
 		pushMatrix();
-		translate((width / 2) - 380, height / 2 -150);
+		translate(VisualizerSettings.COX_ORIGINAL_DIAGRAM_CENTER[0], VisualizerSettings.COX_ORIGINAL_DIAGRAM_CENTER[1]);
 		fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
 				VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
 		stroke(0);
@@ -256,18 +329,18 @@ public class CoxComb extends PApplet {
 		}
 		fill(0);
 
-		translate((float) 210 * cos((start + (start + radians)) / 2),
-				(float) 210 * sin((start + (start + radians)) / 2));
+		translate((float) VisualizerSettings.COX_ORIGINAL_MONTH_LABEL_POSITION * cos((start + (start + radians)) / 2),
+				(float) VisualizerSettings.COX_ORIGINAL_MONTH_LABEL_POSITION * sin((start + (start + radians)) / 2));
 		rotate((start + (start + radians)) / 2 + PI / 2);
-		textSize(13);
-		text("|"+monthYear+"|", 0, 0);
+		textSize(VisualizerSettings.COX_ORIGINAL_MONTH_LABEL_SIZE);
+		text("|" + monthYear + "|", 0, 0);
 
 		popMatrix();
 	}
 
 	public void drawZoomedCoxComb() {
 		pushMatrix();
-		translate((width / 2) + 300, height / 2 + 15);
+		translate(VisualizerSettings.COX_ZOOMED_DIAGRAM_CENTER[0], VisualizerSettings.COX_ZOOMED_DIAGRAM_CENTER[1]);
 		fill(VisualizerSettings.ZYGMOTIC_ARC_COLOR[0], VisualizerSettings.ZYGMOTIC_ARC_COLOR[1],
 				VisualizerSettings.ZYGMOTIC_ARC_COLOR[2]);
 		stroke(0);
@@ -288,43 +361,14 @@ public class CoxComb extends PApplet {
 
 		pushMatrix();
 		fill(0);
-		translate((float) 230 * cos((start_z + (start_z + radians)) / 2),
-				(float) 230 * sin((start_z + (start_z + radians)) / 2));
+		translate((float) VisualizerSettings.COX_ZOOMED_MONTH_LABEL_POSITION * cos((start_z + (start_z + radians)) / 2),
+				(float) VisualizerSettings.COX_ZOOMED_MONTH_LABEL_POSITION * sin((start_z + (start_z + radians)) / 2));
 		rotate((start_z + (start_z + radians)) / 2 + PI / 2);
-		textSize(13);
-		text("|"+monthYear+"|", 0, 0);
+		textSize(VisualizerSettings.COX_ZOOMED_MONTH_LABEL_SIZE);
+		text("|" + monthYear + "|", 0, 0);
 		popMatrix();
 
 		popMatrix();
-	}
-
-	public void drawText(String text, float r, float angle) {
-		float arclength = 0;
-
-		// For every box
-		for (int i = 0; i < text.length(); i++) {
-			// Instead of a constant width, we check the width of each character.
-			char currentChar = text.charAt(i);
-			float w = textWidth(currentChar);
-
-			// Each box is centered so we move half the width
-			arclength += w / 2;
-			// Angle in radians is the arclength divided by the radius
-			// Starting on the left side of the circle by adding PI
-			float theta = (angle + arclength / r);
-
-			pushMatrix();
-			// Polar to cartesian coordinate conversion
-			translate(r * cos(theta), r * sin(theta));
-			// Rotate the box
-			rotate(theta + angle / 2); // rotation is offset by 90 degrees
-			// Display the character
-			fill(0);
-			text(currentChar, 0, 0);
-			popMatrix();
-			// Move halfway again
-			arclength += w / 2;
-		}
 	}
 
 	@Override
