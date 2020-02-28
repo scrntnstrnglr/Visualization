@@ -1,4 +1,4 @@
-# Visualization
+# Data Visualization
 
 The project implements an all inclusive application to generate novel visualizations for existing data sets. The project inlucdes a launcher jar file which initiates the visualizer. The data has been preloaded. To run: 
 
