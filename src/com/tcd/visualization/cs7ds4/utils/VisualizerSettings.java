@@ -1,5 +1,6 @@
 package com.tcd.visualization.cs7ds4.utils;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,16 +20,19 @@ import de.fhpotsdam.unfolding.providers.StamenMapProvider;
 import de.fhpotsdam.unfolding.providers.StamenMapProvider.TonerBackground;
 import processing.core.*;
 
-public class VisualizerSettings {
+public class VisualizerSettings extends PApplet {
 
 	private static Properties minardsProperties;
 
 	// ---Minard's Constants---
 	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
 	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
-	public static final String MINARD_CITIES_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.cities.csv",
-			MINARD_TROOPS_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.troops.csv",
-			MINARD_TEMPERATURE_DATASET = "data"+File.separator+"minard-data"+File.separator+"R"+File.separator+"Minard.temp.csv";
+	public static final String MINARD_CITIES_DATASET = "data" + File.separator + "minard-data" + File.separator + "R"
+			+ File.separator + "Minard.cities.csv",
+			MINARD_TROOPS_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
+					+ "Minard.troops.csv",
+			MINARD_TEMPERATURE_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
+					+ "Minard.temp.csv";
 	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
 	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
 	public static final String MINARDS_TITLE_FONT = "Segoe Script";
@@ -66,20 +70,48 @@ public class VisualizerSettings {
 	public static final boolean MINARDS_SURVIVOR_ATTACK_TOGGLE_DEFAULT = false,
 			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
 	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
-			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X =22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y =0;
-	private static final String MINARDS_DESCRIPTION_FILE = "data"+File.separator+"minard-data"+File.separator+"description_file.txt";
+			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X = 22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y = 0;
+	private static final String MINARDS_DESCRIPTION_FILE = "data" + File.separator + "minard-data" + File.separator
+			+ "description_file.txt";
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 
 	// --Nightangle's Constants---
-	public static final String COX_DATA_SET = "data"+File.separator+"nightingale"+File.separator+"nightingale-data.csv";
+	public static final String COX_DATA_SET = "data" + File.separator + "nightingale" + File.separator
+			+ "nightingale-data.csv";
+	public static final String COX_DATA_SET_NAME = "Cox-Comb";
+	public static final int COX_SCREEN_WIDTH = 1910, COX_SCREEN_HEIGHT = 930;
+	public static final int[] COX_TOGGLE_POSITIONS = { 50, 20 };
+	public static final int[] COX_TOGGLE_SIZE = { 50, 20 };
+	public static final int[] COX_SLIDER_RANGE = { 0, 23 }, COX_SLIDER_RANGE_VALUES = { 0, 11 },
+			COX_SLIDER_SIZE = { 730, 40 }, COX_SLIDER_POSITION = { 40, 20 };
+	public static final int[] COX_SLIDER_FOREGROUND_COLOR = { 255, 40 }, COX_SLIDER_BACKGROUND_COLOR = { 255, 40 };;
+	public static final int COX_SLIDER_HANDLE_SIZE = 20, COX_SLIDER_TICKS = 24;
+	public static final int COX_SLIDER_LABELS_INITIAL_X = 40, COX_SLIDER_LABELS_X_GAPS = 30,
+			COX_AVERAGE_ARMY_SIZE_VALUE_SCALE_FACTOR = 1000, COX_AVERAGE_ARMY_SIZE_LINE_SCALE_FACTOR = 250;
+	public static final int[] COX_TOTAL_DEATHS_ARCS_POSITION = { 35, 140 };
+	public static final int COX_TOTAL_DEATHS_ARCS_RADIUS = 280;
+	public static final float COX_TOTAL_DEATHS_START_DEGREE = PI + 3 * QUARTER_PI,
+			COX_TOTAL_DEATHS_END_DEGREE = TWO_PI + QUARTER_PI;
 	public static final String TITLE = "DIAGRAM OF THE CAUSES OF MORTALITY IN THE ARMY IN THE EAST";
 	public static final int[] VIZ_BACKGROUND = new int[] { 86, 101, 115 };
-	public static final int SCREEN_WIDTH = 1820, SCREEN_HEIGHT = 930;
 	public static final int[] ZYGMOTIC_ARC_COLOR = new int[] { 27, 79, 114 };
 	public static final int[] WOUNDS_ARC_COLOR = new int[] { 52, 152, 219 };
 	public static final int[] OTHERS_ARC_COLOR = new int[] { 214, 234, 248 };
-	public static final int COX_ORIGINAL_ZOOM = 9, COX_ORIGINAL_ZOOM_FACTOR=16;
-
+	public static final int COX_ORIGINAL_ZOOM = 9, COX_ORIGINAL_ZOOM_FACTOR = 18;
+	public static final float COX_ORIGINAL_START_DEGREE = 0.0f, COX_ZOOM_START_DEGREE = 90.0f;
+	public static final boolean COX_ROTATE_BUTTON_VISIBILE = false;
+	public static final float COX_ARMY_LABEL_SIZE = 18, COX_DEATHS_LABEL_SIZE = 18;
+	public static final float[] COX_DEATHS_LABEL_POS = { 20, 260 };
+	public static final float COX_DEATHS_LABEL_ROTATE_FACTOR = 6 * QUARTER_PI;
+	public static final String COX_DEATHS_LABEL = "T O T A L    D E A T H S";
+	public static final int COX_DEATHS_LABEL_ITEMS_SIZE = 13;
+	public static final float[] COX_DEATHS_ITEM_POSITION = { 110, 140 };
+	public static int COX_ORIGINAL_MONTH_LABEL_POSITION = 260, COX_ZOOMED_MONTH_LABEL_POSITION = 260;
+	public static int COX_ORIGINAL_MONTH_LABEL_SIZE = 13, COX_ZOOMED_MONTH_LABEL_SIZE=13;
+	public static float[] COX_ORIGINAL_DIAGRAM_CENTER = {(COX_SCREEN_WIDTH / 2) - 400,COX_SCREEN_HEIGHT / 2 - 150};
+	public static float[] COX_ZOOMED_DIAGRAM_CENTER = {(COX_SCREEN_WIDTH / 2) + 300,COX_SCREEN_HEIGHT / 2 -50};
+	public static String COX_DESCRIPTION_FILE = "data"+File.separator+"nightingale"+File.separator+"description.txt";
+	
 	public VisualizerSettings() throws IOException {
 	}
 
@@ -165,19 +197,19 @@ public class VisualizerSettings {
 		MINARDS_TEMP_X_AXIS_LOCATIONS.add(new Location(minLat - 0.5, minLong - 0.5));
 		MINARDS_TEMP_MAX_LONG = maxLong + 1;
 	}
-	
-	public static String getDescriptionText() throws IOException {
-		InputStream is = new FileInputStream(MINARDS_DESCRIPTION_FILE);
+
+	public static String getDescriptionText(String fileName) throws IOException {
+		InputStream is = new FileInputStream(fileName);
 		BufferedReader buf = new BufferedReader(new InputStreamReader(is));
-		        
+
 		String line = buf.readLine();
 		StringBuilder sb = new StringBuilder();
-		        
-		while(line != null){
-		   sb.append(line).append("\n");
-		   line = buf.readLine();
+
+		while (line != null) {
+			sb.append(line).append("\n");
+			line = buf.readLine();
 		}
-		        
+
 		String fileAsString = sb.toString();
 		buf.close();
 		return fileAsString;

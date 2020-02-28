@@ -245,7 +245,7 @@ public class Minards extends PApplet {
 		.setVisible(true);
 		
 		try {
-			String descriptionText = VisualizerSettings.getDescriptionText();
+			String descriptionText = VisualizerSettings.getDescriptionText(VisualizerSettings.MINARDS_DESCRIPTION_TITLE);
 			cp5.addTextlabel("description").setText(descriptionText)
 			.setPosition(VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[0]+7,VisualizerSettings.MINARD_DESCRIPTION_PANEL_LOCATION[1]+27)
 			.setFont(createFont("Segoe Script", 15)).setColor(0)

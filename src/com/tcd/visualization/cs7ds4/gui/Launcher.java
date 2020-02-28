@@ -95,7 +95,7 @@ public class Launcher {
 		comboBox.addItem("Minard's Map");
 		
 		labelTitle = new Label("L a u n c h e r");
-		labelTitle.setFont(new Font("Bahnschrift", Font.BOLD, 32));
+		labelTitle.setFont(new Font("Comic Sans", Font.BOLD, 32));
 		labelTitle.setBounds(134, 32, 230, 46);
 		frame.getContentPane().add(labelTitle);
 		

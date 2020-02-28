@@ -1,0 +1,16 @@
+Florence Nightingale was a nurse during the
+Crimean War and was a strong advocate
+of proper sanitation standards in hospitals
+during that time. This novel visualization
+of the number of deaths during April 154 to
+March 1856 is famously known as Nightingale's
+Cox Combs. A similar visualization is depicted 
+here. 
+
+Instructions:
+1. Use the mouse wheel to zoom in and out.
+2. Use the slider to select the range of months.
+3. The left diagram depicts the causes of deaths
+and their individual counts.
+4. The right diagram is identical to the left, but
+zoomed.
