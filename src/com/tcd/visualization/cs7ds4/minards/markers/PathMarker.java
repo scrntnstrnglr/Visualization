@@ -34,6 +34,13 @@ public class PathMarker extends SimpleLinesMarker {
 		this.pathMode = pathMode;
 		thisMapPositions = new ArrayList<MapPosition>();
 	}
+	
+	public PathMarker(LinkedList<Location> locations, HashMap<String, Object> properties, String pathMode) {
+		super(locations, properties);
+		mapPos = new LinkedHashMap<MapPosition, Integer>();
+		this.pathMode = pathMode;
+		thisMapPositions = new ArrayList<MapPosition>();
+	}
 
 	public void draw(PGraphics pg, List<MapPosition> mapPositions) {
 		thisMapPositions = mapPositions;
@@ -46,18 +53,37 @@ public class PathMarker extends SimpleLinesMarker {
 		else if (pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_RETREAT))
 			pg.stroke(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
 					VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[3]);
-		pg.noFill();
-		pg.beginShape();
-		mapPos = getMapPositions();
-		for (MapPosition mapPosition : mapPositions) {
-			if (mapPos.containsKey(mapPosition)) {
-				weight = mapPos.get(mapPosition);
-				pg.strokeWeight(weight);
+		else if (pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_TEMPERATURE))
+			pg.stroke(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0],
+					VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
+					VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2],
+					VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[3]);
+
+		if (pathMode.equals(VisualizerSettings.MINARDS_PATH_MODE_TEMPERATURE)) {
+			pg.pushStyle();
+			pg.strokeWeight(VisualizerSettings.MINARDS_TEMP_MARKER_WEIGHT);
+			pg.noFill();
+			pg.beginShape();
+			for (MapPosition mapPosition : mapPositions) {
+				pg.vertex(mapPosition.x, mapPosition.y);
 			}
-			pg.vertex(mapPosition.x, mapPosition.y);
+			pg.endShape();
+			pg.popStyle();
+		} else {
+
+			pg.noFill();
+			pg.beginShape();
+			mapPos = getMapPositions();
+			for (MapPosition mapPosition : mapPositions) {
+				if (mapPos.containsKey(mapPosition)) {
+					weight = mapPos.get(mapPosition);
+					pg.strokeWeight(weight);
+				}
+				pg.vertex(mapPosition.x, mapPosition.y);
+			}
+			pg.endShape();
+			pg.popStyle();
 		}
-		pg.endShape();
-		pg.popStyle();
 
 	}
 

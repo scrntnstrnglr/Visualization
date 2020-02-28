@@ -51,7 +51,7 @@ public class Minards extends PApplet {
 
 	private static PathMarker group1AttackPath, group2AttackPath, group3AttackPath;
 	private static PathMarker group1RetreatPath, group2RetreatPath, group3RetreatPath;
-	private static TemperatureMarker tempPath;
+	private static PathMarker tempPath;
 	private static LocationMarker cityMarkers;
 	private static LinkedHashMap<Location, Integer> thisPath;
 	public static LinkedHashMap<Location, String> temperatureData;
@@ -135,13 +135,13 @@ public class Minards extends PApplet {
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Lines");
 		tempPointsToggle = cp5.addToggle("tempPointsToggle").setPosition(x + 385, y + 30).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Markers");
-		tempDataToggle = cp5.addToggle("tempDataToggle").setPosition(x + 385, y + 60).setSize(32, 12).setState(false)
+		tempDataToggle = cp5.addToggle("tempDataToggle").setPosition(x + 385, y + 60).setSize(32, 12).setState(true)
 				.setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Data");
 
 		cp5.addTextlabel("survivorslabel").setText("Survivors").setPosition(x + 450, y + 10)
 				.setFont(createFont("Arial", 12)).setColor(0);
 		survivorLabelAttackToggle = cp5.addToggle("survivorsAttack").setPosition(x + 455, y + 30).setSize(31, 12)
-				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Attack")
+				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Advance")
 				.setState(VisualizerSettings.MINARDS_SURVIVOR_ATTACK_TOGGLE_DEFAULT);
 		survivorLabelRetreatToggle = cp5.addToggle("survivorsRetreat").setPosition(x + 455, y + 60).setSize(31, 12)
 				.setState(true).setMode(ControlP5.SWITCH).setColorLabel(0).setCaptionLabel("Retreat")
@@ -184,8 +184,8 @@ public class Minards extends PApplet {
 				setMarkerName("Group3RetreatPath"), thisPath, VisualizerSettings.MINARDS_PATH_MODE_RETREAT);
 
 		temperatureData = tempTable.getTemperatureData();
-		tempPath = new TemperatureMarker(new LinkedList<Location>(temperatureData.keySet()),
-				setMarkerName("TemperaturePath"));
+		tempPath = new PathMarker (new LinkedList<Location>(temperatureData.keySet()),
+				setMarkerName("TemperaturePath"), VisualizerSettings.MINARDS_PATH_MODE_TEMPERATURE);
 		tempPoints = new TemperaturePointMarker(new LinkedList<Location>(temperatureData.keySet()),
 				setMarkerName("TemperaturPoints"));
 		tempYAxesLocations = new TemperatureAxesMarkers(VisualizerSettings.MINARDS_TEMP_Y_AXIS_LOCATIONS,
@@ -419,19 +419,19 @@ public class Minards extends PApplet {
 		legendLabel.setText("Legend").setPosition(20, height - 95).setFont(createFont("Arial", 13)).setColor(0);
 
 		fill(VisualizerSettings.MINARD_ATTACK_LINE_COLOR[0], VisualizerSettings.MINARD_ATTACK_LINE_COLOR[1],
-				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2]);
+				VisualizerSettings.MINARD_ATTACK_LINE_COLOR[2],VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]*110);
 		circle(30, height - 60, 20);
 		attackLegendLabel.setText(" - Advance").setPosition(39, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
 
 		fill(VisualizerSettings.MINARD_RETREAT_LINE_COLOR[0], VisualizerSettings.MINARD_RETREAT_LINE_COLOR[1],
-				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2]);
+				VisualizerSettings.MINARD_RETREAT_LINE_COLOR[2],VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]*110);
 		circle(130, height - 60, 20);
 		retreatLegendLabel.setText(" - Retreat").setPosition(140, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
 
 		fill(VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[0], VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[1],
-				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2]);
+				VisualizerSettings.MINARD_TEMPERATURE_LINE_COLOR[2],VisualizerSettings.MINARD_ATTACK_LINE_COLOR[3]*110);
 		circle(230, height - 60, 20);
 		temperatureLegendLabel.setText(" - Temperature").setPosition(240, height - 70).setFont(createFont("Arial", 11))
 				.setColor(0);
@@ -525,6 +525,9 @@ public class Minards extends PApplet {
 		// TODO Auto-generated method stub
 		super.mouseWheel();
 		tempLabels.setVisible(false);
+		for(Textlabel label : cityMarkerLabelList) {
+			label.setVisible(false);
+		}
 	}
 
 	@Override
@@ -570,15 +573,15 @@ public class Minards extends PApplet {
 
 	private void setMarkerLabels(Textlabel label,String cityName, MapPosition mapPosition) {
 		label.setText(cityName).setPosition(mapPosition.x, mapPosition.y + 20)
-				.setFont(createFont("Segoe Script", 11)).setColor(0).setVisible(true);
+				.setFont(createFont("Segoe Script", 14)).setColor(0).setVisible(true);
 	}
 
 	private void setTemperatureLabels(Textlabel label, Location loc, String date, MapPosition mapPosition) {
 		// TODO Auto-generated method stub
 		float temperature = Float
 				.parseFloat(String.format("%.0f", CSVLoader.convertTempToLatitude(loc.getLat(), true)));
-		label.setText(temperature + " \u00B0" + "C\n" + CSVLoader.formatDate(date, '.'))
-				.setPosition(mapPosition.x+3, mapPosition.y + 15).setFont(createFont("Segoe Script", 9)).setColor(0)
+		label.setText(temperature + " \u00B0" + "C\n" + "Days spent: "+date)
+				.setPosition(mapPosition.x+3, mapPosition.y + 20).setFont(createFont("Segoe Script", 10)).setColor(0)
 				.setVisible(tempDataToggle.getState());
 	}
 
