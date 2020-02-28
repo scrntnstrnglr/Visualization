@@ -93,7 +93,8 @@ public class CSVLoader {
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
 				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")),
-						row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
+						(row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR) < 2 ? 2
+								: (row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR));
 			}
 			i++;
 			if (i == limit)
@@ -107,7 +108,8 @@ public class CSVLoader {
 		for (TableRow row : table.rows()) {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
 				pathInfo.put(new Location(row.getFloat("latp"), row.getFloat("longp")),
-						row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
+						(row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR) < 2 ? 2
+								: (row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR));
 			}
 		}
 		return pathInfo;
@@ -198,7 +200,8 @@ public class CSVLoader {
 			if (row.getInt("group") == division && row.getString("direction").equalsIgnoreCase(action)) {
 				Location loc = new Location(row.getFloat("latp"), row.getFloat("longp"));
 				MapPosition mapPos = new MapPosition(Minards.map.mapDisplay.getObjectFromLocation(loc));
-				pathInfo.put(mapPos, row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR);
+				pathInfo.put(mapPos, (row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR) < 2 ? 2
+						: (row.getInt("survivors") / VisualizerSettings.MINARD_SURVIVOR_SCALE_FACTOR));
 			}
 		}
 		return pathInfo;
@@ -219,7 +222,7 @@ public class CSVLoader {
 			float longitude = row.getFloat("longt");
 			float temp = convertTempToLatitude(row.getFloat("temp"), false);
 			Location loc = new Location(temp, longitude);
-			String date = row.getString("date");
+			String date = row.getString("days");
 			temperatureData.put(loc, date);
 		}
 

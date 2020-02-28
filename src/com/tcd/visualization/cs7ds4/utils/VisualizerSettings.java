@@ -23,58 +23,7 @@ import processing.core.*;
 public class VisualizerSettings extends PApplet {
 
 	private static Properties minardsProperties;
-
-	// ---Minard's Constants---
-	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
-	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
-	public static final String MINARD_CITIES_DATASET = "data" + File.separator + "minard-data" + File.separator + "R"
-			+ File.separator + "Minard.cities.csv",
-			MINARD_TROOPS_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
-					+ "Minard.troops.csv",
-			MINARD_TEMPERATURE_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
-					+ "Minard.temp.csv";
-	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
-	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
-	public static final String MINARDS_TITLE_FONT = "Segoe Script";
-	public static final float MINARDS_FONT_SIZE_LARGE = 40, MINARDS_FONT_SIZE_MEDIUM = 30, MINARDS_FONT_SIZE_SMALL = 10;
-	public static final int[] MINARDS_TITLE_COLOR = new int[] { 0, 0, 0 };
-	public static final int[] MINARD_ATTACK_LINE_COLOR = new int[] { 216, 24, 24, 1 };
-	public static final int[] MINARD_RETREAT_LINE_COLOR = new int[] { 15, 79, 203, 1 };
-	public static final int[] MINARD_TEMPERATURE_LINE_COLOR = new int[] { 13, 134, 225, 1 };
-	public static final int MINARD_ATTACK_LINE_WEIGHT = 20, MINARD_RETREAT_LINE_WEIGHT = 20;
-	public static final TonerBackground MAP_PROVIDER = new StamenMapProvider.TonerBackground();
-	public static final int MINARD_LOC_SCALE_FACTOR = 16;
-	public static final String MINARD_RENDERER = PConstants.P3D;
-	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 190;
-	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
-	public static final float MINARD_CONTROL_PANEL_WIDTH = 550, MINARD_CONTROL_PANEL_HEIGHT = 90;
-	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT - 100 };
-	public static final float MINARD_LEGEND_PANEL_WIDTH = 350, MINARD_LEGEND_PANEL_HEIGHT = 90;
-	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT - 100 };
-	public static final float MINARD_DESCRIPTION_PANEL_WIDTH = MINARD_LEGEND_PANEL_WIDTH,
-			MINARD_DESCRIPTION_PANEL_HEIGHT = 400;
-	public static final float[] MINARD_DESCRIPTION_PANEL_LOCATION = new float[] { 10,
-			MINARD_SCREEN_HEIGHT - (MINARD_DESCRIPTION_PANEL_HEIGHT + MINARD_LEGEND_PANEL_HEIGHT + 20) };
-	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3700;
-	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
-	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";
-	public static final String MINARDS_MAP_YEAR = "1812";
-	public static final int MINARDS_TEMP_MARKER_WEIGHT = 10;
-	public static final int MINARDS_TEMP_SCALE_FACTOR = 20, MINARDS_TEMP_LATITUDE = 53,
-			MINARDS_MOUSE_ENTER_EXIT_RANGE = 10;
-	public static final float MINARDS_LOCATION_MARKER_VICINITY = 0.1f;
-	public static final String MINARDS_DECIMAL_PRECISION = "#.#";
-	public static HashMap<String, List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
-	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS, MINARDS_TEMP_X_AXIS_LOCATIONS;
-	public static float MINARDS_TEMP_MAX_LONG;
-	public static final boolean MINARDS_SURVIVOR_ATTACK_TOGGLE_DEFAULT = false,
-			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
-	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
-			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X = 22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y = 0;
-	public static final String MINARDS_DESCRIPTION_FILE = "data" + File.separator + "minard-data" + File.separator
-			+ "description_file.txt";
-	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
-
+	
 	// --Nightangle's Constants---
 	public static final String COX_DATA_SET = "data" + File.separator + "nightingale" + File.separator
 			+ "nightingale-data.csv";
@@ -117,7 +66,60 @@ public class VisualizerSettings extends PApplet {
 	public static final String COX_DESCRIPTION_TITLE="~ History ~";
 	public static final String COX_AVERAGE_ARMY_SIZE_LABEL = "MONTHLY AVERAGE ARMY SIZE (IN THOUSANDS)";
 	public static final int[] COX_ARMY_SIZE_LABEL_LOC = {COX_SCREEN_WIDTH - 1500, COX_SCREEN_HEIGHT - 15};
-	
+
+	// ---Minard's Constants---
+	public static final int MINARD_SCREEN_WIDTH = 1900, MINARD_SCREEN_HEIGHT = 950;
+	public static final float[] MINARD_WINDOW_LOCATION = new float[] { 0, 0 };
+	public static final String MINARD_CITIES_DATASET = "data" + File.separator + "minard-data" + File.separator + "R"
+			+ File.separator + "Minard.cities.csv",
+			MINARD_TROOPS_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
+					+ "Minard.troops.csv",
+			MINARD_TEMPERATURE_DATASET = "data" + File.separator + "minard-data" + File.separator + "R" + File.separator
+					+ "Minard.temp.csv";
+	public static final String MINARDS_TITLE = "NAPOLEAN'S 1812 RUSSIAN CAMPAIGN";
+	public static final float[] MINARDS_TITLE_POISITION = new float[] { MINARD_SCREEN_WIDTH / 2 - 300, 10 };
+	public static final String MINARDS_TITLE_FONT = "Segoe Script";
+	public static final float MINARDS_FONT_SIZE_LARGE = 40, MINARDS_FONT_SIZE_MEDIUM = 30, MINARDS_FONT_SIZE_SMALL = 10;
+	public static final int[] MINARDS_TITLE_COLOR = new int[] { 0, 0, 0 };
+	public static final int[] MINARD_ATTACK_LINE_COLOR = new int[] { 216, 24, 24, 1 };
+	public static final int[] MINARD_RETREAT_LINE_COLOR = new int[] { 15, 79, 203, 1 };
+	public static final int[] MINARD_TEMPERATURE_LINE_COLOR = new int[] {242, 188, 9, 1 };
+	public static final int MINARD_ATTACK_LINE_WEIGHT = 20, MINARD_RETREAT_LINE_WEIGHT = 20;
+	public static final TonerBackground MAP_PROVIDER = new StamenMapProvider.TonerBackground();
+	public static final int MINARD_LOC_SCALE_FACTOR = 16;
+	public static final String MINARD_RENDERER = PConstants.P3D;
+	public static final int MINARD_ZOOM_FACTOR = 7, MINARD_PANNING_RESTRICTION = 300;
+	public static final Location MINARD_ZOOM_LOC = new Location(53.5f, 30.25f);
+	public static final float MINARD_CONTROL_PANEL_WIDTH = 550, MINARD_CONTROL_PANEL_HEIGHT = 90;
+	public static final float[] MINARD_CONTROL_PANEL_LOCATION = new float[] { 370, MINARD_SCREEN_HEIGHT - 100 };
+	public static final float MINARD_LEGEND_PANEL_WIDTH = 350, MINARD_LEGEND_PANEL_HEIGHT = 90;
+	public static final float[] MINARD_LEGEND_PANEL_LOCATION = new float[] { 10, MINARD_SCREEN_HEIGHT - 100 };
+	public static final float MINARD_DESCRIPTION_PANEL_WIDTH = MINARD_LEGEND_PANEL_WIDTH,
+			MINARD_DESCRIPTION_PANEL_HEIGHT = 400;
+	public static final float[] MINARD_DESCRIPTION_PANEL_LOCATION = new float[] { 10,
+			MINARD_SCREEN_HEIGHT - (MINARD_DESCRIPTION_PANEL_HEIGHT + MINARD_LEGEND_PANEL_HEIGHT + 20) };
+	public static final int MINARD_SURVIVOR_SCALE_FACTOR = 3700;
+	public static final String MINARDS_PATH_MODE_ATTACK = "Attack";
+	public static final String MINARDS_PATH_MODE_RETREAT = "Retreat";
+	public static final String MINARDS_PATH_MODE_TEMPERATURE = "Temperature";
+	public static final String MINARDS_MAP_YEAR = "1812";
+	public static final int MINARDS_TEMP_MARKER_WEIGHT = 10;
+	public static final int MINARDS_TEMP_SCALE_FACTOR = 20, MINARDS_TEMP_LATITUDE = 53,
+			MINARDS_MOUSE_ENTER_EXIT_RANGE = 10;
+	public static final float MINARDS_LOCATION_MARKER_VICINITY = 0.1f;
+	public static final String MINARDS_DECIMAL_PRECISION = "#.#";
+	public static HashMap<String, List<String>> MINARDS_ATTACK_CITIES, MINARDS_RETREAT_CITIES;
+	public static List<Location> MINARDS_TEMP_Y_AXIS_LOCATIONS, MINARDS_TEMP_X_AXIS_LOCATIONS;
+	public static float MINARDS_TEMP_MAX_LONG;
+	public static final boolean MINARDS_SURVIVOR_ATTACK_TOGGLE_DEFAULT = false,
+			MINARDS_SURVIVOR_RETREAT_TOGGLE_DEFAULT = false;
+	public static final int MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_X = -40, MINARDS_SURVIVOR_ATTACK_LABEL_ADJUST_Y = -28,
+			MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_X = 22, MINARDS_SURVIVOR_RETREAT_LABEL_ADJUST_Y = 0;
+	public static final String MINARDS_DESCRIPTION_FILE = "data" + File.separator + "minard-data" + File.separator
+			+ "description_file.txt";
+	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
+	public static final String MINARDS_LOCATION_ICON = "img"+File.separator+"minard"+File.separator+"location.png";
+	 
 	public VisualizerSettings() throws IOException {
 	}
 
