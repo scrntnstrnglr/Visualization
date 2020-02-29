@@ -10,7 +10,9 @@ Data for these visualization are also attached in the project, under the data fo
 
 The project has been implemented using Processing 3.0, Unfolding Maps and ControlP5. The jar files for each library is attached in the project as well as the classpath.
 
-Some screens of the visualiztion are as follows: 
+
+The Nightingale's Rose Chart visualization contains two separate cox combs that display the same data, however one can be zoomed for a better view and is rotated differently.
+The average army size per month is also displayed above the month slider controller. All 24 months data can be displayed at once, or any range of choice can be selected.
 
 ![Image1](https://github.com/scrntnstrnglr/Visualization/blob/master/screens/COXCOMB1.png)
 
