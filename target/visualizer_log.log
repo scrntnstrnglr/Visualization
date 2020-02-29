@@ -1,0 +1,44 @@
+INFO    2020-02-29 17:12:51,040 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 17:12:53,722 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing Minard's Map
+INFO    2020-02-29 17:12:55,323 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setting up Minard's data
+INFO    2020-02-29 17:12:55,372 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@5b4eecf9 Name given : CitiesData
+INFO    2020-02-29 17:12:55,387 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@52d3c04e Name given : TroopsData
+INFO    2020-02-29 17:12:55,400 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@720e9c99 Name given : TemperaturData
+INFO    2020-02-29 17:53:39,440 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 17:53:43,405 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing CoxComb
+INFO    2020-02-29 17:53:43,423 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Test
+INFO    2020-02-29 17:53:43,454 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@385ca4e1 Name given : Cox-Comb
+INFO    2020-02-29 17:53:43,559 [Animation Thread] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setupping CoxComb data
+INFO    2020-02-29 17:54:42,305 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 17:54:46,084 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing CoxComb
+INFO    2020-02-29 17:54:46,099 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Test
+INFO    2020-02-29 17:54:46,137 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@385ca4e1 Name given : Cox-Comb
+INFO    2020-02-29 17:54:46,253 [Animation Thread] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setupping CoxComb data
+INFO    2020-02-29 18:01:27,356 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 18:01:32,935 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing CoxComb
+INFO    2020-02-29 18:01:32,947 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Test
+INFO    2020-02-29 18:01:32,990 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@3a2d2b9b Name given : Cox-Comb
+INFO    2020-02-29 18:01:33,100 [Animation Thread] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setupping CoxComb data
+INFO    2020-02-29 18:15:34,512 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 18:15:39,822 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing Minard's Map
+INFO    2020-02-29 18:15:42,031 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setting up Minard's data
+INFO    2020-02-29 18:15:42,084 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@9e5ea2f Name given : CitiesData
+INFO    2020-02-29 18:15:42,100 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@6d6a1d12 Name given : TroopsData
+INFO    2020-02-29 18:15:42,115 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@55a926f9 Name given : TemperaturData
+INFO    2020-02-29 18:17:06,471 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 18:17:17,079 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing Minard's Map
+INFO    2020-02-29 18:17:19,726 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setting up Minard's data
+INFO    2020-02-29 18:17:19,787 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@9e5ea2f Name given : CitiesData
+INFO    2020-02-29 18:17:19,802 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@6d6a1d12 Name given : TroopsData
+INFO    2020-02-29 18:17:19,820 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@55a926f9 Name given : TemperaturData
+INFO    2020-02-29 19:14:58,371 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 19:15:01,150 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing CoxComb
+INFO    2020-02-29 19:15:01,169 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Test
+INFO    2020-02-29 19:15:01,209 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@1142bc9b Name given : Cox-Comb
+INFO    2020-02-29 19:15:01,313 [Animation Thread] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setupping CoxComb data
+INFO    2020-02-29 19:28:27,731 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing launcher UI
+INFO    2020-02-29 19:28:31,534 [AWT-EventQueue-0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Initializing Minard's Map
+INFO    2020-02-29 19:28:33,499 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.nightingale.CoxComb  - Setting up Minard's data
+INFO    2020-02-29 19:28:33,552 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@67b8ec1a Name given : CitiesData
+INFO    2020-02-29 19:28:33,573 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@1a7e3b9b Name given : TroopsData
+INFO    2020-02-29 19:28:33,588 [AWT-EventQueue-0-FPSAWTAnimator#00-Timer0] com.tcd.visualization.cs7ds4.utils.VisualizerSettings  - Loading data for processing.data.Table@27697a32 Name given : TemperaturData
