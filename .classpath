@@ -9,12 +9,14 @@
 	<classpathentry kind="lib" path="lib/controlP5.jar"/>
 	<classpathentry kind="lib" path="lib/jython-standalone-2.7.2b2.jar"/>
 	<classpathentry kind="lib" path="lib/tracer.jar"/>
-	<classpathentry kind="lib" path="natives"/>
+	<!--<classpathentry kind="lib" path="natives"/> -->
 	<classpathentry kind="lib" path="lib/processing 3/core.jar"/>
-	<classpathentry kind="lib" path="lib/processing 3/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="lib/processing 3/jogl-all.jar"/>
+	<!--<classpathentry kind="lib" path="lib/processing 3/gluegen-rt.jar"/>-->
+	<!--<classpathentry kind="lib" path="lib/processing 3/jogl-all.jar"/>-->
 	<classpathentry kind="lib" path="lib/processing 3/json4processing.jar"/>
 	<classpathentry kind="lib" path="lib/processing 3/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/unfolding.0.9.92.jar"/>
+	<classpathentry kind="lib" path="lib/jogamp-fat.jar"/>
+	<!--<classpathentry kind="lib" path="lib/processing 3/gluegen-rt-natives-linux-amd64.jar"/> -->
 	<classpathentry kind="output" path="bin"/>
 </classpath>

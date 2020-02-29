@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Launcher",
+      "request": "launch",
+      "mainClass": "com.tcd.visualization.cs7ds4.gui.Launcher",
+      "projectName": "Visualization"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Minards",
+      "request": "launch",
+      "mainClass": "com.tcd.visualization.cs7ds4.minards.Minards",
+      "projectName": "Visualization"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Minards",
       "request": "launch",
       "mainClass": "com.visualizationo.cs7ds4.minards.Minards",
