@@ -16,13 +16,37 @@ The average army size per month is also displayed above the month slider control
 
 ![Image1](https://github.com/scrntnstrnglr/Visualization/blob/master/screens/COXCOMB1.png)
 
+
+Minards map is recreated over a dynamic Map Provider and is thus fully zoom-capable and traversable over a limited period. This has been implemented with the idea of the reader being able to see the cities and physical map features of the location. The advance path, retreat path and temperature line during retreat are all toggle-enabled.
+
 ![Image2](https://github.com/scrntnstrnglr/Visualization/blob/master/screens/Minards1.png)
 
-The project inlucdes a launcher application/jar  file which initiates the visualizer. The data has been preloaded. 
+# System Requirements:
+1. You should have java jdk version 1.8 and above. 
+2. To check if java is enable in your system, open a terminal (Linux), command prompt (Windows) and run the following command:
 
-1. Download "target" folder on local machine
+```
+java -version
+```
+3. If a definite java version is visible, you're good to go.
+4. Else, [install java](https://java.com/en/download/manual.jsp) 
+
+# How to run:
+
+The project inlucdes a launcher application/jar  file which initiates the visualizer. The data has been preloaded. Clone the repository, or just download the 'target' folder.
+
+1. Clone repository:
+```
+git clone https://github.com/scrntnstrnglr/Visualization
+```
+2. Go to the target foloder.
 2. Double click "VISUALIZER.jar" file to run.
-3. Also : open a terminal on your local and execute after navigating to the folder containing the executable jar.
+
+Alternatively
+
+3. Open a terminal/cmd and execute the following after navigating to the folder containing the executable jar.
 ```
 java -jar VISUALIZER.JAR
 ```
+
+A log file is generated to keep track of errors and debug lines.
