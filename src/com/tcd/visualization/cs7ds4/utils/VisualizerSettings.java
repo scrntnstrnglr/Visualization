@@ -20,6 +20,10 @@ import de.fhpotsdam.unfolding.providers.StamenMapProvider;
 import de.fhpotsdam.unfolding.providers.StamenMapProvider.TonerBackground;
 import processing.core.*;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 public class VisualizerSettings extends PApplet {
 
 	private static Properties minardsProperties;
@@ -119,8 +123,11 @@ public class VisualizerSettings extends PApplet {
 			+ "description_file.txt";
 	public static final String MINARDS_DESCRIPTION_TITLE = "~ History ~";
 	public static final String MINARDS_LOCATION_ICON = "img"+File.separator+"minard"+File.separator+"location.png";
-	 
+	private static Logger logger; 
+	
 	public VisualizerSettings() throws IOException {
+		logger = Logger.getLogger(VisualizerSettings.class);
+        PropertyConfigurator.configure("properties"+File.separator+"log4j.properties");
 	}
 
 	public static void createRetreatAndAttackCities(CSVLoader citiesData, CSVLoader troopsData) {

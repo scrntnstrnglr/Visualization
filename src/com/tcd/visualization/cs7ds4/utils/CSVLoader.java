@@ -1,5 +1,6 @@
 package com.tcd.visualization.cs7ds4.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import com.tcd.visualization.cs7ds4.minards.Minards;
 
@@ -22,10 +26,14 @@ public class CSVLoader {
 	private Map<String, ArrayList> dateInfo;
 	private Map<Location, String> mapInfo;
 	private final String name;
+	private Logger logger;
 
 	public CSVLoader(Table table, String name) {
 		this.table = table;
 		this.name = name;
+		logger = Logger.getLogger(VisualizerSettings.class);
+        PropertyConfigurator.configure("properties"+File.separator+"log4j.properties");
+        logger.info("Loading data for "+table.toString()+" Name given : "+this.name);
 	}
 
 	public String getName() {
