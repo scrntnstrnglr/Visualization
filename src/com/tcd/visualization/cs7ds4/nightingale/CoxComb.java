@@ -2,12 +2,17 @@ package com.tcd.visualization.cs7ds4.nightingale;
 
 import controlP5.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import processing.core.*;
 import processing.data.*;
@@ -43,14 +48,18 @@ public class CoxComb extends PApplet {
 	private static int avgArmySize;
 	private static Button rotateButton;
 	private static String descriptionText, instructionText;
+	private static Logger logger;
 
 	public CoxComb(String month, String year, int visualizationPeriod) {
 		this.month = month;
 		this.year = year;
 		this.visualizationPeriod = visualizationPeriod;
+		logger = Logger.getLogger(CoxComb.class);
+        PropertyConfigurator.configure("properties"+File.separator+"log4j.properties");
 	}
 
 	public void settings() {
+		logger.info("Test");
 		table = loadTable(VisualizerSettings.COX_DATA_SET, "header");
 		csvLoader = new CSVLoader(table, VisualizerSettings.COX_DATA_SET_NAME);
 		dateInfo = csvLoader.getToggleButtonsForMonths();
@@ -62,6 +71,7 @@ public class CoxComb extends PApplet {
 	}
 
 	public void setup() {
+		logger.info("Setupping CoxComb data");
 		f = createFont("Georgia", 12, true);
 		textFont(f);
 		textAlign(CENTER);
@@ -395,11 +405,6 @@ public class CoxComb extends PApplet {
 		// TODO Auto-generated method stub
 		super.mouseWheel(event);
 		zoomFactor -= event.getCount();
-	}
-
-	public static void main(String args[]) {
-		String[] a = { "MAIN" };
-		PApplet.runSketch(a, new CoxComb("Apr", "1854", 12));
 	}
 
 }

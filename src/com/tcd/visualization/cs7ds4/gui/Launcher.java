@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.tcd.visualization.cs7ds4.minards.Minards;
 import com.tcd.visualization.cs7ds4.nightingale.CoxComb;
 
@@ -39,7 +42,7 @@ public class Launcher {
 	private static JComboBox comboBox;
     private static JLabel imageLabel;
     private Label labelTitle;
-	
+	private static Logger logger;
 
 	/**
 	 * Launch the application.
@@ -63,6 +66,8 @@ public class Launcher {
 	 * @throws FontFormatException 
 	 */
 	public Launcher() throws FontFormatException, IOException {
+		logger = Logger.getLogger(CoxComb.class);
+        PropertyConfigurator.configure("properties"+File.separator+"log4j.properties");
 		initialize();
 	}
 
@@ -76,7 +81,7 @@ public class Launcher {
 		String fName = "Michroma.ttf";
 	    InputStream is = getClass().getResourceAsStream(fName);
 	    Font font = Font.createFont(Font.TRUETYPE_FONT, is); */
-	    
+	    logger.info("Initializing launcher UI");
 		frame = new JFrame();
 		frame.setBounds(100, 100, 503, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,17 +118,19 @@ public class Launcher {
 	}
 	
 	private void createCoxComb() {
+		logger.info("Initializing CoxComb");
 		String[] a = { "MAIN" };
 		PApplet.runSketch(a, new CoxComb("Apr", "1854", 12));
 	}
 	
 	private void createMinardsMap() {
+		logger.info("Initializing Minard's Map");
 		String[] a = { "MAIN" };
 		try {
 			PApplet.runSketch(a, new Minards());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 }

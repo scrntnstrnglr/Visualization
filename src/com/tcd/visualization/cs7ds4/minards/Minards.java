@@ -11,6 +11,7 @@ import de.fhpotsdam.unfolding.providers.Google.GoogleSimplifiedProvider;
 import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.providers.Microsoft.AerialProvider;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -24,9 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.tcd.visualization.cs7ds4.utils.CSVLoader;
 import com.tcd.visualization.cs7ds4.utils.VisualizerSettings;
 import com.tcd.visualization.cs7ds4.minards.markers.*;
+import com.tcd.visualization.cs7ds4.nightingale.CoxComb;
 
 import controlP5.ButtonBar;
 import controlP5.CallbackEvent;
@@ -64,9 +69,12 @@ public class Minards extends PApplet {
 	private static List<Textlabel> tempTextLabelList, survivorLabelListAttack, survivorLabelListRetreat, cityMarkerLabelList;
 	private static LinkedHashMap<Location, String> survivorDataAttack, survivorDataRetreat;
 	private static int tracker;
-
+	private static Logger logger;
+	
 	public Minards() throws IOException {
 		// translate(0,800);
+		logger = Logger.getLogger(CoxComb.class);
+        PropertyConfigurator.configure("properties"+File.separator+"log4j.properties");
 	}
 
 	public void settings() {
@@ -76,6 +84,7 @@ public class Minards extends PApplet {
 
 	@SuppressWarnings("deprecation")
 	public void setup() {
+		logger.info("Setting up Minard's data");
 		tracker = 0;
 		map = new UnfoldingMap(this, VisualizerSettings.MINARD_WINDOW_LOCATION[0],
 				VisualizerSettings.MINARD_WINDOW_LOCATION[1], width, height);
@@ -252,7 +261,7 @@ public class Minards extends PApplet {
 			.setVisible(true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		MapUtils.createDefaultEventDispatcher(this, map);
@@ -611,16 +620,6 @@ public class Minards extends PApplet {
 			}
 		}
 		return endLocation;
-	}
-
-	public static void main(String args[]) {
-		String[] a = { "MAIN" };
-		try {
-			PApplet.runSketch(a, new Minards());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }
